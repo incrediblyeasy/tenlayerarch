@@ -1,4 +1,5 @@
-"""UBX framing with checksum check, and decoders for NAV-PVT, NAV-CLOCK and NAV-SAT.
+"""UBX framing with checksum check, decoders for NAV-PVT, NAV-CLOCK, NAV-SAT and RXM-RAWX, and an
+incremental stream reader (UBXStream) for live use.
 
 Field layouts follow the u-blox M8/M9/M10 interface description. Confirm against the
 exact module and firmware before relying on them (the module model is still open).
@@ -15,11 +16,16 @@ NAV = 0x01
 NAV_PVT = 0x07
 NAV_CLOCK = 0x22
 NAV_SAT = 0x35
+RXM = 0x02
+RXM_RAWX = 0x15
 
 _PVT = struct.Struct("<IHBBBBBBIiBBBBiiiiIIiiiiiIIHH4BihH")
 _CLOCK = struct.Struct("<IiiII")
 _SAT_HEAD = struct.Struct("<IBB2B")
 _SAT_SV = struct.Struct("<BBBbhhI")
+_RAWX_HEAD = struct.Struct("<dHbBBB2x")
+_RAWX_MEAS = struct.Struct("<ddfBBBBHBBBBBx")
+assert _RAWX_HEAD.size == 16 and _RAWX_MEAS.size == 32
 assert _PVT.size == 92 and _CLOCK.size == 20 and _SAT_HEAD.size == 8 and _SAT_SV.size == 12
 
 
@@ -118,6 +124,83 @@ class UBXParser:
             sats.append({"gnss_id": gnss, "sv_id": sv, "cn0_dbhz": cno, "elev_deg": elev, "azim_deg": azim,
                          "pr_res_m": pr_res * 0.1, "used": bool(flags & 0x08), "flags": flags})
         return {"message": "NAV-SAT", "itow_ms": itow, "version": version, "num_svs": num_svs, "sats": sats}
+
+
+def parse_rxm_rawx(message: UBXMessage) -> dict[str, Any]:
+    """RXM-RAWX (0x02 0x15): receiver time plus per-signal pseudorange, carrier phase, Doppler, C/N0.
+
+    Layout follows the u-blox M8 interface description (16-byte header, 32 bytes per
+    measurement); needs a receiver that supports raw output (e.g. ZED-F9P, NEO-M8T). Not yet
+    checked against a recorded log.
+    """
+    if (message.msg_class, message.msg_id) != (RXM, RXM_RAWX) or len(message.payload) < 16:
+        raise ValueError(f"not an RXM-RAWX payload: {message.name}")
+    rcv_tow, week, leap_s, num_meas, rec_stat, version = _RAWX_HEAD.unpack_from(message.payload)
+    if len(message.payload) < 16 + 32 * num_meas:
+        raise ValueError("RXM-RAWX payload shorter than numMeas entries")
+    meas = []
+    for k in range(num_meas):
+        pr, cp, do, gnss, sv, sig, freq, lock_ms, cno, pr_sd, cp_sd, do_sd, trk = _RAWX_MEAS.unpack_from(message.payload, 16 + 32 * k)
+        meas.append({
+            "gnss_id": gnss, "sv_id": sv, "sig_id": sig, "freq_id": freq,
+            "pr_m": pr, "cp_cycles": cp, "doppler_hz": do, "lock_ms": lock_ms, "cn0_dbhz": cno,
+            "pr_std_m": 0.01 * 2 ** (pr_sd & 0x0F), "cp_std_cycles": 0.004 * (cp_sd & 0x0F), "do_std_hz": 0.002 * 2 ** (do_sd & 0x0F),
+            "pr_valid": bool(trk & 0x01), "cp_valid": bool(trk & 0x02), "half_cycle": bool(trk & 0x04),
+        })
+    return {"message": "RXM-RAWX", "rcv_tow_s": rcv_tow, "week": week, "leap_s": leap_s, "num_meas": num_meas,
+            "rec_stat": rec_stat, "clock_reset": bool(rec_stat & 0x02), "version": version, "meas": meas}
+
+
+class UBXStream:
+    """Incremental UBX reader for a live byte stream. Call feed() with whatever bytes arrive;
+    it returns the complete, checksum-valid frames and keeps any partial frame for the next call."""
+
+    MAX_BUFFER = 1 << 20
+
+    def __init__(self) -> None:
+        self._buf = bytearray()
+        self.bad_checksum = 0
+        self.frames = 0
+
+    def feed(self, data: bytes) -> list[UBXMessage]:
+        self._buf += data
+        out: list[UBXMessage] = []
+        buf, i = self._buf, 0
+        while True:
+            i = buf.find(SYNC, i)
+            if i < 0:
+                keep = 1 if buf[-1:] == SYNC[:1] else 0  # a lone 0xB5 may start the next frame
+                del buf[: len(buf) - keep]
+                break
+            if i + 6 > len(buf):
+                del buf[:i]
+                break
+            length = struct.unpack_from("<H", buf, i + 4)[0]
+            end = i + 6 + length + 2
+            if end > len(buf):
+                del buf[:i]
+                break
+            if checksum(bytes(buf[i + 2 : i + 6 + length])) != bytes(buf[end - 2 : end]):
+                self.bad_checksum += 1
+                i += 1
+                continue
+            out.append(UBXMessage(buf[i + 2], buf[i + 3], bytes(buf[i + 6 : i + 6 + length])))
+            self.frames += 1
+            i = end
+        if len(buf) > self.MAX_BUFFER:  # never grow without bound on garbage
+            buf.clear()
+        return out
+
+
+def read_serial(port: str, baud: int = 115200, *, chunk: int = 4096):
+    """Yield UBXMessage objects from a serial port in real time. Needs `pip install pyserial`."""
+    import serial  # imported here so the rest of the package does not require pyserial
+
+    stream = UBXStream()
+    with serial.Serial(port, baud, timeout=1.0) as ser:
+        while True:
+            for message in stream.feed(ser.read(chunk)):
+                yield message
 
 
 def parse_ubx_stream(stream: bytes | bytearray | Iterable[int]) -> list[UBXMessage]:
