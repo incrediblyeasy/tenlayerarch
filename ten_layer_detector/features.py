@@ -51,7 +51,7 @@ def warmup_mask(frame: pd.DataFrame, cfg: DetectorConfig) -> np.ndarray:
 def frozen_baseline(x: np.ndarray, warm: np.ndarray, stat: str = "mean") -> np.ndarray:
     """Expanding statistic during warm-up, then held at its last warm-up value (causal)."""
     s = pd.Series(x).expanding()
-    out = (s.median() if stat == "median" else s.mean()).to_numpy()
+    out = (s.median() if stat == "median" else s.mean()).to_numpy(copy=True)
     if warm.any() and not warm.all():
         k = int(np.flatnonzero(warm)[-1])
         out[k + 1 :] = out[k]
