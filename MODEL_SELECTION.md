@@ -103,7 +103,10 @@ Each candidate goes through the same tests on the validation set. The test set i
 
 **Step 1: Eligibility.** A model is eligible only if, on the validation set:
 - false alarms are at most 1 per hour at the threshold set on calibration data, and
-- detection with the strength clue removed (T3) is reported and is not zero.
+- detection with the strength clue removed (T3) is reported and is not zero, and
+- detection on the main test (T1) is at least 0.5.
+
+*Amendment, 2026-10-23:* the 0.5 floor was added after the first full comparison showed a decision tree (0.00 detection) and an Isolation Forest (0.03) passing the original two conditions. It changed no winner: the same model was selected before and after. Results from before this amendment are marked in `reports_v2/DECISION_NOTE.md`.
 
 **Step 2: Main score.** Among eligible models, rank by DR on T1 (validation). Higher is better.
 
