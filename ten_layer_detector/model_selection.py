@@ -38,7 +38,7 @@ from .layers.base import is_clean_session, persistent_alarm
 from .metrics import fa_target_threshold, session_outcome, summarize_outcomes
 from .splits import session_type
 
-STRENGTH_FEATURES = CN0_FEATURES + ("hdop_change", "sv_change")
+STRENGTH_FEATURES = CN0_FEATURES + ("hdop_change", "sv_change", "sv_drop", "hdop_rise")
 
 MODEL_CANDIDATES = {
     "logistic_regression": {"family": "linear", "settings": {"C": 1.0}},

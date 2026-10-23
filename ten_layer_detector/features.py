@@ -193,6 +193,49 @@ def f_const_diff(frame, cfg):
     return trailing_mean(np.sqrt((north - gn) ** 2 + (east - ge) ** 2 + du**2), _rows(frame, cfg.mid_window_s))
 
 
+def f_cn0_rise(frame, cfg):
+    """Rise of mean C/N0 above the session baseline (dB). Spoofers raise it; occlusions lower it."""
+    warm = warmup_mask(frame, cfg)
+    cn0 = frame["cn0_dbhz"].to_numpy(dtype=float)
+    return np.maximum(0.0, trailing_mean(cn0, _rows(frame, cfg.long_window_s)) - frozen_baseline(cn0, warm))
+
+
+def f_cn0_fall(frame, cfg):
+    """Fall of mean C/N0 below the session baseline (dB): the occlusion signature."""
+    warm = warmup_mask(frame, cfg)
+    cn0 = frame["cn0_dbhz"].to_numpy(dtype=float)
+    return np.maximum(0.0, frozen_baseline(cn0, warm) - trailing_mean(cn0, _rows(frame, cfg.long_window_s)))
+
+
+def f_sv_drop(frame, cfg):
+    """Satellites lost relative to the session baseline."""
+    warm = warmup_mask(frame, cfg)
+    sv = frame["num_sv"].to_numpy(dtype=float)
+    return np.maximum(0.0, frozen_baseline(sv, warm, "median") - trailing_mean(sv, _rows(frame, cfg.short_window_s)))
+
+
+def f_hdop_rise(frame, cfg):
+    warm = warmup_mask(frame, cfg)
+    h = frame["hdop"].to_numpy(dtype=float)
+    return np.maximum(0.0, trailing_mean(h, _rows(frame, cfg.short_window_s)) - frozen_baseline(h, warm))
+
+
+def f_dead_reckoning(frame, cfg):
+    """Position minus the velocity integral since the end of warm-up, trailing minimum over
+    persist_window_s (m). A step attack stays above the minimum; a short multipath jump does not."""
+    dt = _dt(frame)
+    warm = warmup_mask(frame, cfg)
+    north, east = local_ne(frame)
+    vn = frame["vel_n_mps"].to_numpy(dtype=float)
+    ve = frame["vel_e_mps"].to_numpy(dtype=float)
+    cn = np.cumsum(np.r_[0.0, 0.5 * (vn[1:] + vn[:-1]) * dt])
+    ce = np.cumsum(np.r_[0.0, 0.5 * (ve[1:] + ve[:-1]) * dt])
+    kb = int(np.flatnonzero(warm)[-1]) if warm.any() else 0
+    r = np.hypot((north - north[kb]) - (cn - cn[kb]), (east - east[kb]) - (ce - ce[kb]))
+    r[: kb + 1] = 0.0
+    return pd.Series(r).rolling(_rows(frame, cfg.persist_window_s), min_periods=1).min().to_numpy()
+
+
 FeatureFn = Callable[[pd.DataFrame, DetectorConfig], np.ndarray]
 
 FEATURES: Dict[str, Tuple[Tuple[str, ...], FeatureFn]] = {
@@ -209,10 +252,15 @@ FEATURES: Dict[str, Tuple[Tuple[str, ...], FeatureFn]] = {
     "allan_dev_nsps": (("t_gnss_s", "clk_drift_nsps"), f_allan),
     "lock_reset": (("t_gnss_s", "lock_ms"), f_lock_reset),
     "code_carrier_m": (("t_gnss_s", "pr_m", "cp_cycles", "lock_ms"), f_code_carrier),
+    "cn0_rise_db": (("t_gnss_s", "cn0_dbhz"), f_cn0_rise),
+    "cn0_fall_db": (("t_gnss_s", "cn0_dbhz"), f_cn0_fall),
+    "sv_drop": (("t_gnss_s", "num_sv"), f_sv_drop),
+    "hdop_rise": (("t_gnss_s", "hdop"), f_hdop_rise),
+    "dead_reckoning_m": (("t_gnss_s", "lat_deg", "lon_deg", "vel_n_mps", "vel_e_mps"), f_dead_reckoning),
     "const_diff_m": (("t_gnss_s", "lat_deg", "lon_deg", "alt_m", "gal_lat_deg", "gal_lon_deg", "gal_alt_m"), f_const_diff),
 }
 
-CN0_FEATURES = ("cn0_shift_db", "cn0_std_drop_db")
+CN0_FEATURES = ("cn0_shift_db", "cn0_std_drop_db", "cn0_rise_db", "cn0_fall_db")
 
 
 def required_columns(names: Iterable[str]) -> Tuple[str, ...]:

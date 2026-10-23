@@ -27,6 +27,7 @@ class DetectorConfig:
     mid_window_s: float = 2.0
     long_window_s: float = 3.0
     allan_window_s: float = 10.0
+    persist_window_s: float = 5.0
     lock_hold_s: float = 5.0
     # Alarm: per-row score above the threshold for persistence_k consecutive rows.
     threshold_percentile: float = 99.9
