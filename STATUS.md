@@ -12,14 +12,12 @@
 - Decision tree 0.0 detection is the tied-score artifact described in model_selection.py's docstring, not a real result.
 - Hardware items (MAVLink, UBX check, Jetson latency, sim-to-real) wait on recordings.
 
-## False-alarm fix (in progress)
-- Cause: clean-session false alarms mostly come from satellite-occlusion events (hdop_change) and multipath jumps; they last 3-15 s so persistence alone cannot fix them. The old 5-hour validation set could not measure FA/h (1 event = 0.2/h).
-- Done: bigger clean set (datasets/sim_fa2: 4000 clean, ~17 clean h validation); configs/sim_v2.json (persistence_k 10, calibration margin 0.25/h).
-- Done: 5 new features in features.py (cn0_rise_db, cn0_fall_db, sv_drop, hdop_rise, dead_reckoning_m) + tests/test_new_features.py. On sim_fa2 (old -> all features): logistic regression DR 0.913 -> 0.960, FA/h 1.38 -> 0.54; one-class SVM DR 0.897 -> 0.960, FA/h 0.96 -> 0.90. Both under the 1/h limit with the new features.
-- Running: full `compare` (13 models, T1-T8) with the new features, 6 parallel workers. Progress: `ls reports_v2/partial` (one json per finished model) and "done ..." lines in results_compare_v2.log. Resumable: rerunning skips saved models.
-  `OMP_NUM_THREADS=4 .venv/bin/python -m ten_layer_detector.cli --config configs/sim_v2.json compare --data datasets/sim_fa2 --out reports_v2 --workers 6`
-- After it finishes: write reports_v2/DECISION_NOTE.md, apply MODEL_SELECTION.md section 6, lock the winner, open the test set once (not yet done), rebuild the zip.
+## False-alarm fix: DONE
+- Causes, fix and numbers: reports_v2/DECISION_NOTE.md. 13-model comparison on datasets/sim_fa2 (reports_v2/). Rule picks one-class SVM; locked in configs/locked_model.json; test set (datasets/sim_test, new seed) opened once: detection 0.960, 0.77 FA/h (16 events, 20.8 h, range 0.44-1.25), delay 0.99 s; consistent takeover 0.73. Results: results/final_test.json.
+- Reproduce: generate sim_fa2 (--n-clean 4000 --n-per-attack 60 --seed 4444) and sim_test (--n-clean 1500 --n-per-attack 60 --seed 8888) with configs/sim_v2.json, then `compare ... --workers 6` and `python -m ten_layer_detector.final_test ...` (see final_test.py docstring).
 
 ## To do next
-- Consistent-takeover detection is still the weakest (0.78): longer-window drift / IMU feature.
+- Consistent-takeover detection is the weakest (0.73 on test): longer-window drift / IMU feature.
+- Repeat the final check on Nayfeh public data and bench data (needs recordings).
+- Rule gap: eligibility has no minimum detection rate (decision tree and Isolation Forest pass with ~0 detection).
 - Layers 3 and 7, attack naming (0.79), vote vs layer 10: see earlier notes.
