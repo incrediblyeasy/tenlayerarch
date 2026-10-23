@@ -99,6 +99,25 @@ def f_imu_resid(frame, cfg):
     return trailing_mean(np.hypot(rx, ry), _rows(frame, cfg.mid_window_s))
 
 
+def f_imu_resid_long(frame, cfg):
+    """Like imu_resid, but the signed bias-removed residual is averaged over persist_window_s
+    before its magnitude is taken, so zero-mean noise cancels and a slow consistent drift stays (m/s^2)."""
+    dt = _dt(frame)
+    n1 = _rows(frame, cfg.short_window_s)
+    warm = warmup_mask(frame, cfg)
+    yaw = frame["yaw_rad"].to_numpy(dtype=float)
+    an = trailing_mean(backward_diff(frame["vel_n_mps"].to_numpy(dtype=float)) / dt, n1)
+    ae = trailing_mean(backward_diff(frame["vel_e_mps"].to_numpy(dtype=float)) / dt, n1)
+    gx = np.cos(yaw) * an + np.sin(yaw) * ae
+    gy = -np.sin(yaw) * an + np.cos(yaw) * ae
+    rx = gx - trailing_mean(frame["acc_bx_mps2"].to_numpy(dtype=float), n1)
+    ry = gy - trailing_mean(frame["acc_by_mps2"].to_numpy(dtype=float), n1)
+    rx = rx - frozen_baseline(rx, warm, "median")
+    ry = ry - frozen_baseline(ry, warm, "median")
+    n = _rows(frame, cfg.persist_window_s)
+    return np.hypot(trailing_mean(rx, n), trailing_mean(ry, n))
+
+
 def f_baro_resid(frame, cfg):
     """GNSS altitude minus barometric altitude, relative to the session baseline (m)."""
     warm = warmup_mask(frame, cfg)
@@ -241,6 +260,7 @@ FeatureFn = Callable[[pd.DataFrame, DetectorConfig], np.ndarray]
 FEATURES: Dict[str, Tuple[Tuple[str, ...], FeatureFn]] = {
     "posvel_mps": (("t_gnss_s", "lat_deg", "lon_deg", "vel_n_mps", "vel_e_mps"), f_posvel),
     "imu_resid_mps2": (("t_gnss_s", "vel_n_mps", "vel_e_mps", "yaw_rad", "acc_bx_mps2", "acc_by_mps2"), f_imu_resid),
+    "imu_resid_long_mps2": (("t_gnss_s", "vel_n_mps", "vel_e_mps", "yaw_rad", "acc_bx_mps2", "acc_by_mps2"), f_imu_resid_long),
     "baro_resid_m": (("t_gnss_s", "alt_m", "baro_alt_m"), f_baro_resid),
     "implied_accel_mps2": (("t_gnss_s", "lat_deg", "lon_deg"), f_implied_accel),
     "cn0_shift_db": (("t_gnss_s", "cn0_dbhz"), f_cn0_shift),

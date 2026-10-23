@@ -63,6 +63,20 @@ SEEDS = (0, 1, 2, 3, 4)
 # kernel SVM) sees the same amount of data.
 MAX_TRAIN_ROWS = 20_000
 
+# Eligibility (MODEL_SELECTION.md section 6, step 1).
+MAX_FA_PER_HOUR = 1.0
+MIN_DETECTION_RATE = 0.5  # a model that detects less than half the attacks is not a detector
+
+
+def is_eligible(r: dict) -> bool:
+    """FA/h within the limit, a non-zero result without the strength clue, and a minimum
+    detection rate on the main test. Works on a stored result row."""
+    return bool(
+        r["far_per_hour"] <= MAX_FA_PER_HOUR
+        and r["dr_no_strength"] > 0.0
+        and r["dr_validation"] >= MIN_DETECTION_RATE
+    )
+
 
 def _make_model(name: str, seed: int = 0):
     if name == "logistic_regression":
@@ -231,7 +245,6 @@ def evaluate_model_candidates(
             seed_dr.append(r_s["all_attacks"]["rate"])
             seed_far.append(r_s["false_alarms_per_hour"])
 
-        eligible = main["false_alarms_per_hour"] <= 1.0 and ns["all_attacks"]["rate"] > 0.0
         results.append(
             {
                 "model_name": name,
@@ -252,16 +265,16 @@ def evaluate_model_candidates(
                 "t8_dr_std": float(np.std(seed_dr)) if seed_dr else float("nan"),
                 "t8_far_mean": float(np.mean(seed_far)) if seed_far else float("nan"),
                 "t8_far_std": float(np.std(seed_far)) if seed_far else float("nan"),
-                "eligible": bool(eligible),
                 "per_type": {a: r["rate"] for a, r in main["per_type"].items()},
             }
         )
+        results[-1]["eligible"] = is_eligible(results[-1])
     return results
 
 
 def select_model(results: Iterable[dict[str, Any]], tie_margin: float = 0.05) -> str | None:
     """MODEL_SELECTION.md section 6. Returns None when no model is eligible."""
-    rows = [r for r in results if r.get("eligible")]
+    rows = [r for r in results if is_eligible(r)]
     if not rows:
         return None
 
@@ -282,4 +295,4 @@ def select_model(results: Iterable[dict[str, Any]], tie_margin: float = 0.05) ->
     return str(winner["model_name"])
 
 
-__all__ = ["MODEL_CANDIDATES", "STRENGTH_FEATURES", "evaluate_model_candidates", "select_model"]
+__all__ = ["MODEL_CANDIDATES", "MAX_FA_PER_HOUR", "MIN_DETECTION_RATE", "is_eligible", "STRENGTH_FEATURES", "evaluate_model_candidates", "select_model"]

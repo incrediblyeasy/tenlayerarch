@@ -22,7 +22,7 @@ import pandas as pd
 
 from .config import DEFAULT_DETECTOR_CONFIG, ProjectConfig
 from .dataset import load_sessions
-from .model_selection import MODEL_CANDIDATES, evaluate_model_candidates, select_model
+from .model_selection import MODEL_CANDIDATES, evaluate_model_candidates, is_eligible, select_model
 from .splits import split_three_way
 
 SLOW_FIRST = ("one_class_svm", "rbf_svm", "knn", "mlp", "random_forest", "extra_trees")
@@ -142,6 +142,8 @@ def build_model_comparison_report(data_dir: str | Path, output_dir: str | Path, 
     else:
         done = dict(map(_run_one, jobs))
     results = [done[n] for n in MODEL_CANDIDATES]
+    for r in results:
+        r["eligible"] = is_eligible(r)  # re-derived, so saved results follow the current rule
     winner = select_model(results)
     meta = {
         "data": str(data_dir),

@@ -32,3 +32,12 @@ def test_cn0_rise_and_fall_have_opposite_signs():
     fd = compute_features(down, ["cn0_rise_db", "cn0_fall_db"])
     assert fu["cn0_rise_db"].iloc[-1] > 5.0 and fu["cn0_fall_db"].iloc[-1] < 1.0
     assert fd["cn0_fall_db"].iloc[-1] > 5.0 and fd["cn0_rise_db"].iloc[-1] < 1.0
+
+
+def test_long_imu_residual_is_causal_and_finite():
+    s = generate_session(attack_type="consistent_takeover", seed=2)
+    a = compute_features(s, ["imu_resid_long_mps2"])["imu_resid_long_mps2"].to_numpy()
+    cut = s.copy()
+    cut.iloc[300:, cut.columns.get_loc("acc_bx_mps2")] += 5.0
+    b = compute_features(cut, ["imu_resid_long_mps2"])["imu_resid_long_mps2"].to_numpy()
+    assert np.isfinite(a).all() and (a[:300] == b[:300]).all()

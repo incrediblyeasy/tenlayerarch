@@ -29,7 +29,7 @@ def cmd_generate(args) -> None:
         ds,
         **{k: v for k, v in {"n_clean": args.n_clean, "n_per_attack": args.n_per_attack, "seed": args.seed}.items() if v is not None},
     )
-    sessions, meta = generate_mixed_dataset(ds.n_clean, ds.n_per_attack, duration_s=ds.duration_s, sample_rate_hz=ds.sample_rate_hz, seed=ds.seed)
+    sessions, meta = generate_mixed_dataset(ds.n_clean, ds.n_per_attack, duration_s=ds.duration_s, sample_rate_hz=ds.sample_rate_hz, seed=ds.seed, power_range_db=tuple(args.power_range) if args.power_range else None)
     out = save_sessions(args.out, sessions, meta)
     ProjectConfig(cfg.version, ds, cfg.detector).save(out / "config.json")
     print(f"wrote {len(sessions)} sessions ({sum(len(s) for s in sessions)} rows) to {out}")
@@ -88,6 +88,7 @@ def main() -> None:
     g.add_argument("--n-clean", type=int, default=None)
     g.add_argument("--n-per-attack", type=int, default=None)
     g.add_argument("--seed", type=int, default=None)
+    g.add_argument("--power-range", type=float, nargs=2, metavar=("LO", "HI"), default=None, help="spoofer power range in dB for attacked sessions")
     g.set_defaults(func=cmd_generate)
 
     e = sub.add_parser("evaluate", help="run the evaluation protocol on a saved dataset")

@@ -294,14 +294,20 @@ def generate_mixed_dataset(
     sample_rate_hz: float = 10.0,
     seed: int = 2026,
     attack_types: tuple[str, ...] = ATTACK_TYPES,
+    power_range_db: tuple[float, float] | None = None,
 ) -> tuple[list[pd.DataFrame], list[Dict[str, Any]]]:
-    """Clean sessions plus n_per_attack sessions of each attack type, with metadata."""
+    """Clean sessions plus n_per_attack sessions of each attack type, with metadata.
+
+    power_range_db: draw each attacked session's spoofer power uniformly from this range
+    (e.g. (0, 1) for a weak-spoofer set) instead of the default 0-10 dB."""
+    power_rng = np.random.default_rng([int(seed), 7])
     plan = [("clean", i) for i in range(n_clean)] + [(a, i) for a in attack_types for i in range(n_per_attack)]
     seeds = np.random.SeedSequence(seed).generate_state(len(plan))
     frames, metas = [], []
     for (attack_type, i), s in zip(plan, seeds):
+        attacker = {"power_db": float(power_rng.uniform(*power_range_db))} if power_range_db and attack_type != "clean" else None
         frame, meta = generate_session(
-            duration_s, sample_rate_hz, attack_type, None, f"{attack_type}_{i:04d}", int(s), return_metadata=True
+            duration_s, sample_rate_hz, attack_type, None, f"{attack_type}_{i:04d}", int(s), attacker=attacker, return_metadata=True
         )
         frames.append(frame)
         metas.append(meta)

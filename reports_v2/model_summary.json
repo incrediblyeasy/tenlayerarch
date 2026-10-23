@@ -70,7 +70,7 @@
       "t8_dr_std": 0.0,
       "t8_far_mean": 0.0,
       "t8_far_std": 0.0,
-      "eligible": true,
+      "eligible": false,
       "per_type": {
         "consistent_takeover": 0.0,
         "dynamic_takeover": 0.0,
@@ -329,7 +329,7 @@
       "t8_dr_std": 0.024072620457306508,
       "t8_far_mean": 0.6119999999999985,
       "t8_far_std": 0.16277591959500604,
-      "eligible": true,
+      "eligible": false,
       "per_type": {
         "consistent_takeover": 0.0,
         "dynamic_takeover": 0.0,
@@ -362,12 +362,11 @@
       "dr_unseen": 0.9603174603174603,
       "delay_median_s": 1.573203379999999,
       "delay_p90_s": 5.254833479999999,
-      "ms_per_decision": 0.0015362228212155034,
+      "ms_per_decision": 0.002235479530642608,
       "t8_dr_mean": 0.9746031746031745,
       "t8_dr_std": 0.0031746031746031633,
       "t8_far_mean": 0.05999999999999985,
       "t8_far_std": 0.06572670690061977,
-      "eligible": true,
       "per_type": {
         "consistent_takeover": 0.8333333333333334,
         "dynamic_takeover": 1.0,
@@ -377,7 +376,8 @@
         "step": 1.0,
         "step_then_ramp": 1.0
       },
-      "wall_s": 75.99039459228516
+      "eligible": true,
+      "wall_s": 401.91160225868225
     },
     {
       "model_name": "lightgbm",
@@ -400,12 +400,11 @@
       "dr_unseen": 0.9682539682539683,
       "delay_median_s": 1.444719825,
       "delay_p90_s": 3.7799189339999995,
-      "ms_per_decision": 0.012978755223075554,
+      "ms_per_decision": 0.016089038109499774,
       "t8_dr_mean": 0.9746031746031745,
       "t8_dr_std": 0.01538945986481373,
       "t8_far_mean": 0.03599999999999991,
       "t8_far_std": 0.029393876913398065,
-      "eligible": true,
       "per_type": {
         "consistent_takeover": 0.8888888888888888,
         "dynamic_takeover": 1.0,
@@ -415,7 +414,8 @@
         "step": 1.0,
         "step_then_ramp": 1.0
       },
-      "wall_s": 868.4497241973877
+      "eligible": true,
+      "wall_s": 1544.1087501049042
     },
     {
       "model_name": "mlp",
