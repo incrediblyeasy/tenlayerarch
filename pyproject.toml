@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ten-layer-detector"
+version = "0.1.0"
+description = "Ten-layer GNSS spoofing detector (simulation phase)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.26,<2",
+  "pandas>=2.1",
+  "scikit-learn>=1.4",
+  "xgboost>=2.0",
+  "lightgbm>=4.0",
+  "matplotlib>=3.8",
+]
+
+[project.scripts]
+ten-layer = "ten_layer_detector.cli:main"
+ten-layer-dashboard = "ten_layer_detector.dashboard:main"
+
+[tool.setuptools.packages.find]
+include = ["ten_layer_detector*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+addopts = "-q"
