@@ -59,7 +59,7 @@ def cmd_compare(args) -> None:
     from .dashboard import build_model_comparison_report
 
     cfg = _load_config(args.config)
-    summary = build_model_comparison_report(args.data, args.out, cfg.detector)
+    summary = build_model_comparison_report(args.data, args.out, cfg.detector, workers=args.workers)
     print(json.dumps({"winner": summary["winner"], "paths": summary["paths"]}, indent=1))
 
 
@@ -99,6 +99,7 @@ def main() -> None:
     c = sub.add_parser("compare", help="model comparison report (MODEL_SELECTION.md)")
     c.add_argument("--data", default="datasets/sim_dev")
     c.add_argument("--out", default="reports")
+    c.add_argument("--workers", type=int, default=1, help="candidates evaluated in parallel processes")
     c.set_defaults(func=cmd_compare)
 
     d = sub.add_parser("demo", help="fit on a small dataset and run one clean and one attacked session")

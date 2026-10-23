@@ -16,8 +16,8 @@
 - Cause: clean-session false alarms mostly come from satellite-occlusion events (hdop_change) and multipath jumps; they last 3-15 s so persistence alone cannot fix them. The old 5-hour validation set could not measure FA/h (1 event = 0.2/h).
 - Done: bigger clean set (datasets/sim_fa2: 4000 clean, ~17 clean h validation); configs/sim_v2.json (persistence_k 10, calibration margin 0.25/h).
 - Done: 5 new features in features.py (cn0_rise_db, cn0_fall_db, sv_drop, hdop_rise, dead_reckoning_m) + tests/test_new_features.py. On sim_fa2 (old -> all features): logistic regression DR 0.913 -> 0.960, FA/h 1.38 -> 0.54; one-class SVM DR 0.897 -> 0.960, FA/h 0.96 -> 0.90. Both under the 1/h limit with the new features.
-- Running: full `compare` (13 models, T1-T8) with the new features -> reports_v2/ (log results_compare_v2.log, ~1.5-2.5 h, no partial saves). If interrupted rerun:
-  `.venv/bin/python -m ten_layer_detector.cli --config configs/sim_v2.json compare --data datasets/sim_fa2 --out reports_v2`
+- Running: full `compare` (13 models, T1-T8) with the new features, 6 parallel workers. Progress: `ls reports_v2/partial` (one json per finished model) and "done ..." lines in results_compare_v2.log. Resumable: rerunning skips saved models.
+  `OMP_NUM_THREADS=4 .venv/bin/python -m ten_layer_detector.cli --config configs/sim_v2.json compare --data datasets/sim_fa2 --out reports_v2 --workers 6`
 - After it finishes: write reports_v2/DECISION_NOTE.md, apply MODEL_SELECTION.md section 6, lock the winner, open the test set once (not yet done), rebuild the zip.
 
 ## To do next

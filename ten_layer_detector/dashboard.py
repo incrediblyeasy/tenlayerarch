@@ -8,6 +8,8 @@ from __future__ import annotations
 import argparse
 import html as html_lib
 import json
+import time
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 from typing import Any, Sequence
 
@@ -18,10 +20,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from .config import DEFAULT_DETECTOR_CONFIG
+from .config import DEFAULT_DETECTOR_CONFIG, ProjectConfig
 from .dataset import load_sessions
-from .model_selection import evaluate_model_candidates, select_model
+from .model_selection import MODEL_CANDIDATES, evaluate_model_candidates, select_model
 from .splits import split_three_way
+
+SLOW_FIRST = ("one_class_svm", "rbf_svm", "knn", "mlp", "random_forest", "extra_trees")
 
 COLUMNS = [
     ("dr_validation", "DR (T1)"),
@@ -106,10 +110,38 @@ tr.win{{background:#e8f5e9}}img{{max-width:100%}}</style></head><body>
     return paths
 
 
-def build_model_comparison_report(data_dir: str | Path, output_dir: str | Path, cfg=DEFAULT_DETECTOR_CONFIG) -> dict[str, Any]:
+def _run_one(args):
+    """Worker: evaluate one candidate and save its result (skipped when already saved)."""
+    name, data_dir, partial_dir, cfg = args
+    out = Path(partial_dir) / f"{name}.json"
+    if out.exists():
+        return name, json.loads(out.read_text(encoding="utf-8"))
     sessions, metadata = load_sessions(data_dir)
     train, cal, val = split_three_way(sessions, cfg.train_fraction, cfg.calibration_fraction, seed=cfg.split_seed)
-    results = evaluate_model_candidates(train, cal, val, metadata, cfg=cfg)
+    t0 = time.time()
+    result = evaluate_model_candidates(train, cal, val, metadata, cfg=cfg, candidates=[name])[0]
+    result["wall_s"] = time.time() - t0
+    out.write_text(json.dumps(result, default=float), encoding="utf-8")
+    print(f"done {name} in {result['wall_s'] / 60:.1f} min", flush=True)
+    return name, result
+
+
+def build_model_comparison_report(data_dir: str | Path, output_dir: str | Path, cfg=DEFAULT_DETECTOR_CONFIG, workers: int = 1) -> dict[str, Any]:
+    """Each candidate's result is saved to <output_dir>/partial/<name>.json as soon as it
+    finishes; a rerun reuses saved results, so an interrupted run loses at most the models in flight."""
+    sessions, _ = load_sessions(data_dir)
+    train, cal, val = split_three_way(sessions, cfg.train_fraction, cfg.calibration_fraction, seed=cfg.split_seed)
+    partial = Path(output_dir) / "partial"
+    partial.mkdir(parents=True, exist_ok=True)
+    # Slowest first so the long models start immediately.
+    order = sorted(MODEL_CANDIDATES, key=lambda n: n not in SLOW_FIRST)
+    jobs = [(n, str(data_dir), str(partial), cfg) for n in order]
+    if workers > 1:
+        with ProcessPoolExecutor(max_workers=workers) as pool:
+            done = dict(pool.map(_run_one, jobs))
+    else:
+        done = dict(map(_run_one, jobs))
+    results = [done[n] for n in MODEL_CANDIDATES]
     winner = select_model(results)
     meta = {
         "data": str(data_dir),
@@ -127,8 +159,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Model-comparison report on a saved dataset")
     parser.add_argument("--data", default="datasets/sim_dev")
     parser.add_argument("--out", default="reports")
+    parser.add_argument("--config", default=None)
+    parser.add_argument("--workers", type=int, default=1)
     args = parser.parse_args()
-    summary = build_model_comparison_report(args.data, args.out)
+    cfg = ProjectConfig.load(args.config).detector if args.config else DEFAULT_DETECTOR_CONFIG
+    summary = build_model_comparison_report(args.data, args.out, cfg, workers=args.workers)
     print(json.dumps({"winner": summary["winner"], "paths": summary["paths"]}, indent=2))
 
 
