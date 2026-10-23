@@ -1,0 +1,593 @@
+{
+ "data": "datasets/sim_v1",
+ "split_seed": 7,
+ "train_fraction": 0.6,
+ "counts": {
+  "train": {
+   "clean": 120,
+   "static": 30,
+   "step": 30,
+   "ramp": 30,
+   "step_then_ramp": 30,
+   "ramp_then_step": 30,
+   "consistent_takeover": 30,
+   "dynamic_takeover": 30
+  },
+  "test": {
+   "clean": 80,
+   "static": 20,
+   "step": 20,
+   "ramp": 20,
+   "step_then_ramp": 20,
+   "ramp_then_step": 20,
+   "consistent_takeover": 20,
+   "dynamic_takeover": 20
+  }
+ },
+ "layers": [
+  {
+   "layer": "1_time_domain",
+   "auc": 0.3327678571428571,
+   "threshold_calibrated": 0.8130165923554139,
+   "false_alarm": 0.025,
+   "detect_all": 0.02142857142857143,
+   "threshold_in_code": 0.65,
+   "false_alarm_code_thr": 1.0,
+   "detect_all_code_thr": 0.7571428571428571,
+   "detect_consistent_takeover": 0.0,
+   "detect_dynamic_takeover": 0.0,
+   "detect_ramp": 0.05,
+   "detect_ramp_then_step": 0.0,
+   "detect_static": 0.0,
+   "detect_step": 0.05,
+   "detect_step_then_ramp": 0.05
+  },
+  {
+   "layer": "2_signal_quality",
+   "auc": 0.8004464285714284,
+   "threshold_calibrated": 0.8100403038833764,
+   "false_alarm": 0.075,
+   "detect_all": 0.65,
+   "threshold_in_code": 0.5,
+   "false_alarm_code_thr": 0.9875,
+   "detect_all_code_thr": 0.9857142857142858,
+   "detect_consistent_takeover": 0.55,
+   "detect_dynamic_takeover": 0.65,
+   "detect_ramp": 0.85,
+   "detect_ramp_then_step": 0.7,
+   "detect_static": 0.7,
+   "detect_step": 0.55,
+   "detect_step_then_ramp": 0.55
+  },
+  {
+   "layer": "3_geometry",
+   "auc": 0.4421428571428571,
+   "threshold_calibrated": 1.615647928705516,
+   "false_alarm": 0.0125,
+   "detect_all": 0.12142857142857143,
+   "threshold_in_code": 0.6,
+   "false_alarm_code_thr": 1.0,
+   "detect_all_code_thr": 1.0,
+   "detect_consistent_takeover": 0.05,
+   "detect_dynamic_takeover": 0.0,
+   "detect_ramp": 0.25,
+   "detect_ramp_then_step": 0.0,
+   "detect_static": 0.2,
+   "detect_step": 0.25,
+   "detect_step_then_ramp": 0.1
+  },
+  {
+   "layer": "4_multi_constellation",
+   "auc": 0.41848214285714286,
+   "threshold_calibrated": 2983807.9139003856,
+   "false_alarm": 0.025,
+   "detect_all": 0.007142857142857143,
+   "threshold_in_code": 0.5,
+   "false_alarm_code_thr": 1.0,
+   "detect_all_code_thr": 1.0,
+   "detect_consistent_takeover": 0.0,
+   "detect_dynamic_takeover": 0.0,
+   "detect_ramp": 0.0,
+   "detect_ramp_then_step": 0.0,
+   "detect_static": 0.0,
+   "detect_step": 0.05,
+   "detect_step_then_ramp": 0.0
+  },
+  {
+   "layer": "5_cross_domain",
+   "auc": 0.40866071428571427,
+   "threshold_calibrated": 534339.0490592271,
+   "false_alarm": 0.0125,
+   "detect_all": 0.007142857142857143,
+   "threshold_in_code": 0.6,
+   "false_alarm_code_thr": 1.0,
+   "detect_all_code_thr": 1.0,
+   "detect_consistent_takeover": 0.0,
+   "detect_dynamic_takeover": 0.0,
+   "detect_ramp": 0.05,
+   "detect_ramp_then_step": 0.0,
+   "detect_static": 0.0,
+   "detect_step": 0.0,
+   "detect_step_then_ramp": 0.0
+  },
+  {
+   "layer": "6_physical",
+   "auc": 0.4583035714285714,
+   "threshold_calibrated": 9130.527166969747,
+   "false_alarm": 0.0375,
+   "detect_all": 0.007142857142857143,
+   "threshold_in_code": 0.5,
+   "false_alarm_code_thr": 1.0,
+   "detect_all_code_thr": 1.0,
+   "detect_consistent_takeover": 0.0,
+   "detect_dynamic_takeover": 0.0,
+   "detect_ramp": 0.0,
+   "detect_ramp_then_step": 0.0,
+   "detect_static": 0.05,
+   "detect_step": 0.0,
+   "detect_step_then_ramp": 0.0
+  },
+  {
+   "layer": "7_raw_signal",
+   "auc": 0.5188392857142856,
+   "threshold_calibrated": 199528.05893973063,
+   "false_alarm": 0.0,
+   "detect_all": 0.02857142857142857,
+   "threshold_in_code": 0.5,
+   "false_alarm_code_thr": 1.0,
+   "detect_all_code_thr": 1.0,
+   "detect_consistent_takeover": 0.0,
+   "detect_dynamic_takeover": 0.0,
+   "detect_ramp": 0.05,
+   "detect_ramp_then_step": 0.0,
+   "detect_static": 0.0,
+   "detect_step": 0.1,
+   "detect_step_then_ramp": 0.05
+  },
+  {
+   "layer": "8_temporal_anomaly",
+   "auc": 0.46821428571428575,
+   "threshold_calibrated": 0.09397343367961038,
+   "false_alarm": 0.025,
+   "detect_all": 0.007142857142857143,
+   "threshold_in_code": 0.7,
+   "false_alarm_code_thr": 0.0,
+   "detect_all_code_thr": 0.0,
+   "detect_consistent_takeover": 0.0,
+   "detect_dynamic_takeover": 0.0,
+   "detect_ramp": 0.0,
+   "detect_ramp_then_step": 0.0,
+   "detect_static": 0.0,
+   "detect_step": 0.05,
+   "detect_step_then_ramp": 0.0
+  },
+  {
+   "layer": "9_allan",
+   "auc": 0.7024107142857142,
+   "threshold_calibrated": 6.414447014341996e-05,
+   "false_alarm": 0.0,
+   "detect_all": 0.07142857142857142,
+   "threshold_in_code": 0.5,
+   "false_alarm_code_thr": 0.0,
+   "detect_all_code_thr": 0.0,
+   "detect_consistent_takeover": 0.0,
+   "detect_dynamic_takeover": 0.1,
+   "detect_ramp": 0.0,
+   "detect_ramp_then_step": 0.05,
+   "detect_static": 0.25,
+   "detect_step": 0.05,
+   "detect_step_then_ramp": 0.05
+  },
+  {
+   "layer": "10_learned",
+   "auc": 0.9200892857142857,
+   "threshold_calibrated": 0.8722624615845618,
+   "false_alarm": 0.025,
+   "detect_all": 0.6857142857142857,
+   "threshold_in_code": 0.45,
+   "false_alarm_code_thr": 1.0,
+   "detect_all_code_thr": 1.0,
+   "detect_consistent_takeover": 0.75,
+   "detect_dynamic_takeover": 0.65,
+   "detect_ramp": 0.7,
+   "detect_ramp_then_step": 0.55,
+   "detect_static": 0.75,
+   "detect_step": 0.7,
+   "detect_step_then_ramp": 0.7
+  }
+ ],
+ "model_candidates": [
+  {
+   "features": "package (with label leak)",
+   "model": "logistic_regression",
+   "false_alarm": 0.0,
+   "detect_all": 1.0,
+   "detect_consistent_takeover": 1.0,
+   "detect_dynamic_takeover": 1.0,
+   "detect_ramp": 1.0,
+   "detect_ramp_then_step": 1.0,
+   "detect_static": 1.0,
+   "detect_step": 1.0,
+   "detect_step_then_ramp": 1.0
+  },
+  {
+   "features": "package (with label leak)",
+   "model": "decision_tree",
+   "false_alarm": 0.0,
+   "detect_all": 1.0,
+   "detect_consistent_takeover": 1.0,
+   "detect_dynamic_takeover": 1.0,
+   "detect_ramp": 1.0,
+   "detect_ramp_then_step": 1.0,
+   "detect_static": 1.0,
+   "detect_step": 1.0,
+   "detect_step_then_ramp": 1.0
+  },
+  {
+   "features": "package (with label leak)",
+   "model": "random_forest",
+   "false_alarm": 0.0,
+   "detect_all": 1.0,
+   "detect_consistent_takeover": 1.0,
+   "detect_dynamic_takeover": 1.0,
+   "detect_ramp": 1.0,
+   "detect_ramp_then_step": 1.0,
+   "detect_static": 1.0,
+   "detect_step": 1.0,
+   "detect_step_then_ramp": 1.0
+  },
+  {
+   "features": "package (with label leak)",
+   "model": "extra_trees",
+   "false_alarm": 0.0,
+   "detect_all": 1.0,
+   "detect_consistent_takeover": 1.0,
+   "detect_dynamic_takeover": 1.0,
+   "detect_ramp": 1.0,
+   "detect_ramp_then_step": 1.0,
+   "detect_static": 1.0,
+   "detect_step": 1.0,
+   "detect_step_then_ramp": 1.0
+  },
+  {
+   "features": "package (with label leak)",
+   "model": "hist_gradient_boosting",
+   "false_alarm": 0.0,
+   "detect_all": 1.0,
+   "detect_consistent_takeover": 1.0,
+   "detect_dynamic_takeover": 1.0,
+   "detect_ramp": 1.0,
+   "detect_ramp_then_step": 1.0,
+   "detect_static": 1.0,
+   "detect_step": 1.0,
+   "detect_step_then_ramp": 1.0
+  },
+  {
+   "features": "package (with label leak)",
+   "model": "linear_svm",
+   "false_alarm": 0.0,
+   "detect_all": 1.0,
+   "detect_consistent_takeover": 1.0,
+   "detect_dynamic_takeover": 1.0,
+   "detect_ramp": 1.0,
+   "detect_ramp_then_step": 1.0,
+   "detect_static": 1.0,
+   "detect_step": 1.0,
+   "detect_step_then_ramp": 1.0
+  },
+  {
+   "features": "package (with label leak)",
+   "model": "rbf_svm",
+   "false_alarm": 0.0125,
+   "detect_all": 1.0,
+   "detect_consistent_takeover": 1.0,
+   "detect_dynamic_takeover": 1.0,
+   "detect_ramp": 1.0,
+   "detect_ramp_then_step": 1.0,
+   "detect_static": 1.0,
+   "detect_step": 1.0,
+   "detect_step_then_ramp": 1.0
+  },
+  {
+   "features": "package (with label leak)",
+   "model": "knn",
+   "false_alarm": 0.075,
+   "detect_all": 0.8857142857142857,
+   "detect_consistent_takeover": 0.95,
+   "detect_dynamic_takeover": 0.8,
+   "detect_ramp": 0.9,
+   "detect_ramp_then_step": 0.85,
+   "detect_static": 0.95,
+   "detect_step": 0.9,
+   "detect_step_then_ramp": 0.85
+  },
+  {
+   "features": "package (with label leak)",
+   "model": "isolation_forest",
+   "false_alarm": 0.0375,
+   "detect_all": 0.1357142857142857,
+   "detect_consistent_takeover": 0.05,
+   "detect_dynamic_takeover": 0.25,
+   "detect_ramp": 0.1,
+   "detect_ramp_then_step": 0.1,
+   "detect_static": 0.2,
+   "detect_step": 0.2,
+   "detect_step_then_ramp": 0.05
+  },
+  {
+   "features": "leak removed",
+   "model": "logistic_regression",
+   "false_alarm": 0.05,
+   "detect_all": 0.8642857142857143,
+   "detect_consistent_takeover": 0.85,
+   "detect_dynamic_takeover": 0.95,
+   "detect_ramp": 0.8,
+   "detect_ramp_then_step": 1.0,
+   "detect_static": 0.9,
+   "detect_step": 0.8,
+   "detect_step_then_ramp": 0.75
+  },
+  {
+   "features": "leak removed",
+   "model": "decision_tree",
+   "false_alarm": 0.025,
+   "detect_all": 0.9142857142857143,
+   "detect_consistent_takeover": 0.95,
+   "detect_dynamic_takeover": 0.9,
+   "detect_ramp": 0.95,
+   "detect_ramp_then_step": 0.8,
+   "detect_static": 0.95,
+   "detect_step": 0.95,
+   "detect_step_then_ramp": 0.9
+  },
+  {
+   "features": "leak removed",
+   "model": "random_forest",
+   "false_alarm": 0.05,
+   "detect_all": 0.95,
+   "detect_consistent_takeover": 1.0,
+   "detect_dynamic_takeover": 0.95,
+   "detect_ramp": 0.95,
+   "detect_ramp_then_step": 0.9,
+   "detect_static": 1.0,
+   "detect_step": 0.95,
+   "detect_step_then_ramp": 0.9
+  },
+  {
+   "features": "leak removed",
+   "model": "extra_trees",
+   "false_alarm": 0.0375,
+   "detect_all": 0.85,
+   "detect_consistent_takeover": 0.9,
+   "detect_dynamic_takeover": 0.9,
+   "detect_ramp": 0.85,
+   "detect_ramp_then_step": 0.85,
+   "detect_static": 0.85,
+   "detect_step": 0.8,
+   "detect_step_then_ramp": 0.8
+  },
+  {
+   "features": "leak removed",
+   "model": "hist_gradient_boosting",
+   "false_alarm": 0.0125,
+   "detect_all": 0.9785714285714285,
+   "detect_consistent_takeover": 1.0,
+   "detect_dynamic_takeover": 0.95,
+   "detect_ramp": 1.0,
+   "detect_ramp_then_step": 1.0,
+   "detect_static": 1.0,
+   "detect_step": 1.0,
+   "detect_step_then_ramp": 0.9
+  },
+  {
+   "features": "leak removed",
+   "model": "linear_svm",
+   "false_alarm": 0.125,
+   "detect_all": 0.8285714285714286,
+   "detect_consistent_takeover": 0.8,
+   "detect_dynamic_takeover": 0.95,
+   "detect_ramp": 0.75,
+   "detect_ramp_then_step": 0.8,
+   "detect_static": 0.9,
+   "detect_step": 0.85,
+   "detect_step_then_ramp": 0.75
+  },
+  {
+   "features": "leak removed",
+   "model": "rbf_svm",
+   "false_alarm": 0.0625,
+   "detect_all": 0.8428571428571429,
+   "detect_consistent_takeover": 0.95,
+   "detect_dynamic_takeover": 1.0,
+   "detect_ramp": 0.8,
+   "detect_ramp_then_step": 0.75,
+   "detect_static": 0.85,
+   "detect_step": 0.85,
+   "detect_step_then_ramp": 0.7
+  },
+  {
+   "features": "leak removed",
+   "model": "knn",
+   "false_alarm": 0.125,
+   "detect_all": 0.7785714285714286,
+   "detect_consistent_takeover": 0.9,
+   "detect_dynamic_takeover": 0.75,
+   "detect_ramp": 0.75,
+   "detect_ramp_then_step": 0.75,
+   "detect_static": 0.8,
+   "detect_step": 0.8,
+   "detect_step_then_ramp": 0.7
+  },
+  {
+   "features": "leak removed",
+   "model": "isolation_forest",
+   "false_alarm": 0.025,
+   "detect_all": 0.21428571428571427,
+   "detect_consistent_takeover": 0.15,
+   "detect_dynamic_takeover": 0.25,
+   "detect_ramp": 0.15,
+   "detect_ramp_then_step": 0.15,
+   "detect_static": 0.35,
+   "detect_step": 0.3,
+   "detect_step_then_ramp": 0.15
+  }
+ ],
+ "reference_single_feature_auc": [
+  {
+   "feature": "cn0_rise_max",
+   "auc_test": 0.9904464285714286
+  },
+  {
+   "feature": "cn0_std_drop_max",
+   "auc_test": 0.9495535714285714
+  },
+  {
+   "feature": "baro_resid_max",
+   "auc_test": 0.8494642857142857
+  },
+  {
+   "feature": "posvel_resid_max",
+   "auc_test": 0.7771428571428571
+  },
+  {
+   "feature": "imu_resid_max",
+   "auc_test": 0.7042857142857143
+  },
+  {
+   "feature": "clk_drift_step_max",
+   "auc_test": 0.6972321428571429
+  },
+  {
+   "feature": "lock_resets",
+   "auc_test": 0.6966071428571428
+  },
+  {
+   "feature": "clk_drift_change_max",
+   "auc_test": 0.6791071428571429
+  },
+  {
+   "feature": "clk_innov_max",
+   "auc_test": 0.6625892857142857
+  },
+  {
+   "feature": "hdop_change_max",
+   "auc_test": 0.6108928571428571
+  },
+  {
+   "feature": "sv_change_max",
+   "auc_test": 0.5012053571428572
+  }
+ ],
+ "reference_models": [
+  {
+   "features": "all reference features",
+   "model": "logistic_regression",
+   "auc": 0.9927678571428571,
+   "false_alarm": 0.0,
+   "false_alarm_ci95": [
+    0.0,
+    0.0458197362645751
+   ],
+   "detect_all": 0.9571428571428572,
+   "detect_all_ci95": [
+    0.9096550147056153,
+    0.9802127287010212
+   ],
+   "detect_consistent_takeover": 0.95,
+   "detect_dynamic_takeover": 1.0,
+   "detect_ramp": 0.9,
+   "detect_ramp_then_step": 0.95,
+   "detect_static": 1.0,
+   "detect_step": 1.0,
+   "detect_step_then_ramp": 0.9
+  },
+  {
+   "features": "all reference features",
+   "model": "random_forest",
+   "auc": 0.9951785714285715,
+   "false_alarm": 0.025,
+   "false_alarm_ci95": [
+    0.006882748898125228,
+    0.08664600055322111
+   ],
+   "detect_all": 0.9,
+   "detect_all_ci95": [
+    0.8391397767648922,
+    0.9394944987159147
+   ],
+   "detect_consistent_takeover": 0.9,
+   "detect_dynamic_takeover": 0.8,
+   "detect_ramp": 0.9,
+   "detect_ramp_then_step": 0.85,
+   "detect_static": 1.0,
+   "detect_step": 0.95,
+   "detect_step_then_ramp": 0.9
+  },
+  {
+   "features": "without C/N0",
+   "model": "logistic_regression",
+   "auc": 0.942857142857143,
+   "false_alarm": 0.025,
+   "false_alarm_ci95": [
+    0.006882748898125228,
+    0.08664600055322111
+   ],
+   "detect_all": 0.8428571428571429,
+   "detect_all_ci95": [
+    0.7735241511184688,
+    0.8938766564365083
+   ],
+   "detect_consistent_takeover": 0.75,
+   "detect_dynamic_takeover": 1.0,
+   "detect_ramp": 0.65,
+   "detect_ramp_then_step": 0.9,
+   "detect_static": 1.0,
+   "detect_step": 0.95,
+   "detect_step_then_ramp": 0.65
+  },
+  {
+   "features": "without C/N0",
+   "model": "random_forest",
+   "auc": 0.9708035714285714,
+   "false_alarm": 0.0875,
+   "false_alarm_ci95": [
+    0.04303145464743989,
+    0.1697698277708346
+   ],
+   "detect_all": 0.9,
+   "detect_all_ci95": [
+    0.8391397767648922,
+    0.9394944987159147
+   ],
+   "detect_consistent_takeover": 0.9,
+   "detect_dynamic_takeover": 0.9,
+   "detect_ramp": 0.65,
+   "detect_ramp_then_step": 1.0,
+   "detect_static": 1.0,
+   "detect_step": 1.0,
+   "detect_step_then_ramp": 0.85
+  }
+ ],
+ "reference_by_power": [
+  {
+   "power_db": "0-1",
+   "n": 20,
+   "detect": 0.4
+  },
+  {
+   "power_db": "1-3",
+   "n": 28,
+   "detect": 0.9285714285714286
+  },
+  {
+   "power_db": "3-6",
+   "n": 38,
+   "detect": 1.0
+  },
+  {
+   "power_db": "6-10",
+   "n": 54,
+   "detect": 1.0
+  }
+ ]
+}

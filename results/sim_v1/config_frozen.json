@@ -1,0 +1,137 @@
+{
+  "project_config": {
+    "dataset": {
+      "version": "sim-1.0",
+      "dataset": {
+        "n_clean": 400,
+        "n_per_attack": 170,
+        "duration_s": 60.0,
+        "sample_rate_hz": 10.0,
+        "seed": 2026
+      },
+      "detector": {
+        "baseline_s": 10.0,
+        "short_window_s": 1.0,
+        "mid_window_s": 2.0,
+        "long_window_s": 3.0,
+        "allan_window_s": 10.0,
+        "lock_hold_s": 5.0,
+        "threshold_percentile": 99.9,
+        "persistence_k": 3,
+        "train_fraction": 0.5,
+        "calibration_fraction": 0.2,
+        "oof_folds": 3,
+        "split_seed": 7,
+        "model_seed": 0,
+        "exclude_features": []
+      }
+    },
+    "detector": {
+      "baseline_s": 10.0,
+      "short_window_s": 1.0,
+      "mid_window_s": 2.0,
+      "long_window_s": 3.0,
+      "allan_window_s": 10.0,
+      "lock_hold_s": 5.0,
+      "threshold_percentile": 99.9,
+      "persistence_k": 3,
+      "fa_per_hour_target": 1.0,
+      "train_fraction": 0.5,
+      "calibration_fraction": 0.2,
+      "oof_folds": 3,
+      "split_seed": 7,
+      "model_seed": 0,
+      "exclude_features": []
+    },
+    "version": "sim-1.0"
+  },
+  "protocol_config": {
+    "baseline_s": 10.0,
+    "short_window_s": 1.0,
+    "mid_window_s": 2.0,
+    "long_window_s": 3.0,
+    "allan_window_s": 10.0,
+    "lock_hold_s": 5.0,
+    "threshold_percentile": 99.9,
+    "persistence_k": 3,
+    "fa_per_hour_target": 1.0,
+    "train_fraction": 0.5,
+    "calibration_fraction": 0.2,
+    "oof_folds": 3,
+    "split_seed": 7,
+    "model_seed": 0,
+    "exclude_features": []
+  },
+  "thresholds": {
+    "1_time_domain": 1.6811873436656106,
+    "2_signal_quality": 1.6761502081692126,
+    "3_geometry": 1.2735617934010577,
+    "4_multi_constellation": 2.00718653863166,
+    "5_cross_domain": 6.605836550862737,
+    "6_physical": 3.8196709692454576,
+    "7_raw_signal": 1.440524203158662,
+    "8_temporal_anomaly": 0.6757155055057337,
+    "9_allan": 1.4497234880204366,
+    "10_learned": 0.9233385935713443,
+    "vote": 3.783216008912864,
+    "vote_at_fa_target": 4.81137201989047,
+    "equal_weight_vote": 2.180581514532317
+  },
+  "vote_weights": {
+    "1_time_domain": 0.2642940093966484,
+    "2_signal_quality": 0.3912596851728579,
+    "3_geometry": -0.16852344281669435,
+    "4_multi_constellation": 0.6866373546295176,
+    "5_cross_domain": 0.8604149342251929,
+    "6_physical": 0.5499398959332514,
+    "7_raw_signal": 0.16933529940807115,
+    "8_temporal_anomaly": -0.08263284723401604,
+    "9_allan": 0.4870764214410612,
+    "10_learned": 3.9138209456112474
+  },
+  "counts": {
+    "train": {
+      "sessions": 795,
+      "by_type": {
+        "clean": 200,
+        "consistent_takeover": 85,
+        "dynamic_takeover": 85,
+        "ramp": 85,
+        "ramp_then_step": 85,
+        "static": 85,
+        "step": 85,
+        "step_then_ramp": 85
+      },
+      "clean_hours": 3.3277777777777655
+    },
+    "calibration": {
+      "sessions": 318,
+      "by_type": {
+        "clean": 80,
+        "consistent_takeover": 34,
+        "dynamic_takeover": 34,
+        "ramp": 34,
+        "ramp_then_step": 34,
+        "static": 34,
+        "step": 34,
+        "step_then_ramp": 34
+      },
+      "clean_hours": 1.3311111111111111
+    },
+    "test": {
+      "sessions": 477,
+      "by_type": {
+        "clean": 120,
+        "consistent_takeover": 51,
+        "dynamic_takeover": 51,
+        "ramp": 51,
+        "ramp_then_step": 51,
+        "static": 51,
+        "step": 51,
+        "step_then_ramp": 51
+      },
+      "clean_hours": 1.9966666666666626
+    }
+  },
+  "not_evaluated": {}
+}

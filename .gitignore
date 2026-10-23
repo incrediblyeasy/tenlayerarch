@@ -27,8 +27,6 @@ dist/
 Thumbs.db
 
 # Project outputs
-results/
-reports/
 backup/
 *.log
 
