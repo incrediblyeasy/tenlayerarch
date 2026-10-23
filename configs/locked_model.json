@@ -1,0 +1,12 @@
+{
+  "locked_on": "2026-10-23",
+  "rule": "MODEL_SELECTION.md section 6, steps 1-4, applied to reports_v2/model_summary.json before the test set was opened",
+  "model": "one_class_svm",
+  "settings": {"nu": 0.05, "gamma": "scale", "scaler": "StandardScaler"},
+  "features": "all 19 in features.py",
+  "alarm": {"persistence_k": 10, "threshold_percentile": 99.9, "calibration_fa_per_hour_target": 0.25},
+  "config": "configs/sim_v2.json",
+  "train_calibration_data": "datasets/sim_fa2 (train and calibration splits only)",
+  "test_data": "datasets/sim_test (new seed, never used for selection or tuning)",
+  "validation_result": {"dr": 0.96, "fa_per_hour": 0.90, "t8_fa_per_hour": "0.94 +/- 0.12"}
+}
