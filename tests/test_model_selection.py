@@ -13,14 +13,15 @@ def test_candidates_are_measured_not_derived(small_dataset, cfg):
         for key in ("dr_validation", "far_per_hour", "dr_no_strength", "ms_per_decision"):
             assert np.isfinite(r[key]), key
         assert r["dr_unseen"] != 0.9 * r["dr_validation"]
-        assert r["eligible"] == (r["far_per_hour"] <= 1.0 and r["dr_no_strength"] > 0)
+        assert r["eligible"] == (r["far_per_hour"] <= 1.0 and r["dr_no_strength"] > 0 and r["dr_validation"] >= 0.5)
 
 
 def test_select_model_follows_the_rule():
+    ok = {"far_per_hour": 0.5, "dr_no_strength": 0.7}
     rows = [
-        {"model_name": "a", "eligible": False, "dr_validation": 0.99},
-        {"model_name": "b", "eligible": True, "dr_validation": 0.8, "dr_weak": 0.5, "dr_unseen": 0.5, "delay_median_s": 2.0, "ms_per_decision": 1.0},
-        {"model_name": "c", "eligible": True, "dr_validation": 0.82, "dr_weak": 0.52, "dr_unseen": 0.5, "delay_median_s": 1.0, "ms_per_decision": 1.0},
+        {"model_name": "a", "far_per_hour": 3.0, "dr_no_strength": 0.7, "dr_validation": 0.99},  # too many false alarms
+        {"model_name": "b", **ok, "dr_validation": 0.8, "dr_weak": 0.5, "dr_unseen": 0.5, "delay_median_s": 2.0, "ms_per_decision": 1.0},
+        {"model_name": "c", **ok, "dr_validation": 0.82, "dr_weak": 0.52, "dr_unseen": 0.5, "delay_median_s": 1.0, "ms_per_decision": 1.0},
     ]
     assert select_model(rows) == "c"
     assert select_model([rows[0]]) is None
