@@ -1,5 +1,7 @@
 # Status (update after each step)
 
+Gate result (2026-10-26, LightGBM, configs/sim_v3.json, fresh sim_test5/sim_weak5): 5 of 7 measurable targets met; missed: weak consistent takeover 0.687 (target 0.85) and weak p90 delay 13.3 s (target 5 s); decision time pending Jetson. See reports_v3/DECISION_NOTE.md (gate section) and configs/gate_targets.json.
+
 Adopted model: LightGBM (configs/adopted_model.json), chosen after pre-registered tests; the selection rule picked the one-class SVM (configs/locked_model_v3.json). Both are reported.
 
 ## Done

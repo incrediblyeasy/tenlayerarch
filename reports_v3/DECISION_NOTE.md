@@ -120,3 +120,30 @@ The 1/h false-alarm limit is met (whole range under 0.53). The false-alarm rate 
 | Ramp, step, static, ramp-then-step, step-then-ramp | 0.99–1.00 | 0.97–0.99 | 0.90–0.97 |
 
 **Reading.** Without an IMU the detector still catches position steps and ramps, but consistent and dynamic takeovers (velocity kept consistent with the spoofed position) drop to about 0.67 and almost vanish at weak power (0.08–0.13). Those attacks are visible mainly through the IMU. A first recording that includes the flight controller's IMU and barometer is therefore much more useful than a GPS-module-only recording.
+
+## Gate result (REMAINING_WORK.md section 1), read once on `sim_test5` and `sim_weak5`
+
+Targets committed in `configs/gate_targets.json` (`8b9dc33`) before any of this data existed; test plan in `configs/preregistered_test5.json` (`46cab6c`, committed before `sim_test5` was generated). Model: LightGBM with `configs/sim_v3.json` (persistence 5, calibration margin 0.5 FA/h). Test: 6000 clean sessions (83 h) and 1050 attacked sessions; weak set: 150 sessions per attack type at 0–1 dB (1050 attacked).
+
+| Target | Result | Verdict |
+|---|---|---|
+| Detection, all attacks ≥ 0.95 | 0.994 (0.988–0.997) | Met |
+| False alarms per hour, upper 95% bound ≤ 1.0 | 0.72/h, 60 events in 83.3 h, range 0.55–0.93 | Met |
+| Consistent takeover, full power ≥ 0.85 | 0.96 (0.92–0.98) | Met |
+| Weak spoofers (0–1 dB), all attacks ≥ 0.90 | 0.950 (0.936–0.962) | Met |
+| Weak spoofers, consistent takeover ≥ 0.85 | **0.687 (0.61–0.76)** | **Missed** |
+| 90th-percentile delay, full power ≤ 5 s | 3.2 s (median 0.94 s) | Met |
+| 90th-percentile delay, weak spoofers ≤ 5 s | **13.3 s** | **Missed** |
+| Decision time ≤ 10 ms on target hardware | 0.012 ms per decision on the development PC | Not measured on the Jetson |
+
+Five of the seven measurable targets are met; two are missed; one is pending hardware. The two missed targets are reported as missed and the targets are not redefined.
+
+### Why the two weak-power targets are missed
+
+- **Delay is set by the attack, not by the alarm rule.** On the weak validation set, steps and static attacks are caught in a median of 0.7–1.9 s, but ramps take a median of 9 s and ramp-then-step 13.6 s: the detector fires once the position offset has grown beyond the noise, which takes time for a slow ramp. Shorter persistence (5, 3), a longer feature window (10 s) and training on weak-power attacks did not shorten the weak delay; persistence 3 and weak-power training made detection worse.
+- **Consistent takeover at weak power** has no signal-strength cue, and the IMU cue is limited by IMU noise. An IMU velocity-drift feature (integrating the IMU since the end of warm-up) was tried and rejected: its value on clean sessions late in the run (median 2.4 m/s) was as large as on attacked ones (3.3 m/s), because IMU noise random-walks when integrated, and adding it lowered weak consistent takeover from 0.66 to 0.24 on validation.
+- Both were tuned only on `sim_fa2` validation and `sim_weakval`. A reasonable reading is that, in this simulator, 0.85 for weak consistent takeover and 5 s for weak ramps are not reachable without raising false alarms. Whether to relax these targets for a later round is the owner's decision and would be made before the next test set, with the reason recorded.
+
+### One more thing to note
+
+False alarms on the test set (0.72/h) are higher than on the validation set for the same settings (0.12/h, 2 events in 17 h). The settings were chosen on validation, and the same pattern held in the earlier rounds (validation 0.06/h, test 0.17–0.37/h). Test figures are the honest ones; validation false-alarm figures underestimate. The upper bound on the test set (0.93/h) is under the limit but close to it.

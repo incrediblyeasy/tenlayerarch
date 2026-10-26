@@ -2,6 +2,10 @@
 
 Status date: 2026-10-26. Based on the archive `e1a8a995-ten_layer_archi.zip` (commit `b4d8be9`). All results are simulation or public data unless stated.
 
+## Update, 2026-10-26 (after the gate test)
+
+Gate read once on fresh `sim_test5` / `sim_weak5` with LightGBM (`configs/sim_v3.json`): **five of seven measurable targets met; two missed.** Missed: weak-spoofer consistent takeover 0.687 (target 0.85) and weak-spoofer 90th-percentile delay 13.3 s (target 5 s). Decision time still needs the Jetson. Full table and analysis: `reports_v3/DECISION_NOTE.md`. Section 2 below describes the state before this test. Decision needed from the owner: accept the two misses as documented simulator limits, or revise those two targets (before the next test set, with the reason recorded).
+
 ## 1. What "ready for hardware" means
 
 A simulation can never be perfect. Its results only show that the detector behaves as designed under the simulator's assumptions. So the simulation phase should end when the detector meets a **gate of pre-set targets**, measured on a fresh test set, and the known gaps are written down. Hardware then tests the assumptions.

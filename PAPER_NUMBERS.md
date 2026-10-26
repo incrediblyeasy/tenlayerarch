@@ -2,6 +2,8 @@
 
 **Headline model: LightGBM** (adopted 2026-10-26, `configs/adopted_model.json`). Not chosen by the selection rule (which picked the one-class SVM); chosen after the pre-registered tests, and confirmed on a second fresh set. Unbiased estimate (sim_test4): detection 0.991 (0.984-0.995), 0.37 false alarms/h (0.25-0.53), median delay 1.48 s, p90 4.1 s, consistent takeover 0.94, weak spoofers 0.948 (consistent takeover 0.65). Report the one-class SVM numbers below as the rule-selected result.
 
+**Latest (gate test, LightGBM, persistence 5, margin 0.5; `sim_test5`/`sim_weak5`, fresh):** detection 0.994 (0.988-0.997); false alarms 0.72/h (range 0.55-0.93); median / p90 delay 0.94 / 3.2 s; consistent takeover 0.96; weak spoofers 0.950 (consistent takeover **0.687**, p90 delay **13.3 s**). Five of seven measurable gate targets met; the weak consistent-takeover target (0.85) and weak p90-delay target (5 s) are missed and reported as missed. Use these in place of the sim_test4 figures below for the final model settings.
+
 Replace the v2 figures (19 features, 0.960 detection, 0.77 FA/h, twelve eligible models) with these.
 
 ## Setup
