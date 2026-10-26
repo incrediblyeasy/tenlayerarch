@@ -1,0 +1,14 @@
+{
+  "locked_on": "2026-10-26",
+  "rule": "MODEL_SELECTION.md section 6 (with the 2026-10-23 minimum-detection amendment), applied to reports_v3/model_summary.json before the test set was opened",
+  "model": "one_class_svm",
+  "settings": {"nu": 0.05, "gamma": "scale", "scaler": "StandardScaler"},
+  "features": "all 20 in features.py (adds imu_resid_long_mps2 to the 19 of the first lock)",
+  "alarm": {"persistence_k": 10, "threshold_percentile": 99.9, "calibration_fa_per_hour_target": 0.25},
+  "config": "configs/sim_v2.json",
+  "train_calibration_data": "datasets/sim_fa2 (train and calibration splits only)",
+  "test_data": "datasets/sim_test2 (new seed 9999, 6000 clean + 1050 attacked sessions, never used for selection or tuning)",
+  "weak_power_data": "datasets/sim_weak (spoofer power 0-1 dB, 420 attacked + 100 clean)",
+  "validation_result": {"dr": 0.968, "fa_per_hour": 0.78, "t8_fa_per_hour": "0.91 +/- 0.11", "delay_median_s": 0.99, "delay_p90_s": 8.3},
+  "note": "Median-delay tie-break decided by 0.08 s (one sample interval) over MLP; XGBoost/LightGBM detect more (0.992) with fewer false alarms (0.06/h) on validation. Not tested on the test set."
+}
