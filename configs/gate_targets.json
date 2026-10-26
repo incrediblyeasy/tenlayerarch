@@ -1,0 +1,21 @@
+{
+  "committed_on": "2026-10-26, before sim_test5 or any weak-power validation set is generated",
+  "status": "Proposed in REMAINING_WORK.md and adopted on the project owner's instruction ('Do this now', 2026-10-26). The owner may revise a target, but only before sim_test5 is generated; any revision must be committed with the reason.",
+  "model": "lightgbm (configs/adopted_model.json)",
+  "evaluated_on": "a fresh test set never used for tuning or model choice (sim_test5), full power and weak (0-1 dB)",
+  "targets": {
+    "detection_all": {"min": 0.95},
+    "false_alarms_per_hour_upper_95": {"max": 1.0},
+    "detection_consistent_takeover_full_power": {"min": 0.85},
+    "detection_weak_all": {"min": 0.90},
+    "detection_weak_consistent_takeover": {"min": 0.85},
+    "delay_p90_full_power_s": {"max": 5.0},
+    "delay_p90_weak_s": {"max": 5.0},
+    "decision_time_ms_on_target_hardware": {"max": 10.0, "note": "not measurable until the Jetson is set up"}
+  },
+  "rules": [
+    "Tuning (features, persistence, training data) uses sim_fa2 validation and a separate weak-power validation set only.",
+    "The gate result is read once from sim_test5.",
+    "A target that is missed is reported as missed, not redefined."
+  ]
+}
