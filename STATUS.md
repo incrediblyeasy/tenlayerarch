@@ -17,9 +17,12 @@
 - Code fixes done: pandas 3 copy-on-write (features.py, test), eligibility minimum detection 0.5 (amendment in MODEL_SELECTION.md), XGBoost/LightGBM rerun reproduces.
 - Reproduce: generate sim_fa2 (--n-clean 4000 --n-per-attack 60 --seed 4444), sim_test2 (--n-clean 6000 --n-per-attack 150 --seed 9999), sim_weak (--n-clean 100 --n-per-attack 60 --seed 7777 --power-range 0 1) with configs/sim_v2.json; `compare ... --out reports_v3 --workers 6`; `python -m ten_layer_detector.final_test` (docstring).
 
+## Pre-registered three-model test (done)
+- sim_test3 (fresh): one-class SVM 0.969 / 0.48 FA/h / consistent takeover 0.79; XGBoost 0.984 / 0.12 / 0.89; LightGBM 0.983 / 0.17 / 0.89. Boosted models better except median delay (1.4 vs 1.0 s). Locked model unchanged (one-class SVM); adopting a boosted one needs one more fresh test set. See reports_v3/DECISION_NOTE.md, PROVENANCE.md, PAPER_NUMBERS.md, DATASETS.md.
+
 ## To do next
 - Weak consistent takeovers (0.53) and late detections (p90 9 s) are the main detector gaps.
-- Decide: one-class SVM (rule) vs XGBoost/LightGBM (better on validation); a boosted model needs a fresh test set.
+- Decide: keep the one-class SVM (rule) or adopt LightGBM/XGBoost (better on the pre-registered test); adopting needs one more fresh test set.
 - Repeat the final check on Nayfeh public data and bench data (needs recordings).
 - Rule gap: eligibility has no minimum detection rate (decision tree and Isolation Forest pass with ~0 detection).
 - Layers 3 and 7, attack naming (0.79), vote vs layer 10: see earlier notes.

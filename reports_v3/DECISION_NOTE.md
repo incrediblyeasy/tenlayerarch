@@ -65,3 +65,24 @@ The earlier weak-power figure rested on 8 sessions; this one uses 420. (The fals
 ## Changes behind the improvement since the first comparison
 
 Larger clean set; persistence 10; calibration margin 0.25/h; features for signed C/N0, satellite drop, HDOP rise, a dead-reckoning residual that ignores short multipath jumps, and a long-window IMU residual; minimum detection in the eligibility rule; `.to_numpy(copy=True)` in `features.py` for pandas 3.0.
+
+## Pre-registered three-model comparison on a fresh test set
+
+Declared in `configs/preregistered_test3.json` and committed before `sim_test3` (seed 6666) was generated or any model scored on it. Same settings, features and training data for all three; nothing tuned afterwards. Test: 6000 clean (83.3 h) and 1050 attacked sessions. Weak: `sim_weak3` (seed 5555, 420 attacked sessions at 0–1 dB).
+
+| | One-class SVM (locked) | XGBoost | LightGBM |
+|---|---|---|---|
+| Detection | 0.969 (0.956–0.978) | **0.984** (0.974–0.990) | 0.983 (0.973–0.989) |
+| False alarms per hour | 0.48 (0.34–0.65), 40 events | **0.12** (0.06–0.22), 10 events | 0.17 (0.09–0.28), 14 events |
+| Median delay, s | **0.99** | 1.46 | 1.42 |
+| 90th-percentile delay, s | 6.3 | 5.8 | **4.3** |
+| Consistent takeover | 0.79 | **0.89** | **0.89** |
+| Weak spoofers (0–1 dB), all attacks | 0.938 (0.911–0.957) | 0.945 (0.919–0.963) | **0.957** (0.933–0.973) |
+| Weak spoofers, consistent takeover | 0.63 | 0.68 | **0.72** |
+| Time per decision, ms | 0.026 | 0.001 | 0.001 |
+
+All three meet the 1/h false-alarm limit on `sim_test3`. (Weak-set false-alarm figures come from 1 clean hour and are not meaningful.)
+
+**Reading.** Both boosted models detect more, raise 3–4 times fewer false alarms (the ranges do not overlap with the one-class SVM's), catch more consistent takeovers, and have a better 90th-percentile delay. The one-class SVM is faster to the first alarm by about 0.4 s in the median. The detection ranges for the three models overlap slightly (0.974–0.978); the false-alarm and consistent-takeover differences are the clearer ones. This supports the earlier validation result that the rule's tie-break (0.08 s) pointed at the less accurate model.
+
+**What this does and does not change.** The locked model stays the one-class SVM, as the rule selected, and its own test result (`sim_test2`: 0.970 detection, 0.58 FA/h) stands. Adopting a boosted model would be a decision made with the help of this comparison, so it would need one more fresh test set (`sim_test3` has now been used to compare them). The v3 consistent-takeover improvement (0.73 to 0.81 for the one-class SVM) is still subject to the caveat that the feature was designed after the v2 test result (see `PROVENANCE.md`).
