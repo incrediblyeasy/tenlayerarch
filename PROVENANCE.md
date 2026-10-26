@@ -14,6 +14,7 @@ All numbers are from simulated data. This file records, in order, which decision
 | 6 | **A long-window IMU feature was added, aimed at the weak consistent-takeover result.** It was designed after the v2 test result showed that weakness, and tried on validation sessions. | The v2 test result. |
 | 7 | Round v3: 13-model comparison with 20 features on `sim_fa2` (`reports_v3/`), one-class SVM locked (`configs/locked_model_v3.json`), tested once on a **new** test set `sim_test2` (seed 9999): detection 0.970, 0.58 FA/h (range 0.42-0.76). Weak-power set `sim_weak` (seed 7777). | Validation results, and the v2 test result (step 6). |
 | 8 | Pre-registered three-model test on yet another new test set `sim_test3` (seed 6666), see section 4. `configs/preregistered_test3.json` was committed before that data was generated or any model scored on it. | v3 results. |
+| 9 | Pre-registered LightGBM confirmation on a fourth fresh set `sim_test4` (seed 3131), `configs/preregistered_test4.json` committed first (`09b52aa`, 2026-10-26 14:39:32). | The test3 result. |
 
 What this means for a reader:
 
@@ -51,7 +52,8 @@ Each lock file was committed before the test result was written. Commit times an
 |---|---|---|
 | `76c7aab` (v2) | 2026-10-23 15:46:09 | `results/final_test.json` 15:48:39 |
 | `e9a6949` (v3) | 2026-10-26 11:30:35 | `results/final_test_v3.json` 11:34:08 |
-| `5670701` (pre-registration) | 2026-10-26 12:27:58 | `results/prereg_*.json` (after this commit) |
+| `5670701` (pre-registration, test3) | 2026-10-26 12:27:58 | `results/prereg_*.json` (written after this commit) |
+| `09b52aa` (pre-registration, test4) | 2026-10-26 14:39:32 | `results/prereg4_*.json` (written after this commit) |
 
 `git_history.bundle` in the archive carries the full commit chain (`git log --format='%h %aI %s'`). These are timestamps from a local machine; they are consistent but not independently attested. Pushing the branch to a remote, or quoting the commit hashes in the paper, would give an external record.
 

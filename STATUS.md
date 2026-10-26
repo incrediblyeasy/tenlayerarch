@@ -20,6 +20,8 @@
 ## Pre-registered three-model test (done)
 - sim_test3 (fresh): one-class SVM 0.969 / 0.48 FA/h / consistent takeover 0.79; XGBoost 0.984 / 0.12 / 0.89; LightGBM 0.983 / 0.17 / 0.89. Boosted models better except median delay (1.4 vs 1.0 s). Locked model unchanged (one-class SVM); adopting a boosted one needs one more fresh test set. See reports_v3/DECISION_NOTE.md, PROVENANCE.md, PAPER_NUMBERS.md, DATASETS.md.
 
+- LightGBM confirmation on sim_test4 (fresh, pre-registered): detection 0.991, 0.37 FA/h (0.25-0.53), p90 4.1 s, consistent takeover 0.94, weak 0.948. Supports switching to LightGBM; locked file still says one-class SVM until the owner decides.
+
 ## To do next
 - Weak consistent takeovers (0.53) and late detections (p90 9 s) are the main detector gaps.
 - Decide: keep the one-class SVM (rule) or adopt LightGBM/XGBoost (better on the pre-registered test); adopting needs one more fresh test set.

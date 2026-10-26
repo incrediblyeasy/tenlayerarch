@@ -19,10 +19,13 @@ Replace the v2 figures (19 features, 0.960 detection, 0.77 FA/h, twelve eligible
 | Consistent takeover | 0.79 | 0.89 | 0.89 |
 | Weak (0-1 dB) detection | 0.938 | 0.945 | 0.957 |
 
+## LightGBM confirmation, fresh test `sim_test4` (pre-registered, LightGBM only)
+Detection 0.991 (0.984-0.995); FA 0.37/h (0.25-0.53); median / p90 delay 1.48 / 4.1 s; consistent takeover 0.94; weak (0-1 dB) detection 0.948, weak consistent takeover 0.65. (Its sim_test3 false-alarm rate was 0.17/h; quote both, about 0.2-0.4/h.)
+
 ## Three statements the paper must make
 1. **Feature designed after seeing a test result.** The consistent-takeover weakness appeared in the v2 test (0.733). The long-window IMU feature was designed in response and tried on validation sessions; the v3 test set is a new dataset, but the improvement (to about 0.8) is not a blind prediction.
 2. **The selection rule was amended after the first comparison.** A minimum detection of 0.5 was added after a decision tree and an Isolation Forest passed with almost no detection. Applied to both later comparisons, the original and amended rules select the same model.
-3. **The model choice was a judgement on a tiny difference.** The one-class SVM won the delay tie-break by 0.08 s (one sample interval). On a fresh pre-registered test the boosted models were better on detection, false alarms, consistent takeover and 90th-percentile delay, and slower by about 0.4 s in median delay. Any claim about "the selected model" should say it was selected by the rule, and that boosted models performed better when tested afterwards.
+3. **The model choice was a judgement on a tiny difference.** The one-class SVM won the delay tie-break by 0.08 s (one sample interval). On a fresh pre-registered test the boosted models were better on detection, false alarms, consistent takeover and 90th-percentile delay, and slower by about 0.4 s in median delay. Any claim about "the selected model" should say it was selected by the rule, and that boosted models performed better when tested afterwards (and LightGBM again on a second fresh set).
 
 ## Also state
 - All results are from simulation; clock, sensor and spoofer parameters are assumptions; no bench or flight data yet.

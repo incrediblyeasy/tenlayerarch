@@ -86,3 +86,20 @@ All three meet the 1/h false-alarm limit on `sim_test3`. (Weak-set false-alarm f
 **Reading.** Both boosted models detect more, raise 3–4 times fewer false alarms (the ranges do not overlap with the one-class SVM's), catch more consistent takeovers, and have a better 90th-percentile delay. The one-class SVM is faster to the first alarm by about 0.4 s in the median. The detection ranges for the three models overlap slightly (0.974–0.978); the false-alarm and consistent-takeover differences are the clearer ones. This supports the earlier validation result that the rule's tie-break (0.08 s) pointed at the less accurate model.
 
 **What this does and does not change.** The locked model stays the one-class SVM, as the rule selected, and its own test result (`sim_test2`: 0.970 detection, 0.58 FA/h) stands. Adopting a boosted model would be a decision made with the help of this comparison, so it would need one more fresh test set (`sim_test3` has now been used to compare them). The v3 consistent-takeover improvement (0.73 to 0.81 for the one-class SVM) is still subject to the caveat that the feature was designed after the v2 test result (see `PROVENANCE.md`).
+
+## LightGBM confirmation on a second fresh test set
+
+Declared in `configs/preregistered_test4.json` and committed before `sim_test4` (seed 3131) and `sim_weak4` (seed 2121) were generated. LightGBM only, same settings. LightGBM was chosen from `sim_test3` and validation, so this set is what lets a choice of LightGBM rest on data not used to make it.
+
+| | LightGBM, sim_test4 | LightGBM, sim_test3 | One-class SVM, sim_test2 (locked) |
+|---|---|---|---|
+| Detection | **0.991** (0.984–0.995) | 0.983 | 0.970 |
+| False alarms per hour | 0.37 (0.25–0.53), 31 events in 83.3 h | 0.17 (0.09–0.28) | 0.58 (0.42–0.76) |
+| Median / 90th-percentile delay, s | 1.48 / 4.1 | 1.42 / 4.3 | 1.0 / 9.1 |
+| Consistent takeover | 0.94 | 0.89 | 0.807 |
+| Weak spoofers (0–1 dB), all attacks | 0.948 (0.922–0.965) | 0.957 | 0.919 |
+| Weak spoofers, consistent takeover | 0.65 | 0.72 | 0.53 |
+
+The 1/h false-alarm limit is met (whole range under 0.53). The false-alarm rate differs between the two fresh sets (0.17 vs 0.37) by more than their ranges suggest, so these two sets are best read together: LightGBM's rate on fresh simulated data is about 0.2–0.4 per hour, below the one-class SVM's 0.5–0.6 on its test sets. Weak consistent takeover remains the weak point for every model (0.53–0.72).
+
+**What this means.** The result from `sim_test3` repeats on a set not used to choose LightGBM: it detects more, raises fewer false alarms, catches more consistent takeovers and has a better 90th-percentile delay than the rule-selected one-class SVM; it is slower to the first alarm by about 0.5 s in the median. The locked model file (`configs/locked_model_v3.json`) still names the one-class SVM, as the rule selected. Switching to LightGBM is a decision for the project owner, and this note and `sim_test3` are the evidence for it. If it is made, it should be reported as a choice made after the pre-registered tests, with this confirmation as support.
