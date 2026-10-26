@@ -16,6 +16,7 @@ NAV = 0x01
 NAV_PVT = 0x07
 NAV_CLOCK = 0x22
 NAV_SAT = 0x35
+NAV_DOP = 0x04
 RXM = 0x02
 RXM_RAWX = 0x15
 
@@ -124,6 +125,15 @@ class UBXParser:
             sats.append({"gnss_id": gnss, "sv_id": sv, "cn0_dbhz": cno, "elev_deg": elev, "azim_deg": azim,
                          "pr_res_m": pr_res * 0.1, "used": bool(flags & 0x08), "flags": flags})
         return {"message": "NAV-SAT", "itow_ms": itow, "version": version, "num_svs": num_svs, "sats": sats}
+
+
+def parse_nav_dop(message: UBXMessage) -> dict[str, Any]:
+    """NAV-DOP (0x01 0x04): geometric, position, time, vertical, horizontal, northing, easting DOP."""
+    if (message.msg_class, message.msg_id) != (NAV, NAV_DOP) or len(message.payload) < 18:
+        raise ValueError(f"not a NAV-DOP payload: {message.name}")
+    itow, g, p, t, v, h, n, e = struct.unpack_from("<IHHHHHHH", message.payload)
+    return {"message": "NAV-DOP", "itow_ms": itow, "gdop": g * 0.01, "pdop": p * 0.01, "tdop": t * 0.01,
+            "vdop": v * 0.01, "hdop": h * 0.01, "ndop": n * 0.01, "edop": e * 0.01}
 
 
 def parse_rxm_rawx(message: UBXMessage) -> dict[str, Any]:

@@ -32,12 +32,12 @@ Generating `sim_v1` takes about 1 minute; `evaluate` about 4 minutes (two runs: 
 | Protocol | `evaluate.py`, `metrics.py`, `splits.py` | Train / calibration / test split by session (50/20/30, stratified by type). Reports detection rate per attack type with 95 % Wilson intervals, false alarms per hour, median and 90th-percentile delay, ablation, the run without C/N0, detection by spoofer power, naming confusion matrix. |
 | Model comparison | `model_selection.py`, `dashboard.py` | Tests T1–T7 of MODEL_SELECTION.md, all measured, on a separate development dataset. |
 | Config | `config.py`, `configs/sim_v1.json` | Every setting in one versioned file; `results/*/config_frozen.json` records thresholds and vote weights. |
-| Hardware I/O | `io/ubx.py`, `io/dataflash.py`, `io/rtl_iq.py`, `time_base.py`, `bench_latency.py` | UBX framing with checksum check; NAV-PVT, NAV-CLOCK, NAV-SAT and RXM-RAWX decoders; incremental `UBXStream` and `read_serial` for live use; DataFlash `.bin` reader (Cube Orange); RTL-SDR 8-bit IQ read/write; time-offset fit and 5 ms acceptance test; full-pipeline latency. Tested on synthetic frames only. |
+| Hardware I/O | `io/ubx.py`, `io/dataflash.py`, `io/rtl_iq.py`, `time_base.py`, `bench_latency.py` | UBX framing with checksum check; NAV-PVT, NAV-CLOCK, NAV-SAT and RXM-RAWX decoders; incremental `UBXStream` and `read_serial` for live use; DataFlash `.bin` reader (Cube Orange); `io/assemble.py` joins decoded UBX messages into one detector row per epoch and merges IMU, attitude and barometer from a DataFlash log; RTL-SDR 8-bit IQ read/write; time-offset fit and 5 ms acceptance test; full-pipeline latency. Tested on synthetic frames only. |
 
 ## Not done yet (outside the simulation phase or not possible on simulated data)
 
 - **DataFlash** (`io/dataflash.py`) is written to the ArduPilot log format and tested on a synthetic log only; `io/mavlink_log.py` still reads text/CSV.
-- **RXM-RAWX, `UBXStream`, `read_serial`** are tested on synthetic bytes only; no live module has been connected. There is no assembler yet that turns the decoded messages into detector rows (needs NAV-DOP for HDOP and the IMU stream aligned in time).
+- **RXM-RAWX, `UBXStream`, `read_serial`** are tested on synthetic bytes only; no live module has been connected. `io/assemble.py` builds detector rows from them (round-trip tested on synthetic frames), but a real recording will lack some simulator columns (e.g. the Galileo-only solution), so a model must be retrained on the available columns first.
 - **Nayfeh loader** (`io/nayfeh_loader.py`) is unchanged: first sheet only, no 1e-7 scale conversion.
 - **UBX decoders** are written to the u-blox interface description but not yet checked against a recorded log from our module, whose model is still unconfirmed.
 - **Layer 3** cannot recompute DOP: the schema has no per-satellite azimuth/elevation (needs NAV-SAT on hardware).

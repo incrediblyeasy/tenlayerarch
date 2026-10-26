@@ -61,4 +61,4 @@ They are large (233 MB for `sim_fa2` alone) and are rebuilt deterministically fr
 
 ## 7. Hardware code
 
-The RXM-RAWX decoder, `UBXStream`, `read_serial` and the DataFlash `.bin` reader have been tested on synthetic bytes only. There is no assembler that turns decoded messages into detector rows, so real receiver or flight-controller data cannot yet be fed into the detector.
+The RXM-RAWX decoder, `UBXStream`, `read_serial` and the DataFlash `.bin` reader have been tested on synthetic bytes only. `io/assemble.py` turns decoded messages into detector rows (round-trip tested on synthetic frames only). A real recording will lack some simulator columns, so the model must be retrained on the available columns before real data can be scored.

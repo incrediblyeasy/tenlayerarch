@@ -24,7 +24,6 @@
 - Weak consistent takeovers (0.53) and late detections (p90 9 s) are the main detector gaps.
 - Decide: keep the one-class SVM (rule) or adopt LightGBM/XGBoost (better on the pre-registered test); adopting needs one more fresh test set.
 - Repeat the final check on Nayfeh public data and bench data (needs recordings).
-- Rule gap: eligibility has no minimum detection rate (decision tree and Isolation Forest pass with ~0 detection).
 - Layers 3 and 7, attack naming (0.79), vote vs layer 10: see earlier notes.
 
-- Hardware readers added (RXM-RAWX, UBXStream/read_serial, DataFlash .bin), synthetic tests only; no row assembler yet.
+- Hardware readers (RXM-RAWX, NAV-DOP, UBXStream/read_serial, DataFlash .bin) and the row assembler (io/assemble.py: UBX epochs -> detector rows; DataFlash IMU/ATT/BARO merge by clock offset) exist; round-trip tested on synthetic frames only. A real recording will have fewer columns than the simulator (no Galileo-only solution, maybe no IMU), so the model must be retrained on the simulated data restricted to those columns before it can score real data.
