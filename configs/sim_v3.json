@@ -1,0 +1,27 @@
+{
+  "version": "sim-3.0",
+  "dataset": {
+    "n_clean": 4000,
+    "n_per_attack": 60,
+    "duration_s": 60.0,
+    "sample_rate_hz": 10.0,
+    "seed": 4444
+  },
+  "detector": {
+    "baseline_s": 10.0,
+    "short_window_s": 1.0,
+    "mid_window_s": 2.0,
+    "long_window_s": 3.0,
+    "allan_window_s": 10.0,
+    "lock_hold_s": 5.0,
+    "threshold_percentile": 99.9,
+    "persistence_k": 5,
+    "fa_per_hour_target": 0.5,
+    "train_fraction": 0.5,
+    "calibration_fraction": 0.2,
+    "oof_folds": 3,
+    "split_seed": 7,
+    "model_seed": 0,
+    "exclude_features": []
+  }
+}

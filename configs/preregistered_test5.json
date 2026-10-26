@@ -1,0 +1,10 @@
+{
+  "declared_on": "2026-10-26, committed before sim_test5 / sim_weak5 were generated or scored",
+  "purpose": "Read the gate (configs/gate_targets.json) once, for LightGBM with the sim_v3 settings",
+  "model": "lightgbm",
+  "settings": "configs/sim_v3.json (persistence 5, calibration margin 0.5 FA/h), 20 features, fitted and calibrated on sim_fa2 train and calibration splits",
+  "test_data": "datasets/sim_test5: --n-clean 6000 --n-per-attack 150 --seed 4242",
+  "weak_power_data": "datasets/sim_weak5: --n-clean 100 --n-per-attack 150 --seed 2424 --power-range 0 1",
+  "reported": "every gate target, met or missed, with 95% intervals; nothing tuned afterwards; missed targets are reported as missed",
+  "tuning_history_before_this_test": "imu_vel_drift feature (integrated IMU drift) tried and rejected: worse than baseline because IMU noise random-walks; weak-power training data tried and rejected: worse; persistence 3 rejected; persist_window 10 s rejected; persistence 5 + margin 0.5 adopted. All on sim_fa2 validation and sim_weakval."
+}

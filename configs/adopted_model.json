@@ -1,10 +1,19 @@
 {
   "adopted_on": "2026-10-26",
   "model": "lightgbm",
-  "settings": {"learning_rate": 0.1, "num_leaves": 31, "n_estimators": 200, "class_weight": "balanced"},
+  "settings": {
+    "learning_rate": 0.1,
+    "num_leaves": 31,
+    "n_estimators": 200,
+    "class_weight": "balanced"
+  },
   "features": "all 20 in features.py",
-  "alarm": {"persistence_k": 10, "threshold_percentile": 99.9, "calibration_fa_per_hour_target": 0.25},
-  "config": "configs/sim_v2.json",
+  "alarm": {
+    "persistence_k": 5,
+    "threshold_percentile": 99.9,
+    "calibration_fa_per_hour_target": 0.5
+  },
+  "config": "configs/sim_v3.json",
   "train_calibration_data": "datasets/sim_fa2 (train and calibration splits only)",
   "how_it_was_chosen": "NOT by the selection rule. The rule (MODEL_SELECTION.md section 6) selected the one-class SVM, locked in configs/locked_model_v3.json, by a 0.08 s median-delay tie-break. LightGBM was adopted afterwards because, on the pre-registered fresh test set sim_test3, the boosted models were better on detection, false alarms, consistent takeover and 90th-percentile delay; the choice was then confirmed for LightGBM alone on a second fresh set sim_test4 (configs/preregistered_test4.json).",
   "evidence": {
@@ -13,5 +22,6 @@
     "rule_selected_model_for_comparison": "one-class SVM on sim_test2: detection 0.970, 0.58 FA/h, consistent takeover 0.807"
   },
   "known_costs": "median delay about 0.5 s longer than the one-class SVM (1.4-1.5 s vs 1.0 s); weak consistent takeover still 0.65",
-  "reversible": "this file does not change locked_model_v3.json; the rule-selected result remains reported in full"
+  "reversible": "this file does not change locked_model_v3.json; the rule-selected result remains reported in full",
+  "config_change_2026-10-26": "persistence 10 -> 5 and calibration margin 0.25 -> 0.5 FA/h, chosen on sim_fa2 validation and sim_weakval only (validation: detection 1.000, 0.12 FA/h, weak detection 0.958, weak consistent takeover 0.73). The test results quoted above (sim_test3, sim_test4) were obtained with the earlier settings; sim_test5 is the first test with these."
 }
