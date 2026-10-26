@@ -24,6 +24,9 @@ Replace the v2 figures (19 features, 0.960 detection, 0.77 FA/h, twelve eligible
 ## LightGBM confirmation, fresh test `sim_test4` (pre-registered, LightGBM only)
 Detection 0.991 (0.984-0.995); FA 0.37/h (0.25-0.53); median / p90 delay 1.48 / 4.1 s; consistent takeover 0.94; weak (0-1 dB) detection 0.948, weak consistent takeover 0.65. (Its sim_test3 false-alarm rate was 0.17/h; quote both, about 0.2-0.4/h.)
 
+## Exploratory (state as such): GNSS-only features
+LightGBM without IMU, barometer and Galileo features, on sim_test4 (reused, not unbiased): detection 0.897; consistent and dynamic takeover 0.67; weak spoofers 0.695 (consistent takeover 0.08). Position steps and ramps stay at 0.97-0.99.
+
 ## Three statements the paper must make
 1. **Feature designed after seeing a test result.** The consistent-takeover weakness appeared in the v2 test (0.733). The long-window IMU feature was designed in response and tried on validation sessions; the v3 test set is a new dataset, but the improvement (to about 0.8) is not a blind prediction.
 2. **The selection rule was amended after the first comparison.** A minimum detection of 0.5 was added after a decision tree and an Isolation Forest passed with almost no detection. Applied to both later comparisons, the original and amended rules select the same model.

@@ -24,6 +24,8 @@ Adopted model: LightGBM (configs/adopted_model.json), chosen after pre-registere
 
 - LightGBM confirmation on sim_test4 (fresh, pre-registered): detection 0.991, 0.37 FA/h (0.25-0.53), p90 4.1 s, consistent takeover 0.94, weak 0.948. Supports switching to LightGBM; locked file still says one-class SVM until the owner decides.
 
+- Exploratory GNSS-only LightGBM (configs/sim_v2_gnss_only.json, sim_test4): detection 0.897, consistent/dynamic takeover 0.67, weak 0.695 (consistent 0.08). IMU is what catches takeovers; record with the flight controller. Details in reports_v3/DECISION_NOTE.md.
+
 ## To do next
 - Weak consistent takeovers (0.53) and late detections (p90 9 s) are the main detector gaps.
 - (Decided) LightGBM adopted in configs/adopted_model.json; one-class SVM remains the rule-selected result.

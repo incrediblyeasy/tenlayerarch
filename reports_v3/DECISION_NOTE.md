@@ -105,3 +105,18 @@ Declared in `configs/preregistered_test4.json` and committed before `sim_test4` 
 The 1/h false-alarm limit is met (whole range under 0.53). The false-alarm rate differs between the two fresh sets (0.17 vs 0.37) by more than their ranges suggest, so these two sets are best read together: LightGBM's rate on fresh simulated data is about 0.2–0.4 per hour, below the one-class SVM's 0.5–0.6 on its test sets. Weak consistent takeover remains the weak point for every model (0.53–0.72).
 
 **What this means.** The result from `sim_test3` repeats on a set not used to choose LightGBM: it detects more, raises fewer false alarms, catches more consistent takeovers and has a better 90th-percentile delay than the rule-selected one-class SVM; it is slower to the first alarm by about 0.5 s in the median. The locked model file (`configs/locked_model_v3.json`) still names the one-class SVM, as the rule selected. Switching to LightGBM is a decision for the project owner, and this note and `sim_test3` are the evidence for it. If it is made, it should be reported as a choice made after the pre-registered tests, with this confirmation as support.
+
+## Exploratory: LightGBM with GNSS-only features (not pre-registered)
+
+`configs/sim_v2_gnss_only.json` drops the four features that need an IMU, barometer or Galileo-only solution (`imu_resid_mps2`, `imu_resid_long_mps2`, `baro_resid_m`, `const_diff_m`), as a recording from the GPS module alone would. Retrained on `sim_fa2`, scored on `sim_test4` and `sim_weak4`. **Exploratory only:** it reuses `sim_test4`, which was used for the LightGBM confirmation, so it is not an unbiased estimate and is not for headline numbers.
+
+| | All 20 features (sim_test4) | GNSS-only (sim_test4) | GNSS-only, weak 0–1 dB (sim_weak4) |
+|---|---|---|---|
+| Detection | 0.991 | 0.897 (0.877–0.914) | 0.695 (0.650–0.737) |
+| False alarms per hour | 0.37 | 0.12 (0.06–0.22) | – |
+| Median / p90 delay, s | 1.48 / 4.1 | 2.66 / 9.2 | 5.87 / 18.8 |
+| Consistent takeover | 0.94 | 0.67 | 0.08 |
+| Dynamic takeover | 1.00 | 0.67 | 0.13 |
+| Ramp, step, static, ramp-then-step, step-then-ramp | 0.99–1.00 | 0.97–0.99 | 0.90–0.97 |
+
+**Reading.** Without an IMU the detector still catches position steps and ramps, but consistent and dynamic takeovers (velocity kept consistent with the spoofed position) drop to about 0.67 and almost vanish at weak power (0.08–0.13). Those attacks are visible mainly through the IMU. A first recording that includes the flight controller's IMU and barometer is therefore much more useful than a GPS-module-only recording.
