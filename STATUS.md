@@ -1,5 +1,7 @@
 # Status (update after each step)
 
+Adopted model: LightGBM (configs/adopted_model.json), chosen after pre-registered tests; the selection rule picked the one-class SVM (configs/locked_model_v3.json). Both are reported.
+
 ## Done
 - Simulation phase, `evaluate` on sim_v1, full `compare` run (13 models + T8): no eligible model, closest is one-class SVM at 1.2 FA/h. See results/sim_v1/REPORT.md, reports/DECISION_NOTE.md.
 - Code added: candidates xgboost, lightgbm, mlp, one_class_svm and T8 (5 seeds) in `model_selection.py`; T8 columns in `dashboard.py`.
@@ -24,7 +26,7 @@
 
 ## To do next
 - Weak consistent takeovers (0.53) and late detections (p90 9 s) are the main detector gaps.
-- Decide: keep the one-class SVM (rule) or adopt LightGBM/XGBoost (better on the pre-registered test); adopting needs one more fresh test set.
+- (Decided) LightGBM adopted in configs/adopted_model.json; one-class SVM remains the rule-selected result.
 - Repeat the final check on Nayfeh public data and bench data (needs recordings).
 - Layers 3 and 7, attack naming (0.79), vote vs layer 10: see earlier notes.
 

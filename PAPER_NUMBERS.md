@@ -1,5 +1,7 @@
 # Numbers and caveats for the paper (v3, all simulated)
 
+**Headline model: LightGBM** (adopted 2026-10-26, `configs/adopted_model.json`). Not chosen by the selection rule (which picked the one-class SVM); chosen after the pre-registered tests, and confirmed on a second fresh set. Unbiased estimate (sim_test4): detection 0.991 (0.984-0.995), 0.37 false alarms/h (0.25-0.53), median delay 1.48 s, p90 4.1 s, consistent takeover 0.94, weak spoofers 0.948 (consistent takeover 0.65). Report the one-class SVM numbers below as the rule-selected result.
+
 Replace the v2 figures (19 features, 0.960 detection, 0.77 FA/h, twelve eligible models) with these.
 
 ## Setup

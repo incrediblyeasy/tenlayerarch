@@ -1,5 +1,7 @@
 # Decision note v3: model selection with 20 features, and the final test
 
+> **Update, 2026-10-26: adopted model.** The rule selected the one-class SVM (locked in `configs/locked_model_v3.json`). After the pre-registered tests below, **LightGBM was adopted** (`configs/adopted_model.json`) as a judgement, not by the rule; see the last two sections and `PROVENANCE.md`. Its unbiased test result is on `sim_test4`.
+
 Simulation only. Supersedes `reports_v2/DECISION_NOTE.md` (19 features, small test set). Selection data: `datasets/sim_fa2` (2210 train / 884 calibration / 1326 validation sessions, about 17 clean validation hours). Config `configs/sim_v2.json` (persistence 10 rows, calibration margin 0.25 FA/h). Features: 20 (the 19 of v2 plus a long-window IMU residual). Selection rule: MODEL_SELECTION.md §6 with the minimum-detection amendment of 2026-10-23. All 13 candidates, T1–T8 run. XGBoost 3.2.0 and LightGBM 4.7.0 were rerun on the project machine and reproduce the earlier numbers exactly.
 
 ## Selection

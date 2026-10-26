@@ -15,6 +15,7 @@ All numbers are from simulated data. This file records, in order, which decision
 | 7 | Round v3: 13-model comparison with 20 features on `sim_fa2` (`reports_v3/`), one-class SVM locked (`configs/locked_model_v3.json`), tested once on a **new** test set `sim_test2` (seed 9999): detection 0.970, 0.58 FA/h (range 0.42-0.76). Weak-power set `sim_weak` (seed 7777). | Validation results, and the v2 test result (step 6). |
 | 8 | Pre-registered three-model test on yet another new test set `sim_test3` (seed 6666), see section 4. `configs/preregistered_test3.json` was committed before that data was generated or any model scored on it. | v3 results. |
 | 9 | Pre-registered LightGBM confirmation on a fourth fresh set `sim_test4` (seed 3131), `configs/preregistered_test4.json` committed first (`09b52aa`, 2026-10-26 14:39:32). | The test3 result. |
+| 10 | LightGBM adopted as the working model (`configs/adopted_model.json`), after steps 8 and 9. This is a judgement made with the test3 and test4 results in hand, not an outcome of the rule. | The test2, test3 and test4 results. |
 
 What this means for a reader:
 
