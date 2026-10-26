@@ -2,7 +2,7 @@
 
 This package implements the simulation phase of [TEN_LAYER_PLAN.md](TEN_LAYER_PLAN.md): one physics-based generator, ten causal detector layers, a fitted vote, and an evaluation protocol on disjoint sessions. **All results are on simulated data.** Nothing here is a bench or flight result; clock, sensor and spoofer parameters are assumptions until calibrated on hardware.
 
-Results: [results/sim_v1/REPORT.md](results/sim_v1/REPORT.md) (first protocol run), [reports_v2/DECISION_NOTE.md](reports_v2/DECISION_NOTE.md) (model selection and the single test-set run after the false-alarm fix).
+Results: [results/sim_v1/REPORT.md](results/sim_v1/REPORT.md) (first protocol run), [reports_v3/DECISION_NOTE.md](reports_v3/DECISION_NOTE.md) (current model selection and the single test-set run; `reports_v2/` is the earlier 19-feature round).
 
 ## Quick start
 

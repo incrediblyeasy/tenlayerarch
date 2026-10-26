@@ -12,12 +12,16 @@
 - Decision tree 0.0 detection is the tied-score artifact described in model_selection.py's docstring, not a real result.
 - Hardware items (MAVLink, UBX check, Jetson latency, sim-to-real) wait on recordings.
 
-## False-alarm fix: DONE
-- Causes, fix and numbers: reports_v2/DECISION_NOTE.md. 13-model comparison on datasets/sim_fa2 (reports_v2/). Rule picks one-class SVM; locked in configs/locked_model.json; test set (datasets/sim_test, new seed) opened once: detection 0.960, 0.77 FA/h (16 events, 20.8 h, range 0.44-1.25), delay 0.99 s; consistent takeover 0.73. Results: results/final_test.json.
-- Reproduce: generate sim_fa2 (--n-clean 4000 --n-per-attack 60 --seed 4444) and sim_test (--n-clean 1500 --n-per-attack 60 --seed 8888) with configs/sim_v2.json, then `compare ... --workers 6` and `python -m ten_layer_detector.final_test ...` (see final_test.py docstring).
+## Current result (v3): DONE
+- 20 features, 13-model comparison on datasets/sim_fa2 (reports_v3/). Rule picks one-class SVM (tie-break by 0.08 s delay; XGBoost/LightGBM look better on validation but were not tested). Locked in configs/locked_model_v3.json, then tested once on datasets/sim_test2 (6000 clean + 1050 attacked): detection 0.970, 0.58 FA/h (range 0.42-0.76, under the 1/h target), delay 1.0 s (p90 9.1 s); consistent takeover 0.807. Weak spoofers (sim_weak, 420 sessions): 0.919, consistent takeover 0.533. Note: reports_v3/DECISION_NOTE.md. Earlier v2 (19 features) and its test are kept as the "before".
+- Code fixes done: pandas 3 copy-on-write (features.py, test), eligibility minimum detection 0.5 (amendment in MODEL_SELECTION.md), XGBoost/LightGBM rerun reproduces.
+- Reproduce: generate sim_fa2 (--n-clean 4000 --n-per-attack 60 --seed 4444), sim_test2 (--n-clean 6000 --n-per-attack 150 --seed 9999), sim_weak (--n-clean 100 --n-per-attack 60 --seed 7777 --power-range 0 1) with configs/sim_v2.json; `compare ... --out reports_v3 --workers 6`; `python -m ten_layer_detector.final_test` (docstring).
 
 ## To do next
-- Consistent-takeover detection is the weakest (0.73 on test): longer-window drift / IMU feature.
+- Weak consistent takeovers (0.53) and late detections (p90 9 s) are the main detector gaps.
+- Decide: one-class SVM (rule) vs XGBoost/LightGBM (better on validation); a boosted model needs a fresh test set.
 - Repeat the final check on Nayfeh public data and bench data (needs recordings).
 - Rule gap: eligibility has no minimum detection rate (decision tree and Isolation Forest pass with ~0 detection).
 - Layers 3 and 7, attack naming (0.79), vote vs layer 10: see earlier notes.
+
+- Hardware readers added (RXM-RAWX, UBXStream/read_serial, DataFlash .bin), synthetic tests only; no row assembler yet.
