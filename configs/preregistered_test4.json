@@ -1,0 +1,12 @@
+{
+  "declared_on": "2026-10-26, committed before sim_test4 / sim_weak4 were generated or any model scored on them",
+  "purpose": "Confirm the pre-registered test3 finding (boosted models better than the rule-selected one-class SVM) for one boosted model on a fresh test set, so that adopting it would rest on a result not used to choose it.",
+  "model": "lightgbm",
+  "why_lightgbm": "Best 90th-percentile delay (4.3 s), best weak-spoofer detection (0.957) and consistent takeover tied-best (0.89) on sim_test3, with 0.17 FA/h; chosen from sim_test3 and validation, which is why a fresh set is needed.",
+  "settings": "exactly as in reports_v3 (configs/sim_v2.json, 20 features, persistence 10, calibration margin 0.25 FA/h, fitted and calibrated on datasets/sim_fa2 train and calibration splits)",
+  "test_data": "datasets/sim_test4: --n-clean 6000 --n-per-attack 150 --seed 3131",
+  "weak_power_data": "datasets/sim_weak4: --n-clean 100 --n-per-attack 60 --seed 2121 --power-range 0 1",
+  "reported": "detection with 95% CI, false alarms per hour with exact 95% range, median and 90th-percentile delay, per attack type, weak-power detection",
+  "no_further_tuning": "no setting is changed after seeing these results",
+  "locked_model_file": "configs/locked_model_v3.json is not changed by this test; the decision to switch models is the project owner's, made with this result and test3 in hand"
+}
