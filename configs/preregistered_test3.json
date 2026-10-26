@@ -1,0 +1,11 @@
+{
+  "declared_on": "2026-10-26, committed before sim_test3 was generated or any model was scored on it",
+  "purpose": "Compare the rule-selected model with the two boosted models that looked better on validation, on one fresh test set, so the choice is not a judgement on a 0.08 s tie-break.",
+  "models": ["one_class_svm", "xgboost", "lightgbm"],
+  "settings": "exactly as in reports_v3 (configs/sim_v2.json, 20 features, persistence 10, calibration margin 0.25 FA/h, fitted and calibrated on datasets/sim_fa2 train and calibration splits)",
+  "test_data": "datasets/sim_test3: --n-clean 6000 --n-per-attack 150 --seed 6666 (seed not used anywhere before)",
+  "weak_power_data": "datasets/sim_weak3: --n-clean 100 --n-per-attack 60 --seed 5555 --power-range 0 1",
+  "reported": "for each model: detection with 95% CI, false alarms per hour with exact 95% range, median and 90th-percentile delay, per attack type, weak-power detection",
+  "no_further_tuning": "no setting is changed after seeing these results; all three are reported whatever the outcome",
+  "interpretation_declared_in_advance": "The rule-selected model remains the locked model (configs/locked_model_v3.json). If a boosted model is clearly better on this test set while meeting the 1 FA/h limit, that is reported as evidence for the choice, and adopting it would need one more fresh test set because this one will have been used for the comparison."
+}
