@@ -32,3 +32,7 @@ backup/
 
 # Large generated data: rebuild with the generate commands in README.md
 datasets/
+
+# Personal paper drafts
+Research_Paper_Draft*.pdf
+*.pdf
