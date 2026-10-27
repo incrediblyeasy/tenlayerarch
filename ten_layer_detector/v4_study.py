@@ -112,6 +112,34 @@ class Scorer:
         return _score(self.model, self.name, X)
 
 
+class Autoencoder:
+    """M4: MLP autoencoder (32-8-32) trained on clean rows only; score = mean squared reconstruction
+    error of the standardised features."""
+
+    name = "autoencoder"
+
+    def __init__(self, cols, cfg, model_seed=None):
+        self.cols = list(cols)
+        self.cfg = cfg if model_seed is None else replace(cfg, model_seed=model_seed)
+
+    def fit(self, tr: "Split", keep=None):
+        from sklearn.neural_network import MLPRegressor
+        from sklearn.preprocessing import StandardScaler
+
+        X, _ = tr.train_xy(self.cols, clean_only=True, keep=keep)
+        rng = np.random.default_rng(self.cfg.model_seed)
+        if len(X) > 20_000:
+            X = X[rng.choice(len(X), 20_000, replace=False)]
+        self.scaler = StandardScaler().fit(X)
+        Z = self.scaler.transform(X)
+        self.model = MLPRegressor(hidden_layer_sizes=(32, 8, 32), max_iter=200, early_stopping=True, random_state=self.cfg.model_seed).fit(Z, Z)
+        return self
+
+    def score(self, X):
+        Z = self.scaler.transform(X)
+        return np.mean((self.model.predict(Z) - Z) ** 2, axis=1)
+
+
 class Ensemble:
     """M2: weighted average of two scorers after mapping each score to a clean-calibration rank.
     The rank of a score is its empirical CDF position among the clean calibration scores; above

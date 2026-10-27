@@ -1,0 +1,26 @@
+{
+  "locked": "2026-10-27, before sim_v4_test and sim_v4_weaktest were generated",
+  "config": "configs/sim_v4.json",
+  "fit_data": "sim_v4_val train split; thresholds from its calibration clean sessions (same splits as validation)",
+  "primary": {
+    "name": "M2_ensemble_0.25",
+    "how": "rank-averaged ensemble, weight 0.25 on LightGBM and 0.75 on one-class SVM (Ensemble(a=lightgbm, b=one_class_svm, weight_a=0.25) in v4_study.py), features S_v3 (20 v3 features), persistence k=5, calibration margin 0.5 FA/h",
+    "chosen_by": "selection_rule_v4.json applied to results/v4_a4_models.json (written to results/v4_selected.json)",
+    "validation": {
+      "detection": 0.897,
+      "consistent_takeover": 0.83,
+      "weak_detection": 0.845,
+      "weak_consistent_takeover": 0.5,
+      "hold_out_FA_per_hour": 0.98,
+      "upper95": 1.33
+    }
+  },
+  "variants_reported_with_the_primary": {
+    "V0_v3_adopted_lightgbm": "LightGBM trained on sim_fa2 with configs/sim_v3.json, scored on the v4 tests unchanged (the 'before' number)",
+    "V0_v3_locked_svm": "one-class SVM trained on sim_fa2 with configs/sim_v3.json, scored on the v4 tests unchanged",
+    "V1_lightgbm_cusum_p99": "LightGBM, S_v3, CUSUM with 99th-percentile reference (chosen after seeing A3 validation: weak consistent takeover 0.48)",
+    "V2_temporal": "M3_temporal (LightGBM with 30 s summaries), S_v3, persistence k=5 (rule runner-up: robustness 0.703, p90 14.7 s)",
+    "V3_lightgbm_all_features": "LightGBM, S_all (22 features), persistence k=5 (chosen after seeing A2 validation: detection 0.913, weak 0.857)"
+  },
+  "note": "V1-V3 were picked after looking at validation results, so they are exploratory variants; only the primary is the rule-selected configuration. Every variant is scored once on each test set and all are reported."
+}

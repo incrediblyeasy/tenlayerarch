@@ -83,6 +83,10 @@ def build(name, cols, splits, cfg, seed=None):
     tr, ca = splits[0], splits[1]
     if name.startswith("M1_"):
         return Scorer(name[3:], cols, cfg, seed).fit(tr)
+    if name == "M4_autoencoder":
+        from .v4_study import Autoencoder
+
+        return Autoencoder(cols, cfg, seed).fit(tr)
     if name.startswith("M2_"):
         w = float(name.split("_")[-1])
         a = Scorer("lightgbm", cols, cfg, seed).fit(tr)
@@ -91,10 +95,12 @@ def build(name, cols, splits, cfg, seed=None):
     raise ValueError(name)
 
 
-def a4(cfg, splits0, cols0, label):
+def a4(cfg, splits0, cols0, label, only=None):
     kw = rule_kw(label)
-    res = {}
-    cands = ["M1_one_class_svm", "M1_lightgbm", "M1_xgboost", "M2_ensemble_0.25", "M2_ensemble_0.5", "M2_ensemble_0.75", "M3_temporal"]
+    res = json.loads(A4.read_text()) if only else {}
+    cands = ["M1_one_class_svm", "M1_lightgbm", "M1_xgboost", "M2_ensemble_0.25", "M2_ensemble_0.5", "M2_ensemble_0.75", "M3_temporal", "M4_autoencoder"]
+    if only:
+        cands = only
     for cand in cands:
         splits, cols = splits0, cols0
         if cand == "M3_temporal":
@@ -111,7 +117,7 @@ def a4(cfg, splits0, cols0, label):
         # unseen attacks: leave each type out of training (supervised only)
         types = sorted({session_type(s) for s, _ in tr.items if session_type(s) != "clean"})
         unseen = []
-        if cand.startswith("M1_") and cand[3:] in UNSUPERVISED:
+        if cand == "M4_autoencoder" or (cand.startswith("M1_") and cand[3:] in UNSUPERVISED):
             unseen_dr = m["dr_val"]
         else:
             for t in types:
@@ -154,7 +160,8 @@ def main():
         a3(cfg, splits, cols)
     else:
         label = json.loads(A3.read_text())["_chosen"]
-        res = a4(cfg, splits, cols, label)
+        only = sys.argv[2].split(",") if len(sys.argv) > 2 else None
+        res = a4(cfg, splits, cols, label, only)
         res_sel = select(res)
         print("selected by rule:", res_sel)
         Path("results/v4_selected.json").write_text(json.dumps({"selected": res_sel, "decision_rule": label}, indent=2))
