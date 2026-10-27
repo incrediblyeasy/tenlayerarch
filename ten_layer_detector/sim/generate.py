@@ -154,7 +154,7 @@ def generate_session(
     if attacked:
         on = t >= onset_s
         k0 = int(np.argmax(on))
-        offset, offset_dot, shape = attack_offset(arng, attack_type, t, onset_s, true_pos, true_vel)
+        offset, offset_dot, shape = attack_offset(arng, attack_type, t, onset_s, true_pos, true_vel, overrides=attacker)
         params = sample_attacker(arng, attack_type)
         if attacker:
             params.update(attacker)

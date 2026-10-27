@@ -51,8 +51,12 @@ def attack_offset(
     onset_s: float,
     true_pos: np.ndarray,
     true_vel: np.ndarray,
+    overrides: dict[str, float] | None = None,
 ) -> tuple[np.ndarray, np.ndarray, dict[str, Any]]:
     """Spoofing offset o(t) and its derivative o_dot(t) in NED, plus the shape parameters.
+
+    overrides: optional fixed values for rate_mps (ramp) or accel_mps2 (consistent_takeover), used by
+    the adaptive attacker; the random draws are still made so the random stream is unchanged.
 
     The reported velocity is true_vel + o_dot: o_dot = 0 leaves velocity untouched
     (position/velocity inconsistent); a matched o_dot keeps them consistent.
@@ -81,6 +85,7 @@ def attack_offset(
         params["step_m"] = float(dist)
     elif attack_type == "ramp":
         rate = rng.uniform(0.2, 2.0)
+        rate = (overrides or {}).get("rate_mps", rate)
         o = rate * tau[:, None] * d
         params["rate_mps"] = float(rate)
     elif attack_type == "step_then_ramp":
@@ -98,6 +103,7 @@ def attack_offset(
         params.update(rate_mps=float(rate), ramp_s=float(t_ramp), step_m=float(step))
     elif attack_type == "consistent_takeover":
         a = rng.uniform(0.05, 0.3)
+        a = (overrides or {}).get("accel_mps2", a)
         t_acc = rng.uniform(5.0, 15.0)
         ta = np.minimum(tau, t_acc)
         o = (0.5 * a * ta**2 + a * t_acc * np.clip(tau - t_acc, 0.0, None))[:, None] * d
