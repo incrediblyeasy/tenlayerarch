@@ -322,6 +322,10 @@ FEATURES: Dict[str, Tuple[Tuple[str, ...], FeatureFn]] = {
     "const_diff_m": (("t_gnss_s", "lat_deg", "lon_deg", "alt_m", "gal_lat_deg", "gal_lon_deg", "gal_alt_m"), f_const_diff),
 }
 
+# Opt-in features: registered below by ekf.py, left out of available_features() so that existing
+# configs and results are unchanged; request them by name in compute_features.
+OPT_IN = ("ekf_innov_m", "ekf_innov_vel_mps")
+
 CN0_FEATURES = ("cn0_shift_db", "cn0_std_drop_db", "cn0_rise_db", "cn0_fall_db")
 
 
@@ -335,7 +339,7 @@ def required_columns(names: Iterable[str]) -> Tuple[str, ...]:
 
 
 def available_features(frame: pd.DataFrame) -> list[str]:
-    return [name for name, (cols, _) in FEATURES.items() if set(cols).issubset(frame.columns)]
+    return [name for name, (cols, _) in FEATURES.items() if name not in OPT_IN and set(cols).issubset(frame.columns)]
 
 
 def compute_features(
@@ -359,3 +363,14 @@ def acceleration_residual(frame: pd.DataFrame, cfg: DetectorConfig = DEFAULT_DET
 
 def position_velocity_residual(frame: pd.DataFrame, cfg: DetectorConfig = DEFAULT_DETECTOR_CONFIG) -> np.ndarray:
     return f_posvel(frame, cfg)
+
+
+def _register_opt_in() -> None:
+    from .ekf import f_ekf_innov, f_ekf_innov_vel
+
+    cols = ("t_gnss_s", "lat_deg", "lon_deg", "vel_n_mps", "vel_e_mps", "roll_rad", "pitch_rad", "yaw_rad", "acc_bx_mps2", "acc_by_mps2", "acc_bz_mps2")
+    FEATURES["ekf_innov_m"] = (cols, f_ekf_innov)
+    FEATURES["ekf_innov_vel_mps"] = (cols, f_ekf_innov_vel)
+
+
+_register_opt_in()
