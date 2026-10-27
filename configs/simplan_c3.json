@@ -1,0 +1,80 @@
+{
+  "config": "configs/sim_v3.json",
+  "sizes": {
+    "train_clean": 3000,
+    "train_per_attack": 50,
+    "test_clean": 2000,
+    "test_per_attack": 100
+  },
+  "note": "All results simulated. Detector: LightGBM, configs/sim_v3.json settings (persistence 5, calibration margin 0.5 FA/h), fitted and calibrated inside the training world (50/20 split by session), two variants (all features; signal-strength features excluded). Test worlds are fresh seeds used only here. Gate targets in configs/gate_targets.json are unchanged. Expected directions are hypotheses, not results.",
+  "change": "C3 realistic IMU (attitude, bias random walk, scale factor, vibration noise). Assumed IMU values listed in sim/realism.py.",
+  "expected": "The level-body IMU features break in the realistic world (many false alarms) and the attitude-aware features are weaker than the original IMU features were; consistent takeover detection falls.",
+  "arms": [
+    {
+      "name": "c3_base_detector_on_imu_world",
+      "train": {
+        "seed": 101
+      },
+      "features_exclude": [
+        "imu_att_resid_mps2",
+        "imu_att_resid_long_mps2"
+      ],
+      "tests": [
+        {
+          "name": "imu_world",
+          "seed": 202,
+          "realism": {
+            "imu": "realistic"
+          }
+        }
+      ]
+    },
+    {
+      "name": "c3_att_features_trained_in_imu_world",
+      "train": {
+        "seed": 102,
+        "realism": {
+          "imu": "realistic"
+        }
+      },
+      "features_exclude": [
+        "imu_resid_mps2",
+        "imu_resid_long_mps2"
+      ],
+      "tests": [
+        {
+          "name": "imu_world",
+          "seed": 202,
+          "realism": {
+            "imu": "realistic"
+          }
+        }
+      ]
+    },
+    {
+      "name": "c3_no_imu_features",
+      "train": {
+        "seed": 102,
+        "realism": {
+          "imu": "realistic"
+        }
+      },
+      "features_exclude": [
+        "imu_resid_mps2",
+        "imu_resid_long_mps2",
+        "imu_att_resid_mps2",
+        "imu_att_resid_long_mps2"
+      ],
+      "tests": [
+        {
+          "name": "imu_world",
+          "seed": 202,
+          "realism": {
+            "imu": "realistic"
+          }
+        }
+      ]
+    }
+  ],
+  "committed_before_generation": "2026-10-27: this plan file is committed before any of its datasets are generated or scored"
+}

@@ -31,6 +31,7 @@ from .gnss_model import (
     solution_error,
     unit_ned,
 )
+from .realism import PLATFORMS, iono_delay, multipath, realistic_imu
 from .sensors import baro_signal, imu_signal
 from .trajectory import sample_trajectory
 
@@ -52,6 +53,7 @@ def generate_session(
     seed: int = 0,
     *,
     attacker: Mapping[str, Any] | None = None,
+    realism: Mapping[str, Any] | None = None,
     return_metadata: bool = False,
 ) -> pd.DataFrame | tuple[pd.DataFrame, Dict[str, Any]]:
     """Generate one labelled session in the canonical schema.
@@ -66,6 +68,8 @@ def generate_session(
         raise ValueError("sample_rate_hz must be positive")
     attack_type = normalize_attack_type(attack_type)
     attacked = attack_type != "clean"
+    R = dict(realism or {})  # opt-in realism options (sim/realism.py); empty means the original simulator
+    orng = np.random.default_rng([int(seed), 11])
 
     rng = np.random.default_rng(seed)
     arng = np.random.default_rng([int(seed), 1])
@@ -82,13 +86,17 @@ def generate_session(
     dt = 1.0 / sample_rate_hz
     t = np.arange(n) * dt
 
-    traj = sample_trajectory(rng, t)
+    traj = sample_trajectory(rng, t, PLATFORMS[R["platform"]] if R.get("platform") else None)
     true_pos, true_vel = traj["pos"], traj["vel"]
     el, az = sat_elevation_azimuth(rng, t)
     clk_bias, clk_drift = clock_state(rng, n, dt)
 
     gain = rng.normal(0.0, 2.0)
     cn0 = 33.0 + 12.0 * (el / 90.0) + rng.normal(0.0, 2.0, N_SAT) + gain + rng.normal(0.0, 1.0, (n, N_SAT))
+    mp_pos, mp_pr0 = np.zeros((n, 3)), np.zeros(n)
+    if R.get("multipath"):  # C6
+        mp_pos, mp_cn0, mp_pr0 = multipath(orng, n, dt, el)
+        cn0 = cn0 + mp_cn0
 
     meta: Dict[str, Any] = {
         "session_id": str(session_id),
@@ -132,6 +140,10 @@ def generate_session(
     alt_msl0 = rng.uniform(100.0, 800.0)
     sat_range = rng.uniform(2.0e7, 2.5e7) + rng.uniform(-600.0, 600.0) * t
     imu_acc, imu_gyr = imu_signal(rng, traj["acc"], traj["yaw"], traj["yaw_rate"])
+    att_est = None
+    if R.get("imu") == "realistic":  # C3
+        imu_acc, imu_gyr, roll_est, pitch_est = realistic_imu(orng, traj["acc"], traj["yaw"], dt)
+        att_est = (roll_est, pitch_est)
     baro = baro_signal(rng, alt_msl0 - true_pos[:, 2], dt)
     vel_noise = rng.normal(0.0, 0.08, (n, 3))
     meas_noise = {
@@ -206,9 +218,9 @@ def generate_session(
     u = unit_ned(el, az)
     hdop, vdop, pdop = dop_from_geometry(u, used)
 
-    rep_pos = true_pos + solution_error(np.random.default_rng(err_gps_noise), n, dt, hdop, vdop) + mp + offset
+    rep_pos = true_pos + solution_error(np.random.default_rng(err_gps_noise), n, dt, hdop, vdop) + mp + mp_pos + offset
     rep_vel = true_vel + offset_dot + vel_noise
-    gal_pos = true_pos + 1.2 * solution_error(np.random.default_rng(err_gal_noise), n, dt, hdop, vdop) + mp + gal_offset
+    gal_pos = true_pos + 1.2 * solution_error(np.random.default_rng(err_gal_noise), n, dt, hdop, vdop) + mp + 0.8 * mp_pos + gal_offset
     lat, lon, alt = ned_to_geodetic(rep_pos, lat0, lon0, alt_msl0)
     gal_lat, gal_lon, gal_alt = ned_to_geodetic(gal_pos, lat0, lon0, alt_msl0)
 
@@ -226,6 +238,13 @@ def generate_session(
         ambiguity[k:] = ambiguity0 + 7919.0 * (j + 1)
         lock_ms[k:] = (t[k:] - t[k]) * 1000.0
     cp = (geom_range + C * clk_bias * 1e-9) / L1_LAMBDA + ambiguity + meas_noise["cp"]
+    if R.get("ionosphere"):  # C4: code delayed, carrier advanced by the same slant delay
+        iono = iono_delay(orng, el[:, 0], t)
+        if attacked and not params.get("iono_matched", True):
+            iono = np.where(on, 0.0, iono)  # this spoofer does not reproduce the ionosphere
+        pr = pr + iono
+        cp = cp - iono / L1_LAMBDA
+    pr = pr + mp_pr0
 
     cn0_used = np.where(used, cn0, np.nan)
     labels = ((t >= onset_s) & attacked).astype(int)
@@ -268,8 +287,8 @@ def generate_session(
             "gyr_bx_rps": imu_gyr[:, 0],
             "gyr_by_rps": imu_gyr[:, 1],
             "gyr_bz_rps": imu_gyr[:, 2],
-            "roll_rad": meas_noise["att"][:, 0],
-            "pitch_rad": meas_noise["att"][:, 1],
+            "roll_rad": meas_noise["att"][:, 0] if att_est is None else att_est[0],
+            "pitch_rad": meas_noise["att"][:, 1] if att_est is None else att_est[1],
             "yaw_rad": traj["yaw"],
             "baro_alt_m": baro,
         }
@@ -306,6 +325,8 @@ def generate_mixed_dataset(
     power_range_db: tuple[float, float] | None = None,
     matched_power: bool = False,
     match_tolerance_db: float = 1.0,
+    attacker_overrides: Mapping[str, Any] | None = None,
+    realism: Mapping[str, Any] | None = None,
 ) -> tuple[list[pd.DataFrame], list[Dict[str, Any]]]:
     """Clean sessions plus n_per_attack sessions of each attack type, with metadata.
 
@@ -321,8 +342,10 @@ def generate_mixed_dataset(
         attacker = {"power_db": float(power_rng.uniform(*power_range_db))} if power_range_db and attack_type != "clean" else None
         if matched_power and attack_type != "clean":
             attacker = {**(attacker or {}), "matched_power": True, "match_tolerance_db": match_tolerance_db}
+        if attacker_overrides and attack_type != "clean":
+            attacker = {**(attacker or {}), **attacker_overrides}
         frame, meta = generate_session(
-            duration_s, sample_rate_hz, attack_type, None, f"{attack_type}_{i:04d}", int(s), attacker=attacker, return_metadata=True
+            duration_s, sample_rate_hz, attack_type, None, f"{attack_type}_{i:04d}", int(s), attacker=attacker, realism=realism, return_metadata=True
         )
         frames.append(frame)
         metas.append(meta)

@@ -1,0 +1,30 @@
+{
+  "config": "configs/sim_v3.json",
+  "sizes": {
+    "train_clean": 3000,
+    "train_per_attack": 50,
+    "test_clean": 2000,
+    "test_per_attack": 100
+  },
+  "note": "All results simulated. Detector: LightGBM, configs/sim_v3.json settings (persistence 5, calibration margin 0.5 FA/h), fitted and calibrated inside the training world (50/20 split by session), two variants (all features; signal-strength features excluded). Test worlds are fresh seeds used only here. Gate targets in configs/gate_targets.json are unchanged. Expected directions are hypotheses, not results.",
+  "change": "Reference: current simulator, same sizes and measures as the C3-C7 studies",
+  "arms": [
+    {
+      "name": "base",
+      "train": {
+        "seed": 101
+      },
+      "features_exclude": [
+        "imu_att_resid_mps2",
+        "imu_att_resid_long_mps2"
+      ],
+      "tests": [
+        {
+          "name": "base_world",
+          "seed": 201
+        }
+      ]
+    }
+  ],
+  "committed_before_generation": "2026-10-27: this plan file is committed before any of its datasets are generated or scored"
+}

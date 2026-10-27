@@ -1,0 +1,253 @@
+{
+  "config": "configs/sim_v3.json",
+  "sizes": {
+    "train_clean": 3000,
+    "train_per_attack": 50,
+    "test_clean": 2000,
+    "test_per_attack": 100
+  },
+  "note": "All results simulated. Detector: LightGBM, configs/sim_v3.json settings (persistence 5, calibration margin 0.5 FA/h), fitted and calibrated inside the training world (50/20 split by session), two variants (all features; signal-strength features excluded). Test worlds are fresh seeds used only here. Gate targets in configs/gate_targets.json are unchanged. Expected directions are hypotheses, not results.",
+  "change": "C7 platform variety: multirotor hover, multirotor manoeuvre (the current profile), fixed-wing (15-30 m/s, yaw follows velocity), large slow vehicle.",
+  "expected": "Some cues depend on platform dynamics: a model trained on one platform degrades on the others, a pooled model is better across platforms, and results differ per platform.",
+  "arms": [
+    {
+      "name": "c7_train_multirotor_hover",
+      "train": {
+        "seed": 112,
+        "realism": {
+          "platform": "multirotor_hover"
+        }
+      },
+      "features_exclude": [
+        "imu_att_resid_mps2",
+        "imu_att_resid_long_mps2"
+      ],
+      "tests": [
+        {
+          "name": "multirotor_hover",
+          "seed": 212,
+          "realism": {
+            "platform": "multirotor_hover"
+          }
+        },
+        {
+          "name": "multirotor_maneuver",
+          "seed": 211,
+          "realism": {
+            "platform": "multirotor_maneuver"
+          }
+        },
+        {
+          "name": "fixed_wing",
+          "seed": 213,
+          "realism": {
+            "platform": "fixed_wing"
+          }
+        },
+        {
+          "name": "large_slow",
+          "seed": 214,
+          "realism": {
+            "platform": "large_slow"
+          }
+        }
+      ]
+    },
+    {
+      "name": "c7_train_multirotor_maneuver",
+      "train": {
+        "seed": 111,
+        "realism": {
+          "platform": "multirotor_maneuver"
+        }
+      },
+      "features_exclude": [
+        "imu_att_resid_mps2",
+        "imu_att_resid_long_mps2"
+      ],
+      "tests": [
+        {
+          "name": "multirotor_hover",
+          "seed": 212,
+          "realism": {
+            "platform": "multirotor_hover"
+          }
+        },
+        {
+          "name": "multirotor_maneuver",
+          "seed": 211,
+          "realism": {
+            "platform": "multirotor_maneuver"
+          }
+        },
+        {
+          "name": "fixed_wing",
+          "seed": 213,
+          "realism": {
+            "platform": "fixed_wing"
+          }
+        },
+        {
+          "name": "large_slow",
+          "seed": 214,
+          "realism": {
+            "platform": "large_slow"
+          }
+        }
+      ]
+    },
+    {
+      "name": "c7_train_fixed_wing",
+      "train": {
+        "seed": 113,
+        "realism": {
+          "platform": "fixed_wing"
+        }
+      },
+      "features_exclude": [
+        "imu_att_resid_mps2",
+        "imu_att_resid_long_mps2"
+      ],
+      "tests": [
+        {
+          "name": "multirotor_hover",
+          "seed": 212,
+          "realism": {
+            "platform": "multirotor_hover"
+          }
+        },
+        {
+          "name": "multirotor_maneuver",
+          "seed": 211,
+          "realism": {
+            "platform": "multirotor_maneuver"
+          }
+        },
+        {
+          "name": "fixed_wing",
+          "seed": 213,
+          "realism": {
+            "platform": "fixed_wing"
+          }
+        },
+        {
+          "name": "large_slow",
+          "seed": 214,
+          "realism": {
+            "platform": "large_slow"
+          }
+        }
+      ]
+    },
+    {
+      "name": "c7_train_large_slow",
+      "train": {
+        "seed": 114,
+        "realism": {
+          "platform": "large_slow"
+        }
+      },
+      "features_exclude": [
+        "imu_att_resid_mps2",
+        "imu_att_resid_long_mps2"
+      ],
+      "tests": [
+        {
+          "name": "multirotor_hover",
+          "seed": 212,
+          "realism": {
+            "platform": "multirotor_hover"
+          }
+        },
+        {
+          "name": "multirotor_maneuver",
+          "seed": 211,
+          "realism": {
+            "platform": "multirotor_maneuver"
+          }
+        },
+        {
+          "name": "fixed_wing",
+          "seed": 213,
+          "realism": {
+            "platform": "fixed_wing"
+          }
+        },
+        {
+          "name": "large_slow",
+          "seed": 214,
+          "realism": {
+            "platform": "large_slow"
+          }
+        }
+      ]
+    },
+    {
+      "name": "c7_train_pooled",
+      "train": [
+        {
+          "seed": 122,
+          "realism": {
+            "platform": "multirotor_hover"
+          }
+        },
+        {
+          "seed": 121,
+          "realism": {
+            "platform": "multirotor_maneuver"
+          }
+        },
+        {
+          "seed": 123,
+          "realism": {
+            "platform": "fixed_wing"
+          }
+        },
+        {
+          "seed": 124,
+          "realism": {
+            "platform": "large_slow"
+          }
+        }
+      ],
+      "sizes": {
+        "train_clean": 800
+      },
+      "features_exclude": [
+        "imu_att_resid_mps2",
+        "imu_att_resid_long_mps2"
+      ],
+      "tests": [
+        {
+          "name": "multirotor_hover",
+          "seed": 212,
+          "realism": {
+            "platform": "multirotor_hover"
+          }
+        },
+        {
+          "name": "multirotor_maneuver",
+          "seed": 211,
+          "realism": {
+            "platform": "multirotor_maneuver"
+          }
+        },
+        {
+          "name": "fixed_wing",
+          "seed": 213,
+          "realism": {
+            "platform": "fixed_wing"
+          }
+        },
+        {
+          "name": "large_slow",
+          "seed": 214,
+          "realism": {
+            "platform": "large_slow"
+          }
+        }
+      ]
+    }
+  ],
+  "committed_before_generation": "2026-10-27: this plan file is committed before any of its datasets are generated or scored"
+}

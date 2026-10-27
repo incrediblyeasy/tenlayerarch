@@ -22,6 +22,9 @@
     "oof_folds": 3,
     "split_seed": 7,
     "model_seed": 0,
-    "exclude_features": []
+    "exclude_features": [
+      "imu_att_resid_mps2",
+      "imu_att_resid_long_mps2"
+    ]
   }
 }

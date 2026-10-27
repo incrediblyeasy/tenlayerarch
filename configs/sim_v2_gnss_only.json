@@ -26,7 +26,9 @@
       "imu_resid_mps2",
       "imu_resid_long_mps2",
       "baro_resid_m",
-      "const_diff_m"
+      "const_diff_m",
+      "imu_att_resid_mps2",
+      "imu_att_resid_long_mps2"
     ]
   }
 }

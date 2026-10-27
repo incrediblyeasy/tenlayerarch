@@ -118,6 +118,46 @@ def f_imu_resid_long(frame, cfg):
     return np.hypot(trailing_mean(rx, n), trailing_mean(ry, n))
 
 
+def _att_accel_ned(frame, cfg):
+    """IMU acceleration in NED using the reported roll, pitch and yaw: R(body to NED) f + g (n, e)."""
+    roll = frame["roll_rad"].to_numpy(dtype=float)
+    pitch = frame["pitch_rad"].to_numpy(dtype=float)
+    yaw = frame["yaw_rad"].to_numpy(dtype=float)
+    fx = frame["acc_bx_mps2"].to_numpy(dtype=float)
+    fy = frame["acc_by_mps2"].to_numpy(dtype=float)
+    fz = frame["acc_bz_mps2"].to_numpy(dtype=float)
+    cr, sr, cp, sp, cy, sy = np.cos(roll), np.sin(roll), np.cos(pitch), np.sin(pitch), np.cos(yaw), np.sin(yaw)
+    an = cy * cp * fx + (cy * sp * sr - sy * cr) * fy + (cy * sp * cr + sy * sr) * fz
+    ae = sy * cp * fx + (sy * sp * sr + cy * cr) * fy + (sy * sp * cr - cy * sr) * fz
+    return an, ae
+
+
+def _att_resid_xy(frame, cfg):
+    dt = _dt(frame)
+    n1 = _rows(frame, cfg.short_window_s)
+    warm = warmup_mask(frame, cfg)
+    an, ae = _att_accel_ned(frame, cfg)
+    gn = trailing_mean(backward_diff(frame["vel_n_mps"].to_numpy(dtype=float)) / dt, n1)
+    ge = trailing_mean(backward_diff(frame["vel_e_mps"].to_numpy(dtype=float)) / dt, n1)
+    rn = gn - trailing_mean(an, n1)
+    re = ge - trailing_mean(ae, n1)
+    return rn - frozen_baseline(rn, warm, "median"), re - frozen_baseline(re, warm, "median")
+
+
+def f_imu_att_resid(frame, cfg):
+    """Attitude-aware version of imu_resid: GNSS acceleration against the IMU acceleration rotated
+    with roll, pitch and yaw (not yaw only), bias removed (m/s^2). Needed once the body is tilted."""
+    rn, re = _att_resid_xy(frame, cfg)
+    return trailing_mean(np.hypot(rn, re), _rows(frame, cfg.mid_window_s))
+
+
+def f_imu_att_resid_long(frame, cfg):
+    """Attitude-aware long-window residual: signed residual averaged over persist_window_s first (m/s^2)."""
+    rn, re = _att_resid_xy(frame, cfg)
+    n = _rows(frame, cfg.persist_window_s)
+    return np.hypot(trailing_mean(rn, n), trailing_mean(re, n))
+
+
 def f_baro_resid(frame, cfg):
     """GNSS altitude minus barometric altitude, relative to the session baseline (m)."""
     warm = warmup_mask(frame, cfg)
@@ -261,6 +301,8 @@ FEATURES: Dict[str, Tuple[Tuple[str, ...], FeatureFn]] = {
     "posvel_mps": (("t_gnss_s", "lat_deg", "lon_deg", "vel_n_mps", "vel_e_mps"), f_posvel),
     "imu_resid_mps2": (("t_gnss_s", "vel_n_mps", "vel_e_mps", "yaw_rad", "acc_bx_mps2", "acc_by_mps2"), f_imu_resid),
     "imu_resid_long_mps2": (("t_gnss_s", "vel_n_mps", "vel_e_mps", "yaw_rad", "acc_bx_mps2", "acc_by_mps2"), f_imu_resid_long),
+    "imu_att_resid_mps2": (("t_gnss_s", "vel_n_mps", "vel_e_mps", "roll_rad", "pitch_rad", "yaw_rad", "acc_bx_mps2", "acc_by_mps2", "acc_bz_mps2"), f_imu_att_resid),
+    "imu_att_resid_long_mps2": (("t_gnss_s", "vel_n_mps", "vel_e_mps", "roll_rad", "pitch_rad", "yaw_rad", "acc_bx_mps2", "acc_by_mps2", "acc_bz_mps2"), f_imu_att_resid_long),
     "baro_resid_m": (("t_gnss_s", "alt_m", "baro_alt_m"), f_baro_resid),
     "implied_accel_mps2": (("t_gnss_s", "lat_deg", "lon_deg"), f_implied_accel),
     "cn0_shift_db": (("t_gnss_s", "cn0_dbhz"), f_cn0_shift),

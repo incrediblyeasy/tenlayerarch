@@ -30,7 +30,9 @@
       "hdop_change",
       "sv_change",
       "sv_drop",
-      "hdop_rise"
+      "hdop_rise",
+      "imu_att_resid_mps2",
+      "imu_att_resid_long_mps2"
     ]
   }
 }

@@ -1,0 +1,72 @@
+{
+  "config": "configs/sim_v3.json",
+  "sizes": {
+    "train_clean": 3000,
+    "train_per_attack": 50,
+    "test_clean": 2000,
+    "test_per_attack": 100
+  },
+  "note": "All results simulated. Detector: LightGBM, configs/sim_v3.json settings (persistence 5, calibration margin 0.5 FA/h), fitted and calibrated inside the training world (50/20 split by session), two variants (all features; signal-strength features excluded). Test worlds are fresh seeds used only here. Gate targets in configs/gate_targets.json are unchanged. Expected directions are hypotheses, not results.",
+  "change": "C5 spoofer and receiver clock: every attacked session either shifts the receiver clock (clock_coupled true) or preserves it (false), instead of the default 50/50 draw.",
+  "expected": "The clock cues detect the clock-shifting attacks; against a clock-preserving attacker they add nothing and detection falls.",
+  "arms": [
+    {
+      "name": "c5_full_detector",
+      "train": {
+        "seed": 105
+      },
+      "features_exclude": [
+        "imu_att_resid_mps2",
+        "imu_att_resid_long_mps2"
+      ],
+      "tests": [
+        {
+          "name": "clock_shifted",
+          "seed": 205,
+          "attacker": {
+            "clock_coupled": true
+          }
+        },
+        {
+          "name": "clock_preserved",
+          "seed": 206,
+          "attacker": {
+            "clock_coupled": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "c5_clock_cues_alone",
+      "train": {
+        "seed": 105
+      },
+      "features_exclude": [
+        "imu_att_resid_mps2",
+        "imu_att_resid_long_mps2"
+      ],
+      "features_only": [
+        "clk_innov_ns",
+        "clk_drift_step_nsps",
+        "allan_dev_nsps"
+      ],
+      "tests": [
+        {
+          "name": "clock_shifted",
+          "seed": 205,
+          "attacker": {
+            "clock_coupled": true
+          }
+        },
+        {
+          "name": "clock_preserved",
+          "seed": 206,
+          "attacker": {
+            "clock_coupled": false
+          }
+        }
+      ]
+    }
+  ],
+  "committed_before_generation": "2026-10-27: this plan file is committed before any of its datasets are generated or scored"
+}

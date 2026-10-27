@@ -1,0 +1,154 @@
+{
+  "config": "configs/sim_v3.json",
+  "sizes": {
+    "train_clean": 3000,
+    "train_per_attack": 50,
+    "test_clean": 2000,
+    "test_per_attack": 100
+  },
+  "note": "All results simulated. Detector: LightGBM, configs/sim_v3.json settings (persistence 5, calibration margin 0.5 FA/h), fitted and calibrated inside the training world (50/20 split by session), two variants (all features; signal-strength features excluded). Test worlds are fresh seeds used only here. Gate targets in configs/gate_targets.json are unchanged. Expected directions are hypotheses, not results.",
+  "change": "C4 ionosphere: code delayed and carrier advanced by the same slant delay (3-12 m vertical, obliquity factor). Spoofer variants: reproduces the ionosphere (iono_matched true) or not (false).",
+  "expected": "The code-versus-carrier cue detects the non-matching spoofer and fails against the matching one.",
+  "arms": [
+    {
+      "name": "c4_full_detector_trained_in_iono_world",
+      "train": [
+        {
+          "seed": 103,
+          "realism": {
+            "ionosphere": true
+          },
+          "attacker": {
+            "iono_matched": true
+          }
+        },
+        {
+          "seed": 104,
+          "realism": {
+            "ionosphere": true
+          },
+          "attacker": {
+            "iono_matched": false
+          }
+        }
+      ],
+      "sizes": {
+        "train_clean": 1500
+      },
+      "features_exclude": [
+        "imu_att_resid_mps2",
+        "imu_att_resid_long_mps2"
+      ],
+      "tests": [
+        {
+          "name": "iono_matched_spoofer",
+          "seed": 203,
+          "realism": {
+            "ionosphere": true
+          },
+          "attacker": {
+            "iono_matched": true
+          }
+        },
+        {
+          "name": "iono_not_matched_spoofer",
+          "seed": 204,
+          "realism": {
+            "ionosphere": true
+          },
+          "attacker": {
+            "iono_matched": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "c4_code_carrier_cue_alone",
+      "train": [
+        {
+          "seed": 103,
+          "realism": {
+            "ionosphere": true
+          },
+          "attacker": {
+            "iono_matched": true
+          }
+        },
+        {
+          "seed": 104,
+          "realism": {
+            "ionosphere": true
+          },
+          "attacker": {
+            "iono_matched": false
+          }
+        }
+      ],
+      "sizes": {
+        "train_clean": 1500
+      },
+      "features_exclude": [
+        "imu_att_resid_mps2",
+        "imu_att_resid_long_mps2"
+      ],
+      "features_only": [
+        "code_carrier_m"
+      ],
+      "tests": [
+        {
+          "name": "iono_matched_spoofer",
+          "seed": 203,
+          "realism": {
+            "ionosphere": true
+          },
+          "attacker": {
+            "iono_matched": true
+          }
+        },
+        {
+          "name": "iono_not_matched_spoofer",
+          "seed": 204,
+          "realism": {
+            "ionosphere": true
+          },
+          "attacker": {
+            "iono_matched": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "c4_base_detector_on_iono_world",
+      "train": {
+        "seed": 101
+      },
+      "features_exclude": [
+        "imu_att_resid_mps2",
+        "imu_att_resid_long_mps2"
+      ],
+      "tests": [
+        {
+          "name": "iono_matched_spoofer",
+          "seed": 203,
+          "realism": {
+            "ionosphere": true
+          },
+          "attacker": {
+            "iono_matched": true
+          }
+        },
+        {
+          "name": "iono_not_matched_spoofer",
+          "seed": 204,
+          "realism": {
+            "ionosphere": true
+          },
+          "attacker": {
+            "iono_matched": false
+          }
+        }
+      ]
+    }
+  ],
+  "committed_before_generation": "2026-10-27: this plan file is committed before any of its datasets are generated or scored"
+}
