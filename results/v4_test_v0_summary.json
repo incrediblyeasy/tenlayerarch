@@ -1,0 +1,36 @@
+{
+ "V0_v3_lightgbm": {
+  "main": {
+   "detection": 0.9946428571428572,
+   "consistent_takeover": 0.96875,
+   "fa_per_hour": 268.0079999999998,
+   "fa_events": 22334,
+   "clean_hours": 83.33333333333339,
+   "delay_median_s": 0.5494186400000007,
+   "delay_p90_s": 5.36699801,
+   "fa_upper95": 271.54632759809994
+  },
+  "weak": {
+   "detection": 0.9982142857142857,
+   "consistent_takeover": 0.9875,
+   "delay_p90_s": 5.324290693000004
+  }
+ },
+ "V0_v3_one_class_svm": {
+  "main": {
+   "detection": 0.99375,
+   "consistent_takeover": 0.975,
+   "fa_per_hour": 113.30399999999993,
+   "fa_events": 9442,
+   "clean_hours": 83.33333333333339,
+   "delay_median_s": 0.09359228000000286,
+   "delay_p90_s": 2.599700072000003,
+   "fa_upper95": 115.61286086095767
+  },
+  "weak": {
+   "detection": 0.9964285714285714,
+   "consistent_takeover": 0.975,
+   "delay_p90_s": 1.155665234999999
+  }
+ }
+}

@@ -20,3 +20,13 @@ All use `configs/sim_v2.json` and the commands below. Rebuild, then check with
 | `sim_matched1` | C1 matched-power attackers | `--out datasets/sim_matched1 --n-clean 300 --n-per-attack 150 --seed 6060 --matched-power` | 1350 | `2496a0678c013a0f` |
 
 Earlier rounds: `sim_v1`, `sim_dev` (first comparison), `sim_fa` (small, 1620 sessions, used for quick feature checks), `sim_test` (v2 test, used once). Their generation commands are in README.md and STATUS.md; `sim_test` is `--n-clean 1500 --n-per-attack 60 --seed 8888`.
+
+## v4 world (configs/sim_v4.json; built by `ten_layer_detector/world_v4.py`, all use realistic IMU, ionosphere, multipath, four platform classes, half matched-power attackers)
+
+| Name | Use | Command | Sessions | Hash (sha256, first 16) |
+|---|---|---|---|---|
+| `sim_v4_val` | train, calibration, validation (all v4 choices) | `python -m ten_layer_detector.world_v4 --out datasets/sim_v4_val --seed 41000 --n-clean 1000 --n-per-attack 15` | 4420 | `0a2d4fc093fbcf33` |
+| `sim_v4_weakval` | weak-power validation | `... --out datasets/sim_v4_weakval --seed 42000 --n-clean 25 --n-per-attack 15 --weak` | 520 | `cc2260c32a5305f3` |
+| `sim_v4_fahold` | clean-only false-alarm hold-out | `... --out datasets/sim_v4_fahold --seed 45000 --n-clean 750 --n-per-attack 0` | 3000 | `e3b48d0949ca9fe3` |
+| `sim_v4_test` | v4 test, opened once | `... --out datasets/sim_v4_test --seed 43000 --n-clean 1500 --n-per-attack 40` | 7120 | `f9158bccb30cca2d` |
+| `sim_v4_weaktest` | v4 weak-power test, opened once | `... --out datasets/sim_v4_weaktest --seed 44000 --n-clean 50 --n-per-attack 40 --weak` | 1320 | `dae37c57d9a1add9` |

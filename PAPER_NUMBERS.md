@@ -38,3 +38,6 @@ LightGBM without IMU, barometer and Galileo features, on sim_test4 (reused, not 
 - All results are from simulation; clock, sensor and spoofer parameters are assumptions; no bench or flight data yet.
 - Hardware parsers are tested only on synthetic frames; there is no row assembler yet.
 - Datasets are rebuilt from seeds (`DATASETS.md`, with content hashes); results are in `reports_v3/`, `results/`.
+
+## v4 harder simulated world (fresh test `sim_v4_test`, opened once; see reports_v4/A5_test_result.md)
+Primary (rule-selected, ensemble of LightGBM and one-class SVM): detection 0.871 (0.851-0.890); ordinary attackers 0.952, matched-power attackers 0.791; FA 0.66/h (upper 95% 0.86; fixed-wing alone 1.20); consistent takeover 0.59; weak (0-1 dB) detection 0.849, weak consistent takeover 0.49; median / p90 delay 1.0 / 16.2 s. v4 targets: false-alarm bound met; weak consistent takeover >= 0.85 and p90 <= 5 s missed. Exploratory variants (chosen after seeing validation): CUSUM 0.897, temporal 0.878, all-features 0.904. The v3 models on this world give detection 0.99 with 113-268 FA/h, i.e. they do not work there. State: validation promised consistent takeover 0.83 and the test gave 0.59 (validation set too small, 18 sessions).
