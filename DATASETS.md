@@ -16,5 +16,7 @@ All use `configs/sim_v2.json` and the commands below. Rebuild, then check with
 | `sim_weak5` | gate weak-power test | `--out datasets/sim_weak5 --n-clean 100 --n-per-attack 150 --seed 2424 --power-range 0 1` | 1150 | `ca991614e120e3f2` |
 | `sim_weakval` | weak-power validation (tuning) | `--out datasets/sim_weakval --n-clean 300 --n-per-attack 150 --seed 1212 --power-range 0 1` | 1350 | `75380847c1587a25` |
 | `sim_weaktrain` | weak-power training experiment (rejected) | `--out datasets/sim_weaktrain --n-clean 1 --n-per-attack 150 --seed 1313 --power-range 0 1` | 1051 | `34e1a04286eba2c7` |
+| `sim_default1` | C1 baseline (default attackers) | `--config configs/sim_v3.json --out datasets/sim_default1 --n-clean 300 --n-per-attack 150 --seed 6161` | 1350 | `d694c8538f398625` |
+| `sim_matched1` | C1 matched-power attackers | `--out datasets/sim_matched1 --n-clean 300 --n-per-attack 150 --seed 6060 --matched-power` | 1350 | `2496a0678c013a0f` |
 
 Earlier rounds: `sim_v1`, `sim_dev` (first comparison), `sim_fa` (small, 1620 sessions, used for quick feature checks), `sim_test` (v2 test, used once). Their generation commands are in README.md and STATUS.md; `sim_test` is `--n-clean 1500 --n-per-attack 60 --seed 8888`.

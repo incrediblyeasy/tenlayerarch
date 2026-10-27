@@ -17,6 +17,7 @@ All numbers are from simulated data. This file records, in order, which decision
 | 9 | Pre-registered LightGBM confirmation on a fourth fresh set `sim_test4` (seed 3131), `configs/preregistered_test4.json` committed first (`09b52aa`, 2026-10-26 14:39:32). | The test3 result. |
 | 10 | LightGBM adopted as the working model (`configs/adopted_model.json`), after steps 8 and 9. This is a judgement made with the test3 and test4 results in hand, not an outcome of the rule. | The test2, test3 and test4 results. |
 | 11 | Gate targets committed (`8b9dc33`, 2026-10-26 16:03:51). Features and alarm settings then tuned on validation only (rejected: IMU drift feature, weak-power training, persistence 3, 10 s window; adopted: persistence 5, margin 0.5). Gate test pre-registered (`46cab6c`, 16:14:31) and read once on `sim_test5` / `sim_weak5`: five targets met, two missed, one pending hardware. | The test2-4 results. |
+| 12 | Simulator improvements plan (`SIMULATOR_IMPROVEMENTS.md`). C1 plan committed (`2f49de2`, 2026-10-27 14:55:46) before `sim_default1` / `sim_matched1` were generated; result in `reports_sim/C1_matched_power.md`. C2 plan and module committed (`9571f6d`) before any run. | Gate result. |
 
 What this means for a reader:
 
