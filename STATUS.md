@@ -1,5 +1,7 @@
 # Status (update after each step)
 
+Simulator improvements (SIMULATOR_IMPROVEMENTS.md): C1 matched power DONE (reports_sim/C1_matched_power.md: full detector 0.989 -> 0.898, consistent takeover 0.93 -> 0.35; no-strength detector 0.969). C2 adaptive attacker DONE (reports_sim/C2_adaptive_attacker.md: careful consistent takeover goes undetected >= 50 m in 64% of worlds, >= 100 m in 25%). Next in order: C3 realistic IMU, then C4 ionosphere, C5 clock, C6 multipath, C7 platforms, C8 calibration (needs bench data).
+
 Gate result (2026-10-26, LightGBM, configs/sim_v3.json, fresh sim_test5/sim_weak5): 5 of 7 measurable targets met; missed: weak consistent takeover 0.687 (target 0.85) and weak p90 delay 13.3 s (target 5 s); decision time pending Jetson. See reports_v3/DECISION_NOTE.md (gate section) and configs/gate_targets.json.
 
 Adopted model: LightGBM (configs/adopted_model.json), chosen after pre-registered tests; the selection rule picked the one-class SVM (configs/locked_model_v3.json). Both are reported.
