@@ -1,0 +1,5 @@
+{
+  "rule": "MODEL_SELECTION.md section 6 with these changes, written before any run: (a) FA eligibility is judged on sim_v4_fahold (at most 1.0 per hour), not on the calibration-adjacent validation split; (b) minimum detection 0.5 and non-zero no-strength detection as before; (c) robustness = one third weak-power detection (sim_v4_weakval), one third unseen-attack detection, one third weak consistent-takeover detection (sim_v4_weakval); (d) ranking and tie-break as before: best detection and robustness within a 0.05 margin, then lowest median delay, then speed.",
+  "locked_file": "configs/locked_model_v4.json, committed before sim_v4_test and sim_v4_weaktest are generated or scored.",
+  "test_rule": "Open each test set once; report everything including missed targets; do not rerun."
+}

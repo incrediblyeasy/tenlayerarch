@@ -1,0 +1,16 @@
+{
+  "rule": "Baseline = LightGBM with the 20 v3 features (the two attitude-aware features excluded), fitted on sim_v4_val train, calibrated on its calibration split, measured on its validation split and on sim_v4_weakval (scored with the same fitted model and threshold). A feature set or added feature replaces the baseline only if ALL hold: (1) detection of consistent_takeover on sim_v4_val validation rises by at least 0.03; (2) detection of weak consistent_takeover on sim_v4_weakval rises by at least 0.03; (3) detection of weak-power sessions overall on sim_v4_weakval does not fall; (4) false alarms per hour on sim_v4_fahold do not exceed 1.0. If several qualify, take the one with the larger mean of gains (1) and (2).",
+  "margin": 0.03,
+  "candidate_sets": {
+    "S_v3": "20 v3 features",
+    "S_all": "all 22 features (adds imu_att_resid_mps2, imu_att_resid_long_mps2)",
+    "S_att": "S_all without imu_resid_mps2 and imu_resid_long_mps2 (level-body IMU features)",
+    "S_att_ekf": "S_att plus ekf_innov_m and ekf_innov_vel_mps (M5, built in ten_layer_detector/ekf.py)"
+  },
+  "ablation": "Each of code_carrier_m (F1), allan_dev_nsps (F6), const_diff_m (F7), dead_reckoning_m, baro_resid_m, imu_resid_long_mps2 (F4/F5) is dropped one at a time from the chosen set and the change reported. Dropping is reported only; features are not removed on this basis.",
+  "not_built": {
+    "F2": "pseudorange-ephemeris consistency: the simulator has no per-satellite positions or ephemeris, so there is nothing to test it against",
+    "F3": "AGC: hardware-only (u-blox MON-HW); a simulator model written by the same author as the detector would be circular, so it is left for bench data"
+  },
+  "caveat": "The validation sets hold 60 consistent-takeover and 28 weak consistent-takeover sessions per attack kind, so a 0.03 margin is inside sampling noise (about 0.04-0.09). The rule is applied as written anyway and the noise is stated in the report."
+}

@@ -1,0 +1,16 @@
+{
+  "note": "Written before any v4 data was generated. v3 targets in configs/gate_targets.json are unchanged and reported as before.",
+  "targets": {
+    "weak_consistent_takeover_detection_min": 0.85,
+    "false_alarms_per_hour_upper95_max": 1.0,
+    "p90_delay_s_max_full_power": 5.0,
+    "p90_delay_s_max_weak": 5.0
+  },
+  "also_reported_not_targets": [
+    "detection overall",
+    "detection per attack type, including matched-power sessions (_m_) separately",
+    "per-platform detection and FA",
+    "median delay",
+    "consistent takeover at full power"
+  ]
+}

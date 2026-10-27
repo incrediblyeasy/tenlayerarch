@@ -1,0 +1,19 @@
+{
+  "metrics_on": "sim_v4_val validation split, sim_v4_weakval, sim_v4_fahold",
+  "candidates": {
+    "M1_svm": "one_class_svm, settings of MODEL_SELECTION.md",
+    "M1_lightgbm": "lightgbm, same",
+    "M1_xgboost": "xgboost, same",
+    "M2_ensemble": "average of the per-model ranks of the one_class_svm and lightgbm scores; ranks taken against the sorted clean calibration scores of each model; weight w in {0.25,0.5,0.75} for lightgbm chosen on validation (lowest p90 delay among those with fahold FA <= 1.0 and no loss in detection greater than 0.01)",
+    "M3_temporal": "lightgbm on the chosen features plus trailing 30 s summaries (mean, max, slope) of the six most important features by gain; implemented as a feature expansion, not a recurrent network, because no deep learning library is installed and the plan limits size by the Jetson budget",
+    "M4_autoencoder": "run only if after M1-M3 the best validation consistent-takeover detection is below 0.85. sklearn MLPRegressor (32-8-32) trained on clean rows, score = reconstruction error",
+    "M5_hybrid": "lightgbm with the EKF innovation features (this is the S_att_ekf feature set; reported under A2)"
+  },
+  "decision_logic": {
+    "D1_cusum": "on the model score z_t (decision_function): S_t = max(0, S_(t-1) + z_t - ref); alarm when S_t > h. ref in {p90, p99} of clean calibration active-row scores; h by bisection so clean calibration FA <= fa_per_hour_target (0.5/h)",
+    "D2_persistence": "k in {3, 5, 10} consecutive rows above threshold, threshold re-calibrated for each k with the existing rule",
+    "D3_conformal": "threshold = the ceil((n+1)(1-alpha))/n quantile of per-session persistence-filtered maximum scores on the clean calibration sessions (n = number of clean calibration sessions), alpha = 0.01 per 50 s of active session (about 0.72 alarms/h); implemented directly, MAPIE is not installed",
+    "choice": "On validation, among decision rules that keep fahold FA <= 0.7/h and detection within 0.01 of the persistence k=5 baseline, take the lowest p90 delay. If none beats the baseline p90 by at least 0.5 s, keep persistence k=5."
+  },
+  "selection": "configs/selection_rule_v4.json"
+}

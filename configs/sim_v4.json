@@ -1,0 +1,43 @@
+{
+  "version": "sim-4.0",
+  "note": "The v4 simulated world is built by ten_layer_detector/world_v4.py: four platform classes (multirotor_hover, multirotor_maneuver, fixed_wing, large_slow), realistic IMU, ionosphere, multipath; attackers half ordinary and half matched-power with preserved clock and reproduced ionosphere (session ids contain _m_ for matched). Results from sim_v4 are never mixed with sim_v3 in one table without a note. All values are simulated assumptions.",
+  "datasets": {
+    "sim_v4_val": {
+      "use": "train, calibration, validation (all choices)",
+      "cmd": "python -m ten_layer_detector.world_v4 --out datasets/sim_v4_val --seed 41000 --n-clean 1000 --n-per-attack 15"
+    },
+    "sim_v4_weakval": {
+      "use": "weak-power validation (power 0-1 dB, ordinary attackers)",
+      "cmd": "python -m ten_layer_detector.world_v4 --out datasets/sim_v4_weakval --seed 42000 --n-clean 25 --n-per-attack 15 --weak"
+    },
+    "sim_v4_fahold": {
+      "use": "clean-only hold-out for checking false-alarm rates during choices; never used to fit or calibrate",
+      "cmd": "python -m ten_layer_detector.world_v4 --out datasets/sim_v4_fahold --seed 45000 --n-clean 750 --n-per-attack 0"
+    },
+    "sim_v4_test": {
+      "use": "fresh test, opened once for the locked configuration",
+      "cmd": "python -m ten_layer_detector.world_v4 --out datasets/sim_v4_test --seed 43000 --n-clean 1500 --n-per-attack 40"
+    },
+    "sim_v4_weaktest": {
+      "use": "fresh weak-power test, opened once",
+      "cmd": "python -m ten_layer_detector.world_v4 --out datasets/sim_v4_weaktest --seed 44000 --n-clean 50 --n-per-attack 40 --weak"
+    }
+  },
+  "detector": {
+    "baseline_s": 10.0,
+    "short_window_s": 1.0,
+    "mid_window_s": 2.0,
+    "long_window_s": 3.0,
+    "allan_window_s": 10.0,
+    "lock_hold_s": 5.0,
+    "threshold_percentile": 99.9,
+    "persistence_k": 5,
+    "fa_per_hour_target": 0.5,
+    "train_fraction": 0.5,
+    "calibration_fraction": 0.2,
+    "oof_folds": 3,
+    "split_seed": 7,
+    "model_seed": 0,
+    "exclude_features": []
+  }
+}
