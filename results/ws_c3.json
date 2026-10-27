@@ -1,0 +1,190 @@
+{
+  "c3_base_detector_on_imu_world": {
+    "arm": "c3_base_detector_on_imu_world",
+    "n_features_full": 20,
+    "features_excluded": [
+      "imu_att_resid_mps2",
+      "imu_att_resid_long_mps2"
+    ],
+    "tests": {
+      "imu_world": {
+        "full": {
+          "detection": 0.93,
+          "detection_ci95": [
+            0.9086575924752508,
+            0.946648487756438
+          ],
+          "fa_per_hour": 1.1519999999999984,
+          "fa_events": 32,
+          "clean_hours": 27.777777777777818,
+          "fa_range": [
+            0.7879671472062432,
+            1.6262802748591345
+          ],
+          "delay_median_s": 1.4578388505963247,
+          "delay_p90_s": 6.127498689434326,
+          "per_type": {
+            "consistent_takeover": 0.79,
+            "dynamic_takeover": 0.82,
+            "ramp": 0.97,
+            "ramp_then_step": 0.98,
+            "static": 1.0,
+            "step": 0.98,
+            "step_then_ramp": 0.97
+          }
+        },
+        "no_strength": {
+          "detection": 1.0,
+          "detection_ci95": [
+            0.9945419537577774,
+            1.0
+          ],
+          "fa_per_hour": 147.85199999999978,
+          "fa_events": 4107,
+          "clean_hours": 27.777777777777818,
+          "fa_range": [
+            143.36437690971093,
+            152.4443673875889
+          ],
+          "delay_median_s": 0.060091351962647366,
+          "delay_p90_s": 0.5771906218221394,
+          "per_type": {
+            "consistent_takeover": 1.0,
+            "dynamic_takeover": 1.0,
+            "ramp": 1.0,
+            "ramp_then_step": 1.0,
+            "static": 1.0,
+            "step": 1.0,
+            "step_then_ramp": 1.0
+          }
+        }
+      }
+    }
+  },
+  "c3_att_features_trained_in_imu_world": {
+    "arm": "c3_att_features_trained_in_imu_world",
+    "n_features_full": 20,
+    "features_excluded": [
+      "imu_resid_mps2",
+      "imu_resid_long_mps2"
+    ],
+    "tests": {
+      "imu_world": {
+        "full": {
+          "detection": 0.9928571428571429,
+          "detection_ci95": [
+            0.9833889148484212,
+            0.9969452967128165
+          ],
+          "fa_per_hour": 2.843999999999996,
+          "fa_events": 79,
+          "clean_hours": 27.777777777777818,
+          "fa_range": [
+            2.251621582545412,
+            3.544472561928321
+          ],
+          "delay_median_s": 0.6216636696442457,
+          "delay_p90_s": 2.212761021528209,
+          "per_type": {
+            "consistent_takeover": 0.95,
+            "dynamic_takeover": 1.0,
+            "ramp": 1.0,
+            "ramp_then_step": 1.0,
+            "static": 1.0,
+            "step": 1.0,
+            "step_then_ramp": 1.0
+          }
+        },
+        "no_strength": {
+          "detection": 0.9371428571428572,
+          "detection_ci95": [
+            0.9166681003562537,
+            0.9528457220719745
+          ],
+          "fa_per_hour": 1.1159999999999983,
+          "fa_events": 31,
+          "clean_hours": 27.777777777777818,
+          "fa_range": [
+            0.7582678552491056,
+            1.5840729181169528
+          ],
+          "delay_median_s": 1.1871778723361288,
+          "delay_p90_s": 15.306781920689192,
+          "per_type": {
+            "consistent_takeover": 0.59,
+            "dynamic_takeover": 1.0,
+            "ramp": 0.97,
+            "ramp_then_step": 1.0,
+            "static": 1.0,
+            "step": 1.0,
+            "step_then_ramp": 1.0
+          }
+        }
+      }
+    }
+  },
+  "c3_no_imu_features": {
+    "arm": "c3_no_imu_features",
+    "n_features_full": 18,
+    "features_excluded": [
+      "imu_resid_mps2",
+      "imu_resid_long_mps2",
+      "imu_att_resid_mps2",
+      "imu_att_resid_long_mps2"
+    ],
+    "tests": {
+      "imu_world": {
+        "full": {
+          "detection": 0.9871428571428571,
+          "detection_ci95": [
+            0.9757466119346795,
+            0.9932214058693264
+          ],
+          "fa_per_hour": 2.735999999999996,
+          "fa_events": 76,
+          "clean_hours": 27.777777777777818,
+          "fa_range": [
+            2.1556568115523262,
+            3.4245119866799323
+          ],
+          "delay_median_s": 0.6880731106659574,
+          "delay_p90_s": 3.3996354041819146,
+          "per_type": {
+            "consistent_takeover": 0.96,
+            "dynamic_takeover": 0.95,
+            "ramp": 1.0,
+            "ramp_then_step": 1.0,
+            "static": 1.0,
+            "step": 1.0,
+            "step_then_ramp": 1.0
+          }
+        },
+        "no_strength": {
+          "detection": 0.9214285714285714,
+          "detection_ci95": [
+            0.8991173423118758,
+            0.939139447283965
+          ],
+          "fa_per_hour": 1.295999999999998,
+          "fa_events": 36,
+          "clean_hours": 27.777777777777818,
+          "fa_range": [
+            0.9077024670233469,
+            1.7942102816125003
+          ],
+          "delay_median_s": 1.2429483406565396,
+          "delay_p90_s": 16.870036153241582,
+          "per_type": {
+            "consistent_takeover": 0.66,
+            "dynamic_takeover": 0.83,
+            "ramp": 0.96,
+            "ramp_then_step": 1.0,
+            "static": 1.0,
+            "step": 1.0,
+            "step_then_ramp": 1.0
+          }
+        }
+      }
+    }
+  }
+}

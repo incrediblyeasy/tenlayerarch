@@ -1,0 +1,230 @@
+{
+  "c5_full_detector": {
+    "arm": "c5_full_detector",
+    "n_features_full": 20,
+    "features_excluded": [
+      "imu_att_resid_mps2",
+      "imu_att_resid_long_mps2"
+    ],
+    "tests": {
+      "clock_shifted": {
+        "full": {
+          "detection": 0.97,
+          "detection_ci95": [
+            0.9545735435133313,
+            0.9802958930189793
+          ],
+          "fa_per_hour": 0.7919999999999988,
+          "fa_events": 22,
+          "clean_hours": 27.777777777777818,
+          "fa_range": [
+            0.49634218340026526,
+            1.1990975179365067
+          ],
+          "delay_median_s": 1.0505771931002812,
+          "delay_p90_s": 2.9107592667020934,
+          "per_type": {
+            "consistent_takeover": 0.88,
+            "dynamic_takeover": 0.99,
+            "ramp": 0.97,
+            "ramp_then_step": 0.98,
+            "static": 1.0,
+            "step": 0.99,
+            "step_then_ramp": 0.98
+          }
+        },
+        "no_strength": {
+          "detection": 0.99,
+          "detection_ci95": [
+            0.9795033261166142,
+            0.9951477885660076
+          ],
+          "fa_per_hour": 1.439999999999998,
+          "fa_events": 40,
+          "clean_hours": 27.777777777777818,
+          "fa_range": [
+            1.0287571119044012,
+            1.9608712907034236
+          ],
+          "delay_median_s": 0.9286778736122905,
+          "delay_p90_s": 3.9858175987682385,
+          "per_type": {
+            "consistent_takeover": 0.93,
+            "dynamic_takeover": 1.0,
+            "ramp": 1.0,
+            "ramp_then_step": 1.0,
+            "static": 1.0,
+            "step": 1.0,
+            "step_then_ramp": 1.0
+          }
+        }
+      },
+      "clock_preserved": {
+        "full": {
+          "detection": 0.9471428571428572,
+          "detection_ci95": [
+            0.9279929385980721,
+            0.9614117229053118
+          ],
+          "fa_per_hour": 0.7559999999999989,
+          "fa_events": 21,
+          "clean_hours": 27.777777777777818,
+          "fa_range": [
+            0.46797591542674205,
+            1.1556263064579608
+          ],
+          "delay_median_s": 1.9538509162856883,
+          "delay_p90_s": 12.808851641294499,
+          "per_type": {
+            "consistent_takeover": 0.75,
+            "dynamic_takeover": 0.97,
+            "ramp": 0.95,
+            "ramp_then_step": 0.99,
+            "static": 1.0,
+            "step": 0.99,
+            "step_then_ramp": 0.98
+          }
+        },
+        "no_strength": {
+          "detection": 0.9357142857142857,
+          "detection_ci95": [
+            0.9150611874430079,
+            0.9516110865459124
+          ],
+          "fa_per_hour": 1.403999999999998,
+          "fa_events": 39,
+          "clean_hours": 27.777777777777818,
+          "fa_range": [
+            0.9983812496197118,
+            1.9193142191699795
+          ],
+          "delay_median_s": 5.3339750826849155,
+          "delay_p90_s": 15.972333214728216,
+          "per_type": {
+            "consistent_takeover": 0.58,
+            "dynamic_takeover": 1.0,
+            "ramp": 0.97,
+            "ramp_then_step": 1.0,
+            "static": 1.0,
+            "step": 1.0,
+            "step_then_ramp": 1.0
+          }
+        }
+      }
+    }
+  },
+  "c5_clock_cues_alone": {
+    "arm": "c5_clock_cues_alone",
+    "n_features_full": 3,
+    "features_excluded": [
+      "imu_att_resid_mps2",
+      "imu_att_resid_long_mps2"
+    ],
+    "tests": {
+      "clock_shifted": {
+        "full": {
+          "detection": 0.9414285714285714,
+          "detection_ci95": [
+            0.9215044962843928,
+            0.9565339714617591
+          ],
+          "fa_per_hour": 0.5039999999999992,
+          "fa_events": 14,
+          "clean_hours": 27.777777777777818,
+          "fa_range": [
+            0.27554148994682104,
+            0.8456263603860795
+          ],
+          "delay_median_s": 0.5504979498378724,
+          "delay_p90_s": 1.1819708246327296,
+          "per_type": {
+            "consistent_takeover": 0.91,
+            "dynamic_takeover": 0.91,
+            "ramp": 0.93,
+            "ramp_then_step": 0.95,
+            "static": 0.98,
+            "step": 0.99,
+            "step_then_ramp": 0.92
+          }
+        },
+        "no_strength": {
+          "detection": 0.9414285714285714,
+          "detection_ci95": [
+            0.9215044962843928,
+            0.9565339714617591
+          ],
+          "fa_per_hour": 0.5039999999999992,
+          "fa_events": 14,
+          "clean_hours": 27.777777777777818,
+          "fa_range": [
+            0.27554148994682104,
+            0.8456263603860795
+          ],
+          "delay_median_s": 0.5504979498378724,
+          "delay_p90_s": 1.1819708246327296,
+          "per_type": {
+            "consistent_takeover": 0.91,
+            "dynamic_takeover": 0.91,
+            "ramp": 0.93,
+            "ramp_then_step": 0.95,
+            "static": 0.98,
+            "step": 0.99,
+            "step_then_ramp": 0.92
+          }
+        }
+      },
+      "clock_preserved": {
+        "full": {
+          "detection": 0.004285714285714286,
+          "detection_ci95": [
+            0.0014585509432198818,
+            0.012524140616926607
+          ],
+          "fa_per_hour": 0.4679999999999993,
+          "fa_events": 13,
+          "clean_hours": 27.777777777777818,
+          "fa_range": [
+            0.2491902896761365,
+            0.8002942530537183
+          ],
+          "delay_median_s": 18.41560692970329,
+          "delay_p90_s": 34.6412898640745,
+          "per_type": {
+            "consistent_takeover": 0.0,
+            "dynamic_takeover": 0.0,
+            "ramp": 0.01,
+            "ramp_then_step": 0.0,
+            "static": 0.0,
+            "step": 0.0,
+            "step_then_ramp": 0.02
+          }
+        },
+        "no_strength": {
+          "detection": 0.004285714285714286,
+          "detection_ci95": [
+            0.0014585509432198818,
+            0.012524140616926607
+          ],
+          "fa_per_hour": 0.4679999999999993,
+          "fa_events": 13,
+          "clean_hours": 27.777777777777818,
+          "fa_range": [
+            0.2491902896761365,
+            0.8002942530537183
+          ],
+          "delay_median_s": 18.41560692970329,
+          "delay_p90_s": 34.6412898640745,
+          "per_type": {
+            "consistent_takeover": 0.0,
+            "dynamic_takeover": 0.0,
+            "ramp": 0.01,
+            "ramp_then_step": 0.0,
+            "static": 0.0,
+            "step": 0.0,
+            "step_then_ramp": 0.02
+          }
+        }
+      }
+    }
+  }
+}

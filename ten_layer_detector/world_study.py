@@ -44,8 +44,13 @@ def run_arm(arm: dict, cfg0, sizes: dict) -> dict:
     cfg = replace(cfg0, exclude_features=tuple(arm.get("features_exclude", ())))
     sizes = {**sizes, **arm.get("sizes", {})}
     train_sessions = []
-    for spec in arm["train"] if isinstance(arm["train"], list) else [arm["train"]]:
-        train_sessions += make(spec, sizes["train_clean"], sizes["train_per_attack"])
+    specs = arm["train"] if isinstance(arm["train"], list) else [arm["train"]]
+    for spec in specs:
+        part = make(spec, sizes["train_clean"], sizes["train_per_attack"])
+        if len(specs) > 1:  # worlds share session ids; keep them unique when pooled
+            for s in part:
+                s["session_id"] = f"w{spec['seed']}_" + s["session_id"].astype(str)
+        train_sessions += part
     tr, ca, _ = split_three_way(train_sessions, cfg.train_fraction, cfg.calibration_fraction, seed=cfg.split_seed)
     feats = {}
 

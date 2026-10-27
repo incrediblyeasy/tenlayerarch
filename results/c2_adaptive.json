@@ -1,0 +1,136 @@
+{
+  "default": {
+    "matched_power": false,
+    "n_worlds": 150,
+    "threshold": 4.076903759892729,
+    "families": {
+      "ramp": {
+        "parameter": "rate_mps",
+        "grid": [
+          0.05,
+          0.1,
+          0.2,
+          0.3,
+          0.5,
+          0.75,
+          1.0,
+          1.5,
+          2.0
+        ],
+        "detection_by_value": [
+          0.887,
+          0.9,
+          0.96,
+          0.987,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "attacker_finds_undetected": 0.11333333333333333,
+        "undetected_offset_ge_25m": 0.0,
+        "undetected_offset_ge_50m": 0.0,
+        "undetected_offset_ge_100m": 0.0,
+        "undetected_offset_median_m": 0.0,
+        "undetected_offset_p90_m": 2.1999999999999886,
+        "max_offset_on_grid_m": 80.0
+      },
+      "consistent_takeover": {
+        "parameter": "accel_mps2",
+        "grid": [
+          0.01,
+          0.02,
+          0.05,
+          0.1,
+          0.15,
+          0.2,
+          0.3
+        ],
+        "detection_by_value": [
+          0.853,
+          0.867,
+          0.893,
+          0.947,
+          0.96,
+          0.973,
+          0.98
+        ],
+        "attacker_finds_undetected": 0.15333333333333332,
+        "undetected_offset_ge_25m": 0.05333333333333334,
+        "undetected_offset_ge_50m": 0.03333333333333333,
+        "undetected_offset_ge_100m": 0.006666666666666667,
+        "undetected_offset_median_m": 0.0,
+        "undetected_offset_p90_m": 9.890689624733382,
+        "max_offset_on_grid_m": 145.39903865068914
+      }
+    }
+  },
+  "matched": {
+    "matched_power": true,
+    "n_worlds": 150,
+    "threshold": 4.076903759892729,
+    "families": {
+      "ramp": {
+        "parameter": "rate_mps",
+        "grid": [
+          0.05,
+          0.1,
+          0.2,
+          0.3,
+          0.5,
+          0.75,
+          1.0,
+          1.5,
+          2.0
+        ],
+        "detection_by_value": [
+          0.36,
+          0.353,
+          0.38,
+          0.707,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "attacker_finds_undetected": 0.6466666666666666,
+        "undetected_offset_ge_25m": 0.0,
+        "undetected_offset_ge_50m": 0.0,
+        "undetected_offset_ge_100m": 0.0,
+        "undetected_offset_median_m": 8.0,
+        "undetected_offset_p90_m": 12.0,
+        "max_offset_on_grid_m": 80.0
+      },
+      "consistent_takeover": {
+        "parameter": "accel_mps2",
+        "grid": [
+          0.01,
+          0.02,
+          0.05,
+          0.1,
+          0.15,
+          0.2,
+          0.3
+        ],
+        "detection_by_value": [
+          0.187,
+          0.193,
+          0.22,
+          0.28,
+          0.3,
+          0.373,
+          0.587
+        ],
+        "attacker_finds_undetected": 0.82,
+        "undetected_offset_ge_25m": 0.7266666666666667,
+        "undetected_offset_ge_50m": 0.64,
+        "undetected_offset_ge_100m": 0.25333333333333335,
+        "undetected_offset_median_m": 76.78078893461213,
+        "undetected_offset_p90_m": 128.3690269145436,
+        "max_offset_on_grid_m": 145.39903865068914
+      }
+    }
+  }
+}
