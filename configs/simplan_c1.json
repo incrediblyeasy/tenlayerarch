@@ -1,0 +1,13 @@
+{
+  "change": "C1 matched-power spoofer (SIMULATOR_IMPROVEMENTS.md section 3)",
+  "committed_on": "2026-10-27, before any C1 dataset was generated",
+  "definition": "Attacked sessions use a careful attacker: per-satellite C/N0 equals the authentic C/N0 plus Gaussian error (sd 1.0 dB), and the satellite geometry is not changed. Position, velocity, clock-coupling, lock-reset and Galileo behaviour are sampled exactly as in the default attacker. Clean sessions are unchanged.",
+  "datasets": {
+    "sim_default1": "--n-clean 300 --n-per-attack 150 --seed 6161 (default attackers, fresh; the side-by-side baseline for this change)",
+    "sim_matched1": "--n-clean 300 --n-per-attack 150 --seed 6060 --matched-power"
+  },
+  "detectors_unchanged": "LightGBM, configs/sim_v3.json (all features) and configs/sim_v3_nostrength.json (strength features excluded), fitted and calibrated on sim_fa2 train and calibration splits exactly as for the gate test; nothing retuned",
+  "measures": "detection (95% CI) overall and per attack type, on both datasets, for both detectors, side by side. False alarms are a property of clean sessions and are not changed by C1; the clean-session figure from the gate test applies.",
+  "hypothesis_not_a_result": "Detection of the full detector falls on matched-power attacks; the no-strength detector changes little between the two datasets; the gap shows how much of the result rests on the strength cue.",
+  "after_this": "If the detector is retrained with matched attacks in training, that is a separate, logged change tested on a new set; its results do not replace these."
+}

@@ -159,13 +159,22 @@ def generate_session(
         if attacker:
             params.update(attacker)
         power_db = float(params["power_db"])
+        matched = bool(params.get("matched_power", False))
 
-        # Spoofed signals arrive at a common power: C/N0 rises and its spread across
-        # satellites shrinks, both scaled by spoofer power.
-        squeeze = 1.0 - 0.6 * min(power_db, 10.0) / 10.0
-        auth = cn0[on]
-        row_mean = auth.mean(axis=1, keepdims=True)
-        cn0[on] = row_mean + (auth - row_mean) * squeeze + power_db * arng.uniform(0.7, 1.0)
+        if matched:
+            # Careful attacker (SIMULATOR_IMPROVEMENTS.md, C1): per-satellite C/N0 matches the
+            # authentic signal up to a Gaussian error, and the satellite geometry is reproduced too,
+            # so neither the strength cue nor the geometry cue is available to the detector.
+            tol = float(params.get("match_tolerance_db", 1.0))
+            cn0[on] = cn0[on] + arng.normal(0.0, tol, cn0[on].shape)
+            params["geometry_changed"] = False
+        else:
+            # Spoofed signals arrive at a common power: C/N0 rises and its spread across
+            # satellites shrinks, both scaled by spoofer power.
+            squeeze = 1.0 - 0.6 * min(power_db, 10.0) / 10.0
+            auth = cn0[on]
+            row_mean = auth.mean(axis=1, keepdims=True)
+            cn0[on] = row_mean + (auth - row_mean) * squeeze + power_db * arng.uniform(0.7, 1.0)
 
         if params["clock_coupled"]:
             jump_ns = arng.uniform(-1000.0, 1000.0) if attack_type not in {"ramp", "consistent_takeover"} else 0.0
@@ -295,17 +304,23 @@ def generate_mixed_dataset(
     seed: int = 2026,
     attack_types: tuple[str, ...] = ATTACK_TYPES,
     power_range_db: tuple[float, float] | None = None,
+    matched_power: bool = False,
+    match_tolerance_db: float = 1.0,
 ) -> tuple[list[pd.DataFrame], list[Dict[str, Any]]]:
     """Clean sessions plus n_per_attack sessions of each attack type, with metadata.
 
     power_range_db: draw each attacked session's spoofer power uniformly from this range
-    (e.g. (0, 1) for a weak-spoofer set) instead of the default 0-10 dB."""
+    (e.g. (0, 1) for a weak-spoofer set) instead of the default 0-10 dB.
+    matched_power: attacked sessions use the careful attacker of C1 (C/N0 matched per satellite
+    within match_tolerance_db, geometry reproduced)."""
     power_rng = np.random.default_rng([int(seed), 7])
     plan = [("clean", i) for i in range(n_clean)] + [(a, i) for a in attack_types for i in range(n_per_attack)]
     seeds = np.random.SeedSequence(seed).generate_state(len(plan))
     frames, metas = [], []
     for (attack_type, i), s in zip(plan, seeds):
         attacker = {"power_db": float(power_rng.uniform(*power_range_db))} if power_range_db and attack_type != "clean" else None
+        if matched_power and attack_type != "clean":
+            attacker = {**(attacker or {}), "matched_power": True, "match_tolerance_db": match_tolerance_db}
         frame, meta = generate_session(
             duration_s, sample_rate_hz, attack_type, None, f"{attack_type}_{i:04d}", int(s), attacker=attacker, return_metadata=True
         )
