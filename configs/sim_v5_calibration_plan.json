@@ -1,0 +1,38 @@
+{
+  "phase": "Round 2 Step 2: calibrate the simulator's clean nuisances to the real rates. Written 2026-10-28 before the grid was run.",
+  "decision_basis": "reports_v5/R2_diagnosis.md: H1 holds, the simulator is 3-9 times more active than the real clean recordings.",
+  "world": "the v4 world (realistic IMU, ionosphere, multipath, four platform classes) with the new `quiet` realism option (sim/realism.py quiet_used) and nuisance probabilities. The old v4 world stays available and is reported alongside.",
+  "targets_real_rates_per_min": {
+    "sat_drop>=1": 2.067,
+    "sat_rise>=1": 2.146,
+    "hdop_jump>=0.2": 1.081,
+    "position_jump>=3.0": 0.0
+  },
+  "grid": {
+    "tracking_s": [
+      0.0,
+      1.0,
+      2.0,
+      4.0
+    ],
+    "hysteresis_db": [
+      0.0,
+      2.0,
+      4.0,
+      6.0
+    ],
+    "occlusion_prob": [
+      0.3,
+      0.1
+    ],
+    "multipath_jump_prob": [
+      0.15,
+      0.03
+    ]
+  },
+  "calibration_sessions": "120 clean sessions per grid point (30 per platform class), seeds 61000-61119 plus 10 per platform class, all grid points on the same sessions; these are used for calibration only and for no other purpose",
+  "selection": "minimise the sum over sat_drop>=1, sat_rise>=1 and hdop_jump>=0.2 of abs(ln(sim rate / real rate)), among grid points whose position_jump>=3.0 rate is at most 0.15 per minute (three times the rule-of-three upper bound of the real data, 0 events in 63.9 minutes). If the best grid point leaves any of the three families outside the real 95% interval, that is reported and the best point is still used.",
+  "lock_reset": "not calibrated: no real flag exists (R2_diagnosis.md). In the simulator a reset happens when satellite 0 leaves the used set, so it falls with the satellite flicker; the remaining rate is unvalidated and is reported as such.",
+  "output": "configs/sim_v5.json receives the chosen parameters (committed before any v5 data is generated); results/quiet_calibration.json holds every grid point",
+  "not_a_target": "false-alarm rates of the detector are an outcome of this calibration, not an input; no detector result is looked at to choose the grid point"
+}

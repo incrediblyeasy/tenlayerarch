@@ -41,3 +41,17 @@ def test_long_imu_residual_is_causal_and_finite():
     cut.iloc[300:, cut.columns.get_loc("acc_bx_mps2")] += 5.0
     b = compute_features(cut, ["imu_resid_long_mps2"])["imu_resid_long_mps2"].to_numpy()
     assert np.isfinite(a).all() and (a[:300] == b[:300]).all()
+
+
+def test_quiet_nuisances_option_is_opt_in_and_reduces_satellite_flicker():
+    import numpy as np
+
+    from ten_layer_detector.sim import generate_session
+
+    base = generate_session(attack_type="clean", seed=11, session_id="a")
+    same = generate_session(attack_type="clean", seed=11, session_id="a", realism={})
+    assert base.equals(same)
+    quiet = generate_session(attack_type="clean", seed=11, session_id="a", realism={"quiet": {"tracking_s": 3.0, "hysteresis_db": 3.0}})
+    changes = lambda f: int(np.sum(np.diff(f["num_sv"].to_numpy()) != 0))
+    assert changes(quiet) <= changes(base)
+    assert set(quiet.columns) == set(base.columns)

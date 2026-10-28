@@ -86,3 +86,28 @@ def multipath(orng: np.random.Generator, n: int, dt: float, el_deg: np.ndarray):
     cn0 = np.stack([gauss_markov(orng, n, dt, 1.0 + 2.0 * (1.0 - el_deg[0, j] / 90.0), orng.uniform(5.0, 20.0)) for j in range(n_sat)], axis=1)
     pr0 = gauss_markov(orng, n, dt, 0.5 + 1.5 * (1.0 - el_deg[0, 0] / 90.0), orng.uniform(5.0, 20.0))
     return pos, cn0, pr0
+
+
+def quiet_used(cn0: np.ndarray, lost_dbhz: float, rate_hz: float, tracking_s: float, hysteresis_db: float) -> np.ndarray:
+    """Used-satellite mask of a receiver that holds satellites steadily (round 2, Step 2).
+
+    The usable/lost decision looks at the C/N0 averaged over tracking_s seconds and switches
+    with hysteresis: a satellite is lost below lost - h/2 and regained above lost + h/2, so
+    per-sample noise around the threshold no longer makes satellites flicker. With both
+    parameters 0 this is the original per-sample rule.
+    """
+    w = max(1, int(round(tracking_s * rate_hz)))
+    if w > 1:
+        c = np.cumsum(np.vstack([np.zeros((1, cn0.shape[1])), cn0]), axis=0)
+        k = np.arange(1, cn0.shape[0] + 1)
+        lo = np.maximum(0, k - w)
+        sm = (c[k] - c[lo]) / (k - lo)[:, None]
+    else:
+        sm = cn0
+    used = np.empty(cn0.shape, dtype=bool)
+    state = sm[0] >= lost_dbhz
+    h = hysteresis_db / 2.0
+    for i in range(cn0.shape[0]):
+        state = np.where(state, sm[i] >= lost_dbhz - h, sm[i] >= lost_dbhz + h)
+        used[i] = state
+    return used

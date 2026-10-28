@@ -31,7 +31,7 @@ from .gnss_model import (
     solution_error,
     unit_ned,
 )
-from .realism import PLATFORMS, iono_delay, multipath, realistic_imu
+from .realism import PLATFORMS, iono_delay, multipath, quiet_used, realistic_imu
 from .sensors import baro_signal, imu_signal
 from .trajectory import sample_trajectory
 
@@ -70,6 +70,7 @@ def generate_session(
     attacked = attack_type != "clean"
     R = dict(realism or {})  # opt-in realism options (sim/realism.py); empty means the original simulator
     orng = np.random.default_rng([int(seed), 11])
+    Q = dict(R.get("quiet") or {})  # round 2 Step 2: quiet clean-flight nuisances (see sim/realism.py quiet_used)
 
     rng = np.random.default_rng(seed)
     arng = np.random.default_rng([int(seed), 1])
@@ -111,7 +112,7 @@ def generate_session(
     }
 
     # Nuisance: occlusion dips (several satellites lose 4-12 dB for 3-15 s).
-    n_occ = int(rng.integers(1, 3)) if rng.random() < 0.3 else 0
+    n_occ = int(rng.integers(1, 3)) if rng.random() < Q.get("occlusion_prob", 0.3) else 0
     for _ in range(n_occ):
         sats = rng.choice(N_SAT, size=int(rng.integers(2, 6)), replace=False)
         start = rng.uniform(0.0, max(0.0, duration_s - 5.0))
@@ -122,7 +123,7 @@ def generate_session(
 
     # Nuisance: multipath jump in horizontal position (velocity unaffected).
     mp = np.zeros((n, 3))
-    if rng.random() < 0.15:
+    if rng.random() < Q.get("multipath_jump_prob", 0.15):
         start = rng.uniform(0.0, max(0.0, duration_s - 5.0))
         length = rng.uniform(1.0, 4.0)
         ang = rng.uniform(0.0, 2 * np.pi)
@@ -213,7 +214,7 @@ def generate_session(
         meta.update(shape)
         meta["attack_onset_s"] = onset_s
 
-    used = cn0 >= CN0_LOST_DBHZ
+    used = quiet_used(cn0, CN0_LOST_DBHZ, sample_rate_hz, Q.get("tracking_s", 0.0), Q.get("hysteresis_db", 0.0)) if (Q.get("tracking_s") or Q.get("hysteresis_db")) else cn0 >= CN0_LOST_DBHZ
     used[used.sum(axis=1) < 4] = True  # receiver keeps a solution on weak satellites
     u = unit_ned(el, az)
     hdop, vdop, pdop = dop_from_geometry(u, used)
