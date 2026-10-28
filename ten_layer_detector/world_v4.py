@@ -21,12 +21,12 @@ CAREFUL = {"iono_matched": True, "clock_coupled": False}
 
 
 def _job(args):
-    platform, kind, seed, n_clean, n_per_attack, weak = args
-    realism = {**REALISM, "platform": platform}
+    platform, kind, seed, n_clean, n_per_attack, weak, quiet, force_reset = args
+    realism = {**REALISM, "platform": platform, **({"quiet": quiet} if quiet else {})}
     matched = kind == "m"
     sessions, meta = generate_mixed_dataset(
         n_clean, n_per_attack, seed=seed, realism=realism, matched_power=matched,
-        attacker_overrides=CAREFUL if matched else None, power_range_db=(0.0, 1.0) if weak else None,
+        attacker_overrides={**(CAREFUL if matched else {}), **({"lock_reset": True} if force_reset else {})} or None, power_range_db=(0.0, 1.0) if weak else None,
     )
     for s, m in zip(sessions, meta):
         sid = f"{platform}_{kind}_{s['session_id'].iloc[0]}"
@@ -37,18 +37,18 @@ def _job(args):
     return sessions, meta
 
 
-def build(out: str, seed: int, n_clean: int, n_per_attack: int, weak: bool = False, workers: int = 8):
+def build(out: str, seed: int, n_clean: int, n_per_attack: int, weak: bool = False, workers: int = 8, quiet: dict | None = None, force_reset: bool = False):
     """Per platform: ordinary attackers (all clean sessions plus half the attacks) and matched-power
     attackers (the other half, no clean sessions). Weak sets use power 0-1 dB and no matched attacker."""
     jobs = []
     for k, p in enumerate(PLATFORMS):
         if weak:
-            jobs.append((p, "o", seed + 10 * k, n_clean, n_per_attack, True))
+            jobs.append((p, "o", seed + 10 * k, n_clean, n_per_attack, True, quiet, force_reset))
         else:
             half = n_per_attack // 2
-            jobs.append((p, "o", seed + 10 * k, n_clean, n_per_attack - half, False))
+            jobs.append((p, "o", seed + 10 * k, n_clean, n_per_attack - half, False, quiet, force_reset))
             if half:
-                jobs.append((p, "m", seed + 10 * k + 1, 0, half, False))
+                jobs.append((p, "m", seed + 10 * k + 1, 0, half, False, quiet, force_reset))
     with ProcessPoolExecutor(workers) as ex:
         parts = list(ex.map(_job, jobs))
     sessions = [s for p, _ in parts for s in p]
@@ -65,8 +65,13 @@ def main() -> None:
     p.add_argument("--n-per-attack", type=int, required=True)
     p.add_argument("--weak", action="store_true")
     p.add_argument("--workers", type=int, default=8)
+    p.add_argument("--quiet-json", default=None, help="config file whose 'quiet' block sets the clean-flight nuisances (configs/sim_v5.json)")
+    p.add_argument("--force-reset", action="store_true", help="every attacker resets the receiver lock at onset")
     a = p.parse_args()
-    n = build(a.out, a.seed, a.n_clean, a.n_per_attack, a.weak, a.workers)
+    import json
+
+    quiet = json.loads(open(a.quiet_json).read())["quiet"] if a.quiet_json else None
+    n = build(a.out, a.seed, a.n_clean, a.n_per_attack, a.weak, a.workers, quiet, a.force_reset)
     print(f"wrote {n} sessions to {a.out}")
 
 

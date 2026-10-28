@@ -1,0 +1,24 @@
+{
+  "phase": "Round 2, Steps 2-4 evaluation plan, written 2026-10-28 after the calibration (configs/sim_v5.json) and before any v5-world dataset exists. Data names carry r2 to avoid clashing with round 1's sim_v5_* sets.",
+  "world": "configs/sim_v5.json (quiet nuisances calibrated to real clean data)",
+  "datasets": {
+    "sim_r2_val": "train/calibration/validation, seed 71000, 1000 clean + 15 per attack type per platform (as sim_v4_val)",
+    "sim_r2_weakval": "seed 72000, weak power, 25 clean + 15 per attack type per platform",
+    "sim_r2_fahold": "seed 75000, clean only, 750 per platform (41.7 h): the per-type false-alarm check used in every choice",
+    "sim_r2_cal": "seed 77000, clean only, 1500 per platform; generated only if Step 4 is triggered",
+    "sim_r2_test": "seed 73000, 1500 clean + 40 per attack type per platform; opened once, after the lock",
+    "sim_r2_weaktest": "seed 74000, weak power; opened once",
+    "sim_r2_resettest": "seed 76000, attacked sessions only, every attacker forces a lock reset at onset; opened once"
+  },
+  "arms": {
+    "R0_old_primary": "the locked v4 primary (trained and calibrated in the v4 world, configs/locked_model_v4.json) scored unchanged in the v5 world: does the old model work against realistic nuisances? Reference only.",
+    "R1_baseline": "the same recipe (ensemble 0.25 LightGBM + 0.75 one-class SVM, the 20 v3 features, persistence 5, calibration margin 0.5 FA/h, pooled threshold) fitted and calibrated on sim_r2_val. No re-selection of features, models or decision rule.",
+    "R2_flag_gate": "R1 plus Step 3a: alarms are suppressed for N seconds after the receiver flags a lock reset (flag = lock_ms goes backwards between samples). N chosen from {2, 5, 10} on validation by the rule below; N=0 is R1.",
+    "R3_explained_cue": "R1 plus Step 3b: two added features, seconds since the last flagged lock reset (capped at 30 s, 30 when none) and an indicator that a reset was flagged in the last 5 s; the model is refitted and recalibrated; no gate.",
+    "R4_larger_calibration": "only if the chosen arm still has a per-type false-alarm point estimate above 0.8 per hour on sim_r2_fahold: the chosen arm with the pooled threshold taken from sim_r2_cal (about 83 clean hours) instead of the calibration split (round 1's A4 on the reset-aware detector)."
+  },
+  "choice_rule": "On sim_r2_val validation, sim_r2_weakval and sim_r2_fahold: R2 (best N) and R3 are eligible if (1) false-alarm point estimate at most 0.8 per hour for EACH aircraft type on sim_r2_fahold, (2) overall detection at least R1's minus 0.02, (3) p90 delay at most R1's plus 1 s, (4) detection of attacked sessions whose attacker resets the lock at onset (metadata lock_reset true) at least R1's minus 0.05. Take the eligible arm with the lowest maximum per-type false-alarm rate; if none is eligible keep R1 and say so. If R1 itself meets (1) on sim_r2_fahold, report that: the new world already removed the problem and no detector change is chosen unless it lowers the maximum per-type rate by at least 0.1 per hour while meeting (2)-(4).",
+  "acceptance": "On sim_r2_test (fresh), the chosen configuration is accepted only if: every aircraft type at or below 0.8 false alarms per hour (point estimate, 20.8 clean hours per type); detection at least R1's minus 0.02; p90 delay at most R1's plus 1 s; detection on sim_r2_resettest reported separately with R1 beside it. R0 and R1 are scored on the same sets.",
+  "targets_unchanged": "configs/gate_targets_v4.json",
+  "labels": "all results simulated (the world is calibrated to real clean data on three nuisance families only)"
+}

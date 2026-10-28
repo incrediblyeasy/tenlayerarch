@@ -1,0 +1,87 @@
+{
+  "version": "sim-5.0 (round 2)",
+  "note": "The v5 world is the v4 world (configs/sim_v4.json: realistic IMU, ionosphere, multipath option, four platform classes, half matched-power attackers) with the quiet clean-flight nuisances below. Parameters chosen by the pre-registered calibration (configs/sim_v5_calibration_plan.json and plan2; results/quiet_calibration_b.json) against the 12 real clean Nayfeh recordings. The old v4 world stays and is reported alongside.",
+  "quiet": {
+    "tracking_s": 1.0,
+    "hysteresis_db": 0.0,
+    "occlusion_prob": 0.3,
+    "multipath_jump_prob": 0.03,
+    "position_white_scale": 0.02
+  },
+  "calibration_check_per_min": {
+    "sat_drop>=1": {
+      "real": 2.07,
+      "real_lo": 1.46,
+      "real_hi": 2.7,
+      "sim": 1.82
+    },
+    "sat_rise>=1": {
+      "real": 2.15,
+      "real_lo": 1.51,
+      "real_hi": 2.89,
+      "sim": 1.91
+    },
+    "hdop_jump>=0.2": {
+      "real": 1.08,
+      "real_lo": 0.64,
+      "real_hi": 1.58,
+      "sim": 1.47
+    },
+    "position_jump>=3.0": {
+      "real": 0.0,
+      "real_lo": 0.0,
+      "real_hi": 0.0,
+      "sim": 0.07
+    },
+    "sat_drop>=2": {
+      "real": 0.11,
+      "real_lo": 0.04,
+      "real_hi": 0.19,
+      "sim": 0.25
+    },
+    "sat_rise>=2": {
+      "real": 0.08,
+      "real_lo": 0.03,
+      "real_hi": 0.14,
+      "sim": 0.17
+    },
+    "hdop_jump>=0.1": {
+      "real": 1.85,
+      "real_lo": 1.2,
+      "real_hi": 2.45,
+      "sim": 2.29
+    },
+    "hdop_jump>=0.5": {
+      "real": 0.09,
+      "real_lo": 0.02,
+      "real_hi": 0.19,
+      "sim": 0.55
+    }
+  },
+  "unresolved": "Not calibrated or still off: (1) the 1 s residual between position change and the velocity integral is about 15 times the real receivers' (sim median 0.68 m against real 0.045 m); white position noise is not the main source and the likely source, the correlated position error of the multipath option, is outside the calibration; (2) large jumps are still too frequent: HDOP change >= 0.5 is 0.55 per minute against 0.09 real, satellite drops of 2 or more 0.25 against 0.11; (3) lock-reset rates are not validated (no real flag). The three calibrated families (drops, rises, HDOP >= 0.2) and position jumps >= 3 m sit inside or at the real intervals.",
+  "datasets": {
+    "sim_r2_val": "world_v4 --quiet-json configs/sim_v5.json --seed 71000 --n-clean 1000 --n-per-attack 15",
+    "sim_r2_weakval": "--seed 72000 --n-clean 25 --n-per-attack 15 --weak",
+    "sim_r2_fahold": "--seed 75000 --n-clean 750 --n-per-attack 0",
+    "sim_r2_test": "--seed 73000 --n-clean 1500 --n-per-attack 40 (generated only after the lock)",
+    "sim_r2_weaktest": "--seed 74000 --n-clean 50 --n-per-attack 40 --weak (after the lock)",
+    "sim_r2_resettest": "--seed 76000 --n-clean 0 --n-per-attack 40 --force-reset (after the lock): every attacker resets the lock at onset"
+  },
+  "detector": {
+    "baseline_s": 10.0,
+    "short_window_s": 1.0,
+    "mid_window_s": 2.0,
+    "long_window_s": 3.0,
+    "allan_window_s": 10.0,
+    "lock_hold_s": 5.0,
+    "threshold_percentile": 99.9,
+    "persistence_k": 5,
+    "fa_per_hour_target": 0.5,
+    "train_fraction": 0.5,
+    "calibration_fraction": 0.2,
+    "oof_folds": 3,
+    "split_seed": 7,
+    "model_seed": 0,
+    "exclude_features": []
+  }
+}
