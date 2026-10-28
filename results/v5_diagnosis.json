@@ -1,0 +1,296 @@
+{
+  "pooled_threshold": 0.9964325237500011,
+  "D1_mix": {
+    "train": {
+      "multirotor_hover": {
+        "clean_sessions": 479,
+        "clean_hours": 6.652777777777841,
+        "attacked_sessions": 54
+      },
+      "multirotor_maneuver": {
+        "clean_sessions": 526,
+        "clean_hours": 7.305555555555637,
+        "attacked_sessions": 58
+      },
+      "fixed_wing": {
+        "clean_sessions": 490,
+        "clean_hours": 6.805555555555623,
+        "attacked_sessions": 46
+      },
+      "large_slow": {
+        "clean_sessions": 505,
+        "clean_hours": 7.013888888888962,
+        "attacked_sessions": 52
+      }
+    },
+    "calibration": {
+      "multirotor_hover": {
+        "clean_sessions": 204,
+        "clean_hours": 2.8333333333333255,
+        "attacked_sessions": 18
+      },
+      "multirotor_maneuver": {
+        "clean_sessions": 180,
+        "clean_hours": 2.4999999999999933,
+        "attacked_sessions": 18
+      },
+      "fixed_wing": {
+        "clean_sessions": 224,
+        "clean_hours": 3.1111111111111023,
+        "attacked_sessions": 22
+      },
+      "large_slow": {
+        "clean_sessions": 192,
+        "clean_hours": 2.6666666666666594,
+        "attacked_sessions": 26
+      }
+    },
+    "validation": {
+      "multirotor_hover": {
+        "clean_sessions": 317,
+        "clean_hours": 4.402777777777777,
+        "attacked_sessions": 33
+      },
+      "multirotor_maneuver": {
+        "clean_sessions": 294,
+        "clean_hours": 4.083333333333323,
+        "attacked_sessions": 29
+      },
+      "fixed_wing": {
+        "clean_sessions": 286,
+        "clean_hours": 3.9722222222222103,
+        "attacked_sessions": 37
+      },
+      "large_slow": {
+        "clean_sessions": 303,
+        "clean_hours": 4.208333333333327,
+        "attacked_sessions": 27
+      }
+    },
+    "fahold": {
+      "multirotor_hover": {
+        "clean_sessions": 750,
+        "clean_hours": 10.416666666666837,
+        "attacked_sessions": 0
+      },
+      "multirotor_maneuver": {
+        "clean_sessions": 750,
+        "clean_hours": 10.416666666666837,
+        "attacked_sessions": 0
+      },
+      "fixed_wing": {
+        "clean_sessions": 750,
+        "clean_hours": 10.416666666666837,
+        "attacked_sessions": 0
+      },
+      "large_slow": {
+        "clean_sessions": 750,
+        "clean_hours": 10.416666666666837,
+        "attacked_sessions": 0
+      }
+    },
+    "test": {
+      "multirotor_hover": {
+        "clean_sessions": 1500,
+        "clean_hours": 20.833333333333798,
+        "attacked_sessions": 280
+      },
+      "multirotor_maneuver": {
+        "clean_sessions": 1500,
+        "clean_hours": 20.833333333333798,
+        "attacked_sessions": 280
+      },
+      "fixed_wing": {
+        "clean_sessions": 1500,
+        "clean_hours": 20.833333333333798,
+        "attacked_sessions": 280
+      },
+      "large_slow": {
+        "clean_sessions": 1500,
+        "clean_hours": 20.833333333333798,
+        "attacked_sessions": 280
+      }
+    }
+  },
+  "reproduced_events": {
+    "total": 55,
+    "per_platform": {
+      "multirotor_hover": {
+        "events": 9,
+        "hours": 20.833333333333798
+      },
+      "multirotor_maneuver": {
+        "events": 16,
+        "hours": 20.833333333333798
+      },
+      "fixed_wing": {
+        "events": 25,
+        "hours": 20.833333333333798
+      },
+      "large_slow": {
+        "events": 5,
+        "hours": 20.833333333333798
+      }
+    }
+  },
+  "D2_events": {
+    "multirotor_hover": {
+      "n_events": 9,
+      "speed_event_median": 0.7347192539955218,
+      "speed_nonalarm_median": 0.9053617836443222,
+      "speed_event_pctile_in_nonalarm": 0.42886172839506176,
+      "acc_event_median": 0.5037966347541012,
+      "acc_nonalarm_median": 0.010316570407731263,
+      "acc_event_pctile_in_nonalarm": 0.5678987654320988,
+      "turn_event_median": 0.06681103000000022,
+      "turn_nonalarm_median": 0.03009481500000133,
+      "turn_event_pctile_in_nonalarm": 0.6367876543209877,
+      "feature_pctile_median": {
+        "implied_accel_mps2": 0.9983555555555556,
+        "posvel_mps": 0.9973111111111111,
+        "const_diff_m": 0.9944444444444445,
+        "hdop_change": 0.9940666666666667,
+        "lock_reset": 0.9634666666666667,
+        "sv_change": 0.9379777777777778
+      }
+    },
+    "multirotor_maneuver": {
+      "n_events": 16,
+      "speed_event_median": 3.511562397517591,
+      "speed_nonalarm_median": 3.7461462625917226,
+      "speed_event_pctile_in_nonalarm": 0.5083319444444444,
+      "acc_event_median": -0.3301872746378193,
+      "acc_nonalarm_median": 0.009703511959635591,
+      "acc_event_pctile_in_nonalarm": 0.43369583333333334,
+      "turn_event_median": 0.04224709499999979,
+      "turn_nonalarm_median": 0.03326156999999941,
+      "turn_event_pctile_in_nonalarm": 0.5196791666666667,
+      "feature_pctile_median": {
+        "hdop_rise": 0.9992666666666667,
+        "hdop_change": 0.9986444444444444,
+        "sv_drop": 0.9985444444444445,
+        "sv_change": 0.9979888888888889,
+        "const_diff_m": 0.9921,
+        "lock_reset": 0.9524666666666667
+      }
+    },
+    "fixed_wing": {
+      "n_events": 25,
+      "speed_event_median": 29.40081436249933,
+      "speed_nonalarm_median": 24.409600284892388,
+      "speed_event_pctile_in_nonalarm": 0.5352426666666666,
+      "acc_event_median": -0.26013813785283446,
+      "acc_nonalarm_median": 0.011956581407179812,
+      "acc_event_pctile_in_nonalarm": 0.40931911111111113,
+      "turn_event_median": 0.023907685999999817,
+      "turn_nonalarm_median": 0.022138969999999647,
+      "turn_event_pctile_in_nonalarm": 0.5115457777777778,
+      "feature_pctile_median": {
+        "const_diff_m": 0.9980444444444444,
+        "hdop_change": 0.9949333333333333,
+        "hdop_rise": 0.9939333333333333,
+        "sv_change": 0.9890666666666666,
+        "sv_drop": 0.9792888888888889,
+        "lock_reset": 0.9649555555555556
+      }
+    },
+    "large_slow": {
+      "n_events": 5,
+      "speed_event_median": 2.235944110349007,
+      "speed_nonalarm_median": 2.798943957701886,
+      "speed_event_pctile_in_nonalarm": 0.4242666666666667,
+      "acc_event_median": -0.4483119154201365,
+      "acc_nonalarm_median": 0.0002213433082620675,
+      "acc_event_pctile_in_nonalarm": 0.3152933333333333,
+      "turn_event_median": 0.034292728000000494,
+      "turn_nonalarm_median": 0.03205912434999972,
+      "turn_event_pctile_in_nonalarm": 0.4805244444444444,
+      "feature_pctile_median": {
+        "lock_reset": 1.0,
+        "baro_resid_m": 0.9998888888888889,
+        "hdop_change": 0.9991777777777778,
+        "hdop_rise": 0.9991777777777778,
+        "sv_drop": 0.9954888888888889,
+        "sv_change": 0.994
+      }
+    }
+  },
+  "D2_session_spread": {
+    "sessions_with_events": 38,
+    "events": 55,
+    "events_per_session_max": 4
+  },
+  "D3_thresholds": {
+    "multirotor_hover": {
+      "clean_sessions": 204,
+      "clean_hours": 2.8333333333333255,
+      "own_threshold": 0.992299375,
+      "pooled_threshold": 0.9964325237500011,
+      "allowed_events_at_target": 1.4166666666666627,
+      "calibration_events_at_pooled_threshold": 0
+    },
+    "multirotor_maneuver": {
+      "clean_sessions": 180,
+      "clean_hours": 2.4999999999999933,
+      "own_threshold": 0.9959875,
+      "pooled_threshold": 0.9964325237500011,
+      "allowed_events_at_target": 1.2499999999999967,
+      "calibration_events_at_pooled_threshold": 1
+    },
+    "fixed_wing": {
+      "clean_sessions": 224,
+      "clean_hours": 3.1111111111111023,
+      "own_threshold": 0.999604375,
+      "pooled_threshold": 0.9964325237500011,
+      "allowed_events_at_target": 1.5555555555555511,
+      "calibration_events_at_pooled_threshold": 1
+    },
+    "large_slow": {
+      "clean_sessions": 192,
+      "clean_hours": 2.6666666666666594,
+      "own_threshold": 0.9990275,
+      "pooled_threshold": 0.9964325237500011,
+      "allowed_events_at_target": 1.3333333333333297,
+      "calibration_events_at_pooled_threshold": 3
+    }
+  },
+  "D4_intervals": {
+    "multirotor_hover": {
+      "events": 9,
+      "hours": 20.833333333333798,
+      "rate": 0.4319999999999904,
+      "ci95": [
+        0.19753790867415563,
+        0.8200705656681017
+      ]
+    },
+    "multirotor_maneuver": {
+      "events": 16,
+      "hours": 20.833333333333798,
+      "rate": 0.7679999999999829,
+      "ci95": [
+        0.4389783577747834,
+        1.2471838846828973
+      ]
+    },
+    "fixed_wing": {
+      "events": 25,
+      "hours": 20.833333333333798,
+      "rate": 1.1999999999999733,
+      "ci95": [
+        0.7765767286957904,
+        1.7714367214814182
+      ]
+    },
+    "large_slow": {
+      "events": 5,
+      "hours": 20.833333333333798,
+      "rate": 0.23999999999999466,
+      "ci95": [
+        0.07792734672568245,
+        0.5600799398074757
+      ]
+    },
+    "fixed_wing_vs_rest_binomial_p": 0.0007772758093165586
+  }
+}
