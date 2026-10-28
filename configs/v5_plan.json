@@ -1,0 +1,36 @@
+{
+  "phase": "v5 false-alarm fix (FALSE_ALARM_FIX_PLAN.md), written 2026-10-28 after the diagnosis (reports_v5/D_diagnosis.md, fd00010) and before any v5 data exists",
+  "model": "the locked v4 primary scorer, unchanged: 0.25 LightGBM + 0.75 one-class SVM ensemble, 20 v3 features, fitted on sim_v4_val train split (configs/locked_model_v4.json). Only the alarm thresholds change between arms. Persistence 5, calibration margin 0.5 FA/h, same fa_target_threshold rule.",
+  "not_tested": {
+    "F2_motion_scaling": "diagnosis D2 shows speed, acceleration and turn rate at the 55 false alarms are at ordinary percentiles (0.32-0.64) of non-alarm rows; no support",
+    "F3_two_check": "adds delay, which is already the weakest number; only if the threshold arms fail, and then under a new pre-registration",
+    "F5_persistence": "last resort, adds delay directly"
+  },
+  "arms": {
+    "A0_baseline": "pooled threshold from the v4 calibration split (11.1 clean hours), exactly as in the v4 test; reported for comparison, not a candidate",
+    "A4_larger_calibration": "pooled threshold from sim_v5_cal (about 83 clean hours, balanced over the four aircraft types)",
+    "A1_per_type_threshold": "one threshold per aircraft type, each from that type's own sim_v5_cal sessions (about 20.8 clean hours each); the aircraft type is known at run time"
+  },
+  "datasets": {
+    "sim_v5_cal": {
+      "use": "calibration for A4 and A1",
+      "cmd": "python -m ten_layer_detector.world_v4 --out datasets/sim_v5_cal --seed 51000 --n-clean 1500 --n-per-attack 0"
+    },
+    "sim_v5_val": {
+      "use": "choose between A4 and A1",
+      "cmd": "python -m ten_layer_detector.world_v4 --out datasets/sim_v5_val --seed 52000 --n-clean 1000 --n-per-attack 30"
+    },
+    "sim_v5_test": {
+      "use": "fresh test, opened once, after the choice is locked",
+      "cmd": "python -m ten_layer_detector.world_v4 --out datasets/sim_v5_test --seed 53000 --n-clean 1500 --n-per-attack 40"
+    },
+    "sim_v5_weaktest": {
+      "use": "fresh weak-power test, opened once",
+      "cmd": "python -m ten_layer_detector.world_v4 --out datasets/sim_v5_weaktest --seed 54000 --n-clean 50 --n-per-attack 40 --weak"
+    }
+  },
+  "choice_rule": "On sim_v5_val, an arm among A4 and A1 is eligible if (1) the false-alarm point estimate is at most 0.8 per hour for EACH of the four aircraft types (0.8 leaves room for the known validation optimism), (2) overall detection is at least A0 detection minus 0.02, and (3) p90 delay is at most A0 p90 plus 1 s. Among eligible arms take the lowest maximum per-type false-alarm rate; tie -> A4 (simpler). If neither is eligible, nothing is tested on sim_v5_test and the report says so.",
+  "acceptance": "On sim_v5_test, the chosen arm is accepted only if: (a) the 95% upper bound of the false-alarm rate is at most 1 per hour for EVERY aircraft type (with 20.8 clean hours per type this means at most 11 events per type); (b) overall detection is at least A0 minus 0.02, measured on the same test set; (c) p90 delay is at most A0 plus 1 s; (d) the change is explained by the diagnosis. Otherwise it is reported as not accepted.",
+  "targets_unchanged": "configs/gate_targets_v4.json",
+  "labels": "all results simulated"
+}
