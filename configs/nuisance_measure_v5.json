@@ -1,0 +1,92 @@
+{
+  "phase": "False alarm fix round 2, Step 1 (FALSE_ALARM_FIX_ROUND2.md). Written 2026-10-28 before any nuisance rate was computed.",
+  "note_on_inputs": "PUBLIC_DATASET_PLAN.md and PUBLIC_DATASET_CANDIDATES.md named in the plan do not exist in the repository. The only real clean GNSS recordings on this machine are the Nayfeh et al. files in the user's 'ML implementaion nayfeh' folder (Clean.xlsx, Testing and Training & Validation: 12 recordings of a COEX Clover drone, PX4 vehicle_gps_position fields). Label meaning (0 authentic, 1 static, 2 dynamic) comes from the user's own paper_reproduction.py and the paper's Table 2; only the Clean.xlsx files are used here.",
+  "real_data": {
+    "files": [
+      "Testing/Clean.xlsx (3 sheets)",
+      "Training & Validation/Clean.xlsx (9 sheets)"
+    ],
+    "recordings": 12,
+    "sample_rate": "measured from the timestamp column (about 5 Hz); windows are defined in seconds, not rows",
+    "fields_used": [
+      "timestamp",
+      "lat",
+      "lon (1e-7 deg)",
+      "vel_n_m_s",
+      "vel_e_m_s",
+      "hdop",
+      "satellites_used"
+    ],
+    "conversion": "Clean.xlsx -> one CSV per sheet with the Nayfeh environment's python (openpyxl); data stays outside the repository"
+  },
+  "simulator_data": {
+    "primary": "datasets/sim_v4_fahold (clean sessions of the v4 world, 3000 sessions, 41.7 h)",
+    "secondary": "clean sessions of datasets/sim_fa2 (original world, 4000 sessions)",
+    "columns": [
+      "num_sv",
+      "hdop",
+      "lat_deg",
+      "lon_deg",
+      "vel_n_mps",
+      "vel_e_mps"
+    ]
+  },
+  "metrics": {
+    "window_s": 1.0,
+    "event": "an episode: the indicator turns on (rising edge); an episode is counted once however long it lasts",
+    "sat_drop": {
+      "indicator": "satellites_used is lower than 1.0 s earlier by at least k",
+      "k_primary": 1,
+      "k_also_reported": [
+        2,
+        3
+      ]
+    },
+    "sat_rise": {
+      "indicator": "satellites_used is higher than 1.0 s earlier by at least k",
+      "k_primary": 1,
+      "k_also_reported": [
+        2,
+        3
+      ]
+    },
+    "hdop_jump": {
+      "indicator": "abs(hdop - hdop 1.0 s earlier) at least x",
+      "x_primary": 0.2,
+      "x_also_reported": [
+        0.1,
+        0.5
+      ]
+    },
+    "position_jump": {
+      "indicator": "horizontal position change over 1.0 s differs from the integral of the reported velocity over the same second by at least d metres (proxy for multipath jumps; position from lat, lon)",
+      "d_primary_m": 3.0,
+      "d_also_reported": [
+        2.0,
+        5.0
+      ]
+    },
+    "lock_reset": "NOT MEASURED: the public data has no lock-loss flag and no pseudorange, so there is no proxy; the simulator's lock-reset rate stays unvalidated"
+  },
+  "rates": {
+    "unit": "events per minute of clean recording",
+    "interval": "bootstrap over recordings (resample the 12 recordings with replacement, 10000 resamples, pooled rate = sum of events / sum of minutes), 95% percentile interval; the simulator interval is bootstrapped over sessions the same way",
+    "poisson_not_used": "events cluster in recordings, so counting-noise intervals would be too narrow"
+  },
+  "decision_rule": {
+    "compare": "simulator pooled rate (primary data) against the real interval, at the primary threshold of each of the four measured families",
+    "much_more_active": "simulator rate is more than 2 times the upper end of the real interval",
+    "close": "simulator rate lies between half the lower end and twice the upper end of the real interval",
+    "much_quieter": "simulator rate is below half the lower end of the real interval",
+    "H1_holds": "at least 2 of the 4 families are much_more_active -> Step 2 (calibrate the simulator)",
+    "H1_rejected": "otherwise -> Step 3 (detector change); families that are much_quieter are reported because then the simulator under-states nuisances",
+    "if_real_rate_is_zero": "the real interval's upper end is used; a zero lower end makes 'much_quieter' impossible for that family"
+  },
+  "caveats_to_report": [
+    "12 recordings, about an hour in total, one drone and one receiver, 20-70 m altitude over one site: wide intervals, and a clean open-sky site may have fewer nuisances than the operating environments",
+    "satellites_used and hdop are what the PX4 driver reports, not visible satellites or per-satellite C/N0",
+    "recording rate (about 5 Hz) differs from the simulator (10 Hz); windows are in seconds to compensate",
+    "the real data cannot test the signal-strength features or lock resets"
+  ],
+  "labels": "results are 'real clean' and 'simulated', kept separate"
+}
