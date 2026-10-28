@@ -48,13 +48,13 @@ def gauss_markov(rng: np.random.Generator, n: int, dt: float, sigma: float, tau:
     return out
 
 
-def solution_error(rng: np.random.Generator, n: int, dt: float, hdop: np.ndarray, vdop: np.ndarray) -> np.ndarray:
-    """GNSS position error (NED metres): Gauss-Markov scaled by DOP plus white noise."""
+def solution_error(rng: np.random.Generator, n: int, dt: float, hdop: np.ndarray, vdop: np.ndarray, white_scale: float = 1.0) -> np.ndarray:
+    """GNSS position error (NED metres): Gauss-Markov scaled by DOP plus white noise (times white_scale)."""
     return np.stack(
         (
-            gauss_markov(rng, n, dt, 0.8, 30.0) * hdop / 1.2 + rng.normal(0.0, 0.4, n),
-            gauss_markov(rng, n, dt, 0.8, 30.0) * hdop / 1.2 + rng.normal(0.0, 0.4, n),
-            gauss_markov(rng, n, dt, 1.2, 30.0) * vdop / 1.6 + rng.normal(0.0, 0.6, n),
+            gauss_markov(rng, n, dt, 0.8, 30.0) * hdop / 1.2 + rng.normal(0.0, 0.4 * white_scale, n),
+            gauss_markov(rng, n, dt, 0.8, 30.0) * hdop / 1.2 + rng.normal(0.0, 0.4 * white_scale, n),
+            gauss_markov(rng, n, dt, 1.2, 30.0) * vdop / 1.6 + rng.normal(0.0, 0.6 * white_scale, n),
         ),
         axis=1,
     )

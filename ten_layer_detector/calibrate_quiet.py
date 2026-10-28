@@ -30,14 +30,64 @@ def _point(args):
     return quiet, {k: pooled_rate(recs, k, n_boot=2000) for k in KEYS}
 
 
+def _resid(args):
+    scale, n_per_platform = args
+    from .sim.realism import PLATFORMS as P
+
+    out = []
+    for k, plat in enumerate(P):
+        for i in range(n_per_platform):
+            s = generate_session(attack_type="clean", seed=61000 + 1000 * k + i, session_id=f"cal_{k}_{i}",
+                                 realism={"imu": "realistic", "ionosphere": True, "multipath": True, "platform": plat, "quiet": {"position_white_scale": scale}})
+            out.append(residual_1s(s))
+    r = np.concatenate(out)
+    return scale, [float(x) for x in np.percentile(r, [50, 90, 99])]
+
+
+def residual_1s(s):
+    from .nuisance import EARTH_R
+
+    t = s["t_gnss_s"].to_numpy(float)
+    lat, lon = np.deg2rad(s["lat_deg"].to_numpy(float)), np.deg2rad(s["lon_deg"].to_numpy(float))
+    vn, ve = s["vel_n_mps"].to_numpy(float), s["vel_e_mps"].to_numpy(float)
+    north, east = lat * EARTH_R, lon * EARTH_R * np.cos(lat[0])
+    cn = np.cumsum(np.r_[0.0, 0.5 * (vn[1:] + vn[:-1]) * np.diff(t)])
+    ce = np.cumsum(np.r_[0.0, 0.5 * (ve[1:] + ve[:-1]) * np.diff(t)])
+    idx = np.searchsorted(t, t - 1.0, side="right") - 1
+    ok = idx >= 0
+    return np.hypot((north[ok] - north[idx[ok]]) - (cn[ok] - cn[idx[ok]]), (east[ok] - east[idx[ok]]) - (ce[ok] - ce[idx[ok]]))
+
+
+def stage_a(args):
+    plan = json.loads(Path("configs/sim_v5_calibration_plan2.json").read_text())["stage_a"]
+    tgt = plan["real_targets_m"]
+    with ProcessPoolExecutor(args.workers) as ex:
+        rows = list(ex.map(_resid, [(sc, 30) for sc in plan["grid"]]))
+    res = []
+    for sc, (m, p90, p99) in rows:
+        res.append({"position_white_scale": sc, "median": m, "p90": p90, "p99": p99,
+                    "score": float(abs(np.log(m / tgt["median"])) + abs(np.log(p90 / tgt["p90"])) + abs(np.log(p99 / tgt["p99"])))})
+    best = min(res, key=lambda r: r["score"])
+    Path("results/quiet_calibration_a.json").write_text(json.dumps({"points": res, "best": best, "targets": tgt}, indent=2))
+    for r in res:
+        print(r)
+    print("best scale:", best["position_white_scale"])
+
+
 def main():
     a = argparse.ArgumentParser()
     a.add_argument("--out", default="results/quiet_calibration.json")
     a.add_argument("--workers", type=int, default=24)
+    a.add_argument("--stage", default="0", help="0 first grid, a position-noise scale, b grid with the chosen scale")
     args = a.parse_args()
+    if args.stage == "a":
+        return stage_a(args)
+    scale = 1.0
+    if args.stage == "b":
+        scale = json.loads(Path("results/quiet_calibration_a.json").read_text())["best"]["position_white_scale"]
     plan = json.loads(Path("configs/sim_v5_calibration_plan.json").read_text())
     g = plan["grid"]
-    points = [dict(tracking_s=t, hysteresis_db=h, occlusion_prob=o, multipath_jump_prob=m)
+    points = [dict(tracking_s=t, hysteresis_db=h, occlusion_prob=o, multipath_jump_prob=m, position_white_scale=scale)
               for t, h, o, m in itertools.product(g["tracking_s"], g["hysteresis_db"], g["occlusion_prob"], g["multipath_jump_prob"])]
     with ProcessPoolExecutor(args.workers) as ex:
         rows = list(ex.map(_point, [(p, 30) for p in points]))

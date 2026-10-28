@@ -219,9 +219,9 @@ def generate_session(
     u = unit_ned(el, az)
     hdop, vdop, pdop = dop_from_geometry(u, used)
 
-    rep_pos = true_pos + solution_error(np.random.default_rng(err_gps_noise), n, dt, hdop, vdop) + mp + mp_pos + offset
+    rep_pos = true_pos + solution_error(np.random.default_rng(err_gps_noise), n, dt, hdop, vdop, Q.get("position_white_scale", 1.0)) + mp + mp_pos + offset
     rep_vel = true_vel + offset_dot + vel_noise
-    gal_pos = true_pos + 1.2 * solution_error(np.random.default_rng(err_gal_noise), n, dt, hdop, vdop) + mp + 0.8 * mp_pos + gal_offset
+    gal_pos = true_pos + 1.2 * solution_error(np.random.default_rng(err_gal_noise), n, dt, hdop, vdop, Q.get("position_white_scale", 1.0)) + mp + 0.8 * mp_pos + gal_offset
     lat, lon, alt = ned_to_geodetic(rep_pos, lat0, lon0, alt_msl0)
     gal_lat, gal_lon, gal_alt = ned_to_geodetic(gal_pos, lat0, lon0, alt_msl0)
 

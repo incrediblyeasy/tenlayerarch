@@ -1,0 +1,26 @@
+{
+  "phase": "Round 2 Step 2, amendment 1, written 2026-10-28 after the first grid (results/quiet_calibration.json) ran and before any further calibration run.",
+  "why": "The first grid matched the satellite and HDOP rates (best point: tracking 1 s, no hysteresis: 1.8, 1.9, 1.5 per minute against 2.1, 2.1, 1.1) but no grid point brought the position-jump rate under 0.15 per minute (all 1.0-1.5; target 0.05). Measured afterwards on the real recordings and on 300 sim_v4_fahold sessions: the 1 s residual between position change and the velocity integral has median 0.045 m, p90 0.135 m, p99 0.352 m in the real data and median 0.96 m, p90 1.77 m, p99 2.71 m in the simulator. The simulator's white position noise (0.4/0.4/0.6 m per axis) is about 20 times larger than the real receivers' position jitter. These real percentiles were looked at after the first grid, so the grid was not designed blind to them.",
+  "new_parameter": "quiet.position_white_scale multiplies the white terms of the simulated position error (0.4, 0.4, 0.6 m); 1.0 is the original simulator.",
+  "stage_a": {
+    "grid": [
+      1.0,
+      0.5,
+      0.25,
+      0.1,
+      0.05,
+      0.02
+    ],
+    "other_parameters": "defaults (no tracking filter, no hysteresis, occlusion 0.3, jump 0.15)",
+    "sessions": "120 clean sessions as before (30 per platform class)",
+    "real_targets_m": {
+      "median": 0.045,
+      "p90": 0.135,
+      "p99": 0.352
+    },
+    "selection": "minimise abs(ln(sim median/0.045)) + abs(ln(sim p90/0.135)) + abs(ln(sim p99/0.352)) over the grid; ties impossible"
+  },
+  "stage_b": "With the stage A scale fixed, rerun the original 64-point grid (configs/sim_v5_calibration_plan.json) with the same selection rule, now with a meaningful position-jump constraint (at most 0.15 per minute). If still no grid point meets the constraint, report that and take the best of the points by the rule's score alone; the plan's rule had no explicit fallback and this is the one stated here.",
+  "after_calibration": "configs/sim_v5.json receives the chosen parameters and is committed before any v5 dataset is generated.",
+  "known_consequence": "Less position noise makes small attacks easier to see and the position/velocity features more sensitive; this follows the real receivers, but it makes the simulated problem easier, and the old v4 world remains the harder reference. Both are reported."
+}
