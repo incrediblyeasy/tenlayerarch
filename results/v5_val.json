@@ -1,0 +1,199 @@
+{
+  "thresholds": {
+    "A0_baseline": {
+      "multirotor_hover": 0.9964325237500011,
+      "multirotor_maneuver": 0.9964325237500011,
+      "fixed_wing": 0.9964325237500011,
+      "large_slow": 0.9964325237500011
+    },
+    "A4_larger_calibration": {
+      "multirotor_hover": 0.99633875,
+      "multirotor_maneuver": 0.99633875,
+      "fixed_wing": 0.99633875,
+      "large_slow": 0.99633875
+    },
+    "A1_per_type_threshold": {
+      "multirotor_hover": 0.996344375,
+      "multirotor_maneuver": 0.99750875,
+      "fixed_wing": 0.998318125,
+      "large_slow": 0.996519375
+    }
+  },
+  "calibration_hours": {
+    "pooled": 83.33333333332244,
+    "multirotor_hover": 20.833333333333798,
+    "multirotor_maneuver": 20.833333333333798,
+    "fixed_wing": 20.833333333333798,
+    "large_slow": 20.833333333333798
+  },
+  "val": {
+    "A0_baseline": {
+      "detection": 0.8738095238095238,
+      "detection_ci95": [
+        0.8496380948039036,
+        0.8945774072524065
+      ],
+      "consistent_takeover": 0.5166666666666667,
+      "fa_events": 27,
+      "clean_hours": 55.55555555555559,
+      "fa_per_hour": 0.48599999999999965,
+      "fa_upper95": 0.7071044840129179,
+      "delay_median_s": 1.1217810550000014,
+      "delay_p90_s": 15.509629786000003,
+      "per_type": {
+        "consistent_takeover": 0.5166666666666667,
+        "dynamic_takeover": 0.675,
+        "ramp": 0.9333333333333333,
+        "ramp_then_step": 0.9916666666666667,
+        "static": 1.0,
+        "step": 1.0,
+        "step_then_ramp": 1.0
+      },
+      "per_platform": {
+        "multirotor_hover": {
+          "fa_events": 14,
+          "clean_hours": 13.888888888889252,
+          "fa_per_hour": 1.0079999999999736,
+          "fa_upper95": 1.6912527207721173,
+          "detection": 0.8761904761904762
+        },
+        "multirotor_maneuver": {
+          "fa_events": 3,
+          "clean_hours": 13.888888888889252,
+          "fa_per_hour": 0.21599999999999436,
+          "fa_upper95": 0.6312436610214308,
+          "detection": 0.8523809523809524
+        },
+        "fixed_wing": {
+          "fa_events": 5,
+          "clean_hours": 13.888888888889252,
+          "fa_per_hour": 0.3599999999999906,
+          "fa_upper95": 0.8401199097112103,
+          "detection": 0.8904761904761904
+        },
+        "large_slow": {
+          "fa_events": 5,
+          "clean_hours": 13.888888888889252,
+          "fa_per_hour": 0.3599999999999906,
+          "fa_upper95": 0.8401199097112103,
+          "detection": 0.8761904761904762
+        }
+      }
+    },
+    "A4_larger_calibration": {
+      "detection": 0.8738095238095238,
+      "detection_ci95": [
+        0.8496380948039036,
+        0.8945774072524065
+      ],
+      "consistent_takeover": 0.5166666666666667,
+      "fa_events": 30,
+      "clean_hours": 55.55555555555559,
+      "fa_per_hour": 0.5399999999999996,
+      "fa_upper95": 0.7708835771065374,
+      "delay_median_s": 1.0819307749999982,
+      "delay_p90_s": 15.426840297000004,
+      "per_type": {
+        "consistent_takeover": 0.5166666666666667,
+        "dynamic_takeover": 0.675,
+        "ramp": 0.9333333333333333,
+        "ramp_then_step": 0.9916666666666667,
+        "static": 1.0,
+        "step": 1.0,
+        "step_then_ramp": 1.0
+      },
+      "per_platform": {
+        "multirotor_hover": {
+          "fa_events": 13,
+          "clean_hours": 13.888888888889252,
+          "fa_per_hour": 0.9359999999999755,
+          "fa_upper95": 1.600588506107397,
+          "detection": 0.8761904761904762
+        },
+        "multirotor_maneuver": {
+          "fa_events": 3,
+          "clean_hours": 13.888888888889252,
+          "fa_per_hour": 0.21599999999999436,
+          "fa_upper95": 0.6312436610214308,
+          "detection": 0.8523809523809524
+        },
+        "fixed_wing": {
+          "fa_events": 5,
+          "clean_hours": 13.888888888889252,
+          "fa_per_hour": 0.3599999999999906,
+          "fa_upper95": 0.8401199097112103,
+          "detection": 0.8904761904761904
+        },
+        "large_slow": {
+          "fa_events": 9,
+          "clean_hours": 13.888888888889252,
+          "fa_per_hour": 0.647999999999983,
+          "fa_upper95": 1.2301058485021479,
+          "detection": 0.8761904761904762
+        }
+      },
+      "rule": {
+        "max_per_type_fa": 0.9359999999999755,
+        "eligible": false
+      }
+    },
+    "A1_per_type_threshold": {
+      "detection": 0.8666666666666667,
+      "detection_ci95": [
+        0.8420005729107573,
+        0.8879942507623114
+      ],
+      "consistent_takeover": 0.48333333333333334,
+      "fa_events": 21,
+      "clean_hours": 55.55555555555559,
+      "fa_per_hour": 0.3779999999999997,
+      "fa_upper95": 0.5778131532289809,
+      "delay_median_s": 1.2305965000000008,
+      "delay_p90_s": 16.322292589000003,
+      "per_type": {
+        "consistent_takeover": 0.48333333333333334,
+        "dynamic_takeover": 0.6583333333333333,
+        "ramp": 0.9333333333333333,
+        "ramp_then_step": 0.9916666666666667,
+        "static": 1.0,
+        "step": 1.0,
+        "step_then_ramp": 1.0
+      },
+      "per_platform": {
+        "multirotor_hover": {
+          "fa_events": 13,
+          "clean_hours": 13.888888888889252,
+          "fa_per_hour": 0.9359999999999755,
+          "fa_upper95": 1.600588506107397,
+          "detection": 0.8761904761904762
+        },
+        "multirotor_maneuver": {
+          "fa_events": 1,
+          "clean_hours": 13.888888888889252,
+          "fa_per_hour": 0.07199999999999812,
+          "fa_upper95": 0.4011583241475902,
+          "detection": 0.8380952380952381
+        },
+        "fixed_wing": {
+          "fa_events": 2,
+          "clean_hours": 13.888888888889252,
+          "fa_per_hour": 0.14399999999999624,
+          "fa_upper95": 0.5201775120761115,
+          "detection": 0.8761904761904762
+        },
+        "large_slow": {
+          "fa_events": 5,
+          "clean_hours": 13.888888888889252,
+          "fa_per_hour": 0.3599999999999906,
+          "fa_upper95": 0.8401199097112103,
+          "detection": 0.8761904761904762
+        }
+      },
+      "rule": {
+        "max_per_type_fa": 0.9359999999999755,
+        "eligible": false
+      }
+    }
+  },
+  "chosen": null
+}

@@ -59,3 +59,7 @@ Pooled over the three others the rate is 0.48/h (30 events in 62.5 h). Fixed win
 - F2 (motion scaling) has no support from D2. It will not be tested; the reason is recorded here.
 - F4 (larger, balanced clean calibration) is needed before F1 can even be tried: 20.8 h per type means 1500 clean sessions per type. F1 and F4 are therefore run together, with F4 alone (pooled threshold from the larger set) as a separate arm so the two effects can be told apart.
 - The events are driven by signal-quality and consistency cues, so if a per-type threshold is not enough, the next place to look is how those cues are treated for fixed wing, not motion scaling. That is a hypothesis, not a finding.
+
+## Correction after the fresh validation (see F_fix_result.md)
+
+The D4 statement "the fixed-wing excess is not a small-sample accident" and the p = 0.0008 are withdrawn. The test selected the worst of four aircraft after seeing the result and treated events as independent, but false alarms cluster in sessions (55 events in 38 sessions). On fresh clean data with the same model and threshold, fixed wing had 0.36/h and hover 1.01/h. The per-type differences in the v4 test are therefore not established as a property of the aircraft type. D1 (balanced mix) and D2 (ordinary motion at the alarms) stand.

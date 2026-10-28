@@ -30,3 +30,7 @@ Earlier rounds: `sim_v1`, `sim_dev` (first comparison), `sim_fa` (small, 1620 se
 | `sim_v4_fahold` | clean-only false-alarm hold-out | `... --out datasets/sim_v4_fahold --seed 45000 --n-clean 750 --n-per-attack 0` | 3000 | `e3b48d0949ca9fe3` |
 | `sim_v4_test` | v4 test, opened once | `... --out datasets/sim_v4_test --seed 43000 --n-clean 1500 --n-per-attack 40` | 7120 | `f9158bccb30cca2d` |
 | `sim_v4_weaktest` | v4 weak-power test, opened once | `... --out datasets/sim_v4_weaktest --seed 44000 --n-clean 50 --n-per-attack 40 --weak` | 1320 | `dae37c57d9a1add9` |
+| `sim_v5_cal` | v5 false-alarm fix: threshold calibration (clean only) | `python -m ten_layer_detector.world_v4 --out datasets/sim_v5_cal --seed 51000 --n-clean 1500 --n-per-attack 0` | 6000 | `c6dd390c46f5e15f` |
+| `sim_v5_val` | v5 fix choice (validation) | `... --out datasets/sim_v5_val --seed 52000 --n-clean 1000 --n-per-attack 30` | 4840 | `618db6d845eda8bf` |
+
+`sim_v5_test` (seed 53000) and `sim_v5_weaktest` (seed 54000) are planned in `configs/v5_plan.json` but were not generated: no fix passed the choice rule.
