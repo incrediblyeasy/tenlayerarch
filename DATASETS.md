@@ -34,3 +34,16 @@ Earlier rounds: `sim_v1`, `sim_dev` (first comparison), `sim_fa` (small, 1620 se
 | `sim_v5_val` | v5 fix choice (validation) | `... --out datasets/sim_v5_val --seed 52000 --n-clean 1000 --n-per-attack 30` | 4840 | `618db6d845eda8bf` |
 
 `sim_v5_test` (seed 53000) and `sim_v5_weaktest` (seed 54000) are planned in `configs/v5_plan.json` but were not generated: no fix passed the choice rule.
+
+## Round 2 (v5 world, configs/sim_v5.json; commands in that file, built by `world_v4.py --quiet-json configs/sim_v5.json`)
+
+| Name | Use | Sessions | Hash (sha256, first 16) |
+|---|---|---|---|
+| `sim_r2_val` | train, calibration, validation | 4420 | `dbb850779ae3e0b8` |
+| `sim_r2_weakval` | weak-power validation | 520 | `83e4e900284e59f4` |
+| `sim_r2_fahold` | clean-only per-type false-alarm check | 3000 | `2cfdf2c045c527b4` |
+| `sim_r2_test` | round 2 test, opened once | 7120 | `2917ef6fd711fccf` |
+| `sim_r2_weaktest` | weak-power test, opened once | 1320 | `3c215d163f000177` |
+| `sim_r2_resettest` | attackers reset the lock at onset (`--force-reset`), opened once | 1120 | `b194c99dd5293428` |
+
+`sim_r2_cal` (Step 4) was not generated. Real clean recordings used for calibration: Nayfeh et al. `Clean.xlsx` (12 sheets), not part of this repository.

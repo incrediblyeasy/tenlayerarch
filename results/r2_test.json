@@ -1,0 +1,527 @@
+{
+  "thresholds": {
+    "R0_old_primary": 0.9964325237500011,
+    "R1_baseline": 0.999635,
+    "R3_explained_cue": 0.999369375,
+    "R2_flag_gate_2s": 0.999635,
+    "R2_flag_gate_5s": 0.999635,
+    "R2_flag_gate_10s": 0.999635
+  },
+  "main": {
+    "R0_old_primary": {
+      "fa_per_platform": {
+        "multirotor_hover": {
+          "events": 22,
+          "hours": 20.833333333333893,
+          "rate": 1.0559999999999716,
+          "upper95": 1.5987966905819682
+        },
+        "multirotor_maneuver": {
+          "events": 16,
+          "hours": 20.833333333333893,
+          "rate": 0.7679999999999794,
+          "upper95": 1.2471838846828915
+        },
+        "fixed_wing": {
+          "events": 31,
+          "hours": 20.833333333333893,
+          "rate": 1.48799999999996,
+          "upper95": 2.1120972241558835
+        },
+        "large_slow": {
+          "events": 7,
+          "hours": 20.833333333333893,
+          "rate": 0.335999999999991,
+          "upper95": 0.6922884173616954
+        }
+      },
+      "fa_events": 76,
+      "clean_hours": 83.33333333333339,
+      "fa_per_hour": 0.9119999999999995,
+      "fa_upper95": 1.1415039955599784,
+      "detection": 0.8544642857142857,
+      "detection_ci95": [
+        0.8325995912065337,
+        0.873905667185752
+      ],
+      "delay_median_s": 1.0163958199999996,
+      "delay_p90_s": 16.273461691999998,
+      "consistent_takeover": 0.48125,
+      "per_type": {
+        "consistent_takeover": 0.48125,
+        "dynamic_takeover": 0.63125,
+        "ramp": 0.89375,
+        "ramp_then_step": 1.0,
+        "static": 1.0,
+        "step": 0.9875,
+        "step_then_ramp": 0.9875
+      },
+      "detection_reset_attackers": 0.8635547576301615,
+      "n_reset_attackers": 557,
+      "detection_other_attackers": 0.8454706927175843,
+      "detection_by_platform": {
+        "multirotor_hover": 0.8571428571428571,
+        "multirotor_maneuver": 0.8535714285714285,
+        "fixed_wing": 0.825,
+        "large_slow": 0.8821428571428571
+      }
+    },
+    "R1_baseline": {
+      "fa_per_platform": {
+        "multirotor_hover": {
+          "events": 4,
+          "hours": 20.833333333333893,
+          "rate": 0.19199999999999484,
+          "upper95": 0.4915962564193641
+        },
+        "multirotor_maneuver": {
+          "events": 0,
+          "hours": 20.833333333333893,
+          "rate": 0.0,
+          "upper95": 0.17706621379746415
+        },
+        "fixed_wing": {
+          "events": 2,
+          "hours": 20.833333333333893,
+          "rate": 0.09599999999999742,
+          "upper95": 0.34678500805074075
+        },
+        "large_slow": {
+          "events": 0,
+          "hours": 20.833333333333893,
+          "rate": 0.0,
+          "upper95": 0.17706621379746415
+        }
+      },
+      "fa_events": 6,
+      "clean_hours": 83.33333333333339,
+      "fa_per_hour": 0.07199999999999995,
+      "fa_upper95": 0.15671368827022414,
+      "detection": 0.71875,
+      "detection_ci95": [
+        0.6917047592255943,
+        0.7442997453238014
+      ],
+      "delay_median_s": 5.332165349999997,
+      "delay_p90_s": 20.121893516000004,
+      "consistent_takeover": 0.21875,
+      "per_type": {
+        "consistent_takeover": 0.21875,
+        "dynamic_takeover": 0.4125,
+        "ramp": 0.76875,
+        "ramp_then_step": 0.875,
+        "static": 1.0,
+        "step": 0.9375,
+        "step_then_ramp": 0.81875
+      },
+      "detection_reset_attackers": 0.7378815080789947,
+      "n_reset_attackers": 557,
+      "detection_other_attackers": 0.6998223801065719,
+      "detection_by_platform": {
+        "multirotor_hover": 0.6857142857142857,
+        "multirotor_maneuver": 0.7464285714285714,
+        "fixed_wing": 0.6857142857142857,
+        "large_slow": 0.7571428571428571
+      }
+    },
+    "R2_flag_gate_5s": {
+      "fa_per_platform": {
+        "multirotor_hover": {
+          "events": 4,
+          "hours": 20.833333333333893,
+          "rate": 0.19199999999999484,
+          "upper95": 0.4915962564193641
+        },
+        "multirotor_maneuver": {
+          "events": 0,
+          "hours": 20.833333333333893,
+          "rate": 0.0,
+          "upper95": 0.17706621379746415
+        },
+        "fixed_wing": {
+          "events": 0,
+          "hours": 20.833333333333893,
+          "rate": 0.0,
+          "upper95": 0.17706621379746415
+        },
+        "large_slow": {
+          "events": 0,
+          "hours": 20.833333333333893,
+          "rate": 0.0,
+          "upper95": 0.17706621379746415
+        }
+      },
+      "fa_events": 4,
+      "clean_hours": 83.33333333333339,
+      "fa_per_hour": 0.04799999999999997,
+      "fa_upper95": 0.12289906410484425,
+      "detection": 0.7098214285714286,
+      "detection_ci95": [
+        0.6825600197971406,
+        0.7356483825257489
+      ],
+      "delay_median_s": 5.368455730000001,
+      "delay_p90_s": 20.273835912000003,
+      "consistent_takeover": 0.20625,
+      "per_type": {
+        "consistent_takeover": 0.20625,
+        "dynamic_takeover": 0.39375,
+        "ramp": 0.7625,
+        "ramp_then_step": 0.86875,
+        "static": 1.0,
+        "step": 0.925,
+        "step_then_ramp": 0.8125
+      },
+      "detection_reset_attackers": 0.7217235188509874,
+      "n_reset_attackers": 557,
+      "detection_other_attackers": 0.6980461811722913,
+      "detection_by_platform": {
+        "multirotor_hover": 0.6678571428571428,
+        "multirotor_maneuver": 0.7464285714285714,
+        "fixed_wing": 0.6785714285714286,
+        "large_slow": 0.7464285714285714
+      }
+    }
+  },
+  "weak": {
+    "R0_old_primary": {
+      "fa_per_platform": {
+        "multirotor_hover": {
+          "events": 0,
+          "hours": 0.6944444444444535,
+          "rate": 0.0,
+          "upper95": 5.311986413923997
+        },
+        "multirotor_maneuver": {
+          "events": 1,
+          "hours": 0.6944444444444535,
+          "rate": 1.439999999999981,
+          "upper95": 8.023166482951908
+        },
+        "fixed_wing": {
+          "events": 1,
+          "hours": 0.6944444444444535,
+          "rate": 1.439999999999981,
+          "upper95": 8.023166482951908
+        },
+        "large_slow": {
+          "events": 0,
+          "hours": 0.6944444444444535,
+          "rate": 0.0,
+          "upper95": 5.311986413923997
+        }
+      },
+      "fa_events": 2,
+      "clean_hours": 2.7777777777778168,
+      "fa_per_hour": 0.7199999999999899,
+      "fa_upper95": 2.600887560380589,
+      "detection": 0.8419642857142857,
+      "detection_ci95": [
+        0.8194364352170577,
+        0.8621542800581198
+      ],
+      "delay_median_s": 0.7466285900000003,
+      "delay_p90_s": 15.792296728000023,
+      "consistent_takeover": 0.4375,
+      "per_type": {
+        "consistent_takeover": 0.4375,
+        "dynamic_takeover": 0.5625,
+        "ramp": 0.90625,
+        "ramp_then_step": 1.0,
+        "static": 1.0,
+        "step": 1.0,
+        "step_then_ramp": 0.9875
+      },
+      "detection_reset_attackers": 0.8426573426573427,
+      "n_reset_attackers": 572,
+      "detection_other_attackers": 0.8412408759124088,
+      "detection_by_platform": {
+        "multirotor_hover": 0.8535714285714285,
+        "multirotor_maneuver": 0.8321428571428572,
+        "fixed_wing": 0.8392857142857143,
+        "large_slow": 0.8428571428571429
+      }
+    },
+    "R1_baseline": {
+      "fa_per_platform": {
+        "multirotor_hover": {
+          "events": 0,
+          "hours": 0.6944444444444535,
+          "rate": 0.0,
+          "upper95": 5.311986413923997
+        },
+        "multirotor_maneuver": {
+          "events": 0,
+          "hours": 0.6944444444444535,
+          "rate": 0.0,
+          "upper95": 5.311986413923997
+        },
+        "fixed_wing": {
+          "events": 0,
+          "hours": 0.6944444444444535,
+          "rate": 0.0,
+          "upper95": 5.311986413923997
+        },
+        "large_slow": {
+          "events": 0,
+          "hours": 0.6944444444444535,
+          "rate": 0.0,
+          "upper95": 5.311986413923997
+        }
+      },
+      "fa_events": 0,
+      "clean_hours": 2.7777777777778168,
+      "fa_per_hour": 0.0,
+      "fa_upper95": 1.327996603480998,
+      "detection": 0.7294642857142857,
+      "detection_ci95": [
+        0.702695328102887,
+        0.7546644991183155
+      ],
+      "delay_median_s": 4.104961850000002,
+      "delay_p90_s": 19.640553806,
+      "consistent_takeover": 0.2,
+      "per_type": {
+        "consistent_takeover": 0.2,
+        "dynamic_takeover": 0.31875,
+        "ramp": 0.7625,
+        "ramp_then_step": 0.95625,
+        "static": 1.0,
+        "step": 0.95,
+        "step_then_ramp": 0.91875
+      },
+      "detection_reset_attackers": 0.743006993006993,
+      "n_reset_attackers": 572,
+      "detection_other_attackers": 0.7153284671532847,
+      "detection_by_platform": {
+        "multirotor_hover": 0.7678571428571429,
+        "multirotor_maneuver": 0.7035714285714286,
+        "fixed_wing": 0.7,
+        "large_slow": 0.7464285714285714
+      }
+    },
+    "R2_flag_gate_5s": {
+      "fa_per_platform": {
+        "multirotor_hover": {
+          "events": 0,
+          "hours": 0.6944444444444535,
+          "rate": 0.0,
+          "upper95": 5.311986413923997
+        },
+        "multirotor_maneuver": {
+          "events": 0,
+          "hours": 0.6944444444444535,
+          "rate": 0.0,
+          "upper95": 5.311986413923997
+        },
+        "fixed_wing": {
+          "events": 0,
+          "hours": 0.6944444444444535,
+          "rate": 0.0,
+          "upper95": 5.311986413923997
+        },
+        "large_slow": {
+          "events": 0,
+          "hours": 0.6944444444444535,
+          "rate": 0.0,
+          "upper95": 5.311986413923997
+        }
+      },
+      "fa_events": 0,
+      "clean_hours": 2.7777777777778168,
+      "fa_per_hour": 0.0,
+      "fa_upper95": 1.327996603480998,
+      "detection": 0.7125,
+      "detection_ci95": [
+        0.6853021230130076,
+        0.7382451099778338
+      ],
+      "delay_median_s": 5.352129320000001,
+      "delay_p90_s": 20.62723487200001,
+      "consistent_takeover": 0.14375,
+      "per_type": {
+        "consistent_takeover": 0.14375,
+        "dynamic_takeover": 0.3,
+        "ramp": 0.75,
+        "ramp_then_step": 0.95,
+        "static": 1.0,
+        "step": 0.95,
+        "step_then_ramp": 0.89375
+      },
+      "detection_reset_attackers": 0.7115384615384616,
+      "n_reset_attackers": 572,
+      "detection_other_attackers": 0.7135036496350365,
+      "detection_by_platform": {
+        "multirotor_hover": 0.7357142857142858,
+        "multirotor_maneuver": 0.7,
+        "fixed_wing": 0.6892857142857143,
+        "large_slow": 0.725
+      }
+    }
+  },
+  "reset": {
+    "R0_old_primary": {
+      "fa_per_platform": {
+        "multirotor_hover": {
+          "events": 0,
+          "hours": 0.0,
+          "rate": NaN,
+          "upper95": NaN
+        },
+        "multirotor_maneuver": {
+          "events": 0,
+          "hours": 0.0,
+          "rate": NaN,
+          "upper95": NaN
+        },
+        "fixed_wing": {
+          "events": 0,
+          "hours": 0.0,
+          "rate": NaN,
+          "upper95": NaN
+        },
+        "large_slow": {
+          "events": 0,
+          "hours": 0.0,
+          "rate": NaN,
+          "upper95": NaN
+        }
+      },
+      "detection": 0.8625,
+      "detection_ci95": [
+        0.8410885793819725,
+        0.8814331710141687
+      ],
+      "delay_median_s": 0.7952075999999995,
+      "delay_p90_s": 15.304584105000002,
+      "consistent_takeover": 0.4875,
+      "per_type": {
+        "consistent_takeover": 0.4875,
+        "dynamic_takeover": 0.65625,
+        "ramp": 0.9125,
+        "ramp_then_step": 1.0,
+        "static": 1.0,
+        "step": 0.9875,
+        "step_then_ramp": 0.99375
+      },
+      "detection_reset_attackers": 0.8625,
+      "n_reset_attackers": 1120,
+      "detection_other_attackers": NaN,
+      "detection_by_platform": {
+        "multirotor_hover": 0.8464285714285714,
+        "multirotor_maneuver": 0.8571428571428571,
+        "fixed_wing": 0.8607142857142858,
+        "large_slow": 0.8857142857142857
+      }
+    },
+    "R1_baseline": {
+      "fa_per_platform": {
+        "multirotor_hover": {
+          "events": 0,
+          "hours": 0.0,
+          "rate": NaN,
+          "upper95": NaN
+        },
+        "multirotor_maneuver": {
+          "events": 0,
+          "hours": 0.0,
+          "rate": NaN,
+          "upper95": NaN
+        },
+        "fixed_wing": {
+          "events": 0,
+          "hours": 0.0,
+          "rate": NaN,
+          "upper95": NaN
+        },
+        "large_slow": {
+          "events": 0,
+          "hours": 0.0,
+          "rate": NaN,
+          "upper95": NaN
+        }
+      },
+      "detection": 0.7419642857142857,
+      "detection_ci95": [
+        0.7155417923881833,
+        0.7667325779501277
+      ],
+      "delay_median_s": 4.135087649999999,
+      "delay_p90_s": 19.297289360000004,
+      "consistent_takeover": 0.225,
+      "per_type": {
+        "consistent_takeover": 0.225,
+        "dynamic_takeover": 0.45625,
+        "ramp": 0.80625,
+        "ramp_then_step": 0.90625,
+        "static": 1.0,
+        "step": 0.925,
+        "step_then_ramp": 0.875
+      },
+      "detection_reset_attackers": 0.7419642857142857,
+      "n_reset_attackers": 1120,
+      "detection_other_attackers": NaN,
+      "detection_by_platform": {
+        "multirotor_hover": 0.7357142857142858,
+        "multirotor_maneuver": 0.725,
+        "fixed_wing": 0.7178571428571429,
+        "large_slow": 0.7892857142857143
+      }
+    },
+    "R2_flag_gate_5s": {
+      "fa_per_platform": {
+        "multirotor_hover": {
+          "events": 0,
+          "hours": 0.0,
+          "rate": NaN,
+          "upper95": NaN
+        },
+        "multirotor_maneuver": {
+          "events": 0,
+          "hours": 0.0,
+          "rate": NaN,
+          "upper95": NaN
+        },
+        "fixed_wing": {
+          "events": 0,
+          "hours": 0.0,
+          "rate": NaN,
+          "upper95": NaN
+        },
+        "large_slow": {
+          "events": 0,
+          "hours": 0.0,
+          "rate": NaN,
+          "upper95": NaN
+        }
+      },
+      "detection": 0.7348214285714286,
+      "detection_ci95": [
+        0.7081977129543402,
+        0.7598397756027662
+      ],
+      "delay_median_s": 5.371521229999999,
+      "delay_p90_s": 20.126639406000002,
+      "consistent_takeover": 0.2125,
+      "per_type": {
+        "consistent_takeover": 0.2125,
+        "dynamic_takeover": 0.4375,
+        "ramp": 0.79375,
+        "ramp_then_step": 0.90625,
+        "static": 1.0,
+        "step": 0.925,
+        "step_then_ramp": 0.86875
+      },
+      "detection_reset_attackers": 0.7348214285714286,
+      "n_reset_attackers": 1120,
+      "detection_other_attackers": NaN,
+      "detection_by_platform": {
+        "multirotor_hover": 0.7321428571428571,
+        "multirotor_maneuver": 0.7214285714285714,
+        "fixed_wing": 0.7107142857142857,
+        "large_slow": 0.775
+      }
+    }
+  },
+  "chosen": "R1_baseline"
+}
