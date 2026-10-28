@@ -324,7 +324,7 @@ FEATURES: Dict[str, Tuple[Tuple[str, ...], FeatureFn]] = {
 
 # Opt-in features: registered below by ekf.py, left out of available_features() so that existing
 # configs and results are unchanged; request them by name in compute_features.
-OPT_IN = ("ekf_innov_m", "ekf_innov_vel_mps")
+OPT_IN = ("ekf_innov_m", "ekf_innov_vel_mps", "since_reset_s", "reset_recent_5s")
 
 CN0_FEATURES = ("cn0_shift_db", "cn0_std_drop_db", "cn0_rise_db", "cn0_fall_db")
 
@@ -365,8 +365,37 @@ def position_velocity_residual(frame: pd.DataFrame, cfg: DetectorConfig = DEFAUL
     return f_posvel(frame, cfg)
 
 
+def reset_flags(frame) -> np.ndarray:
+    """True at rows where the receiver's lock time went backwards (a flagged lock reset); causal."""
+    lock = frame["lock_ms"].to_numpy(dtype=float)
+    flag = np.zeros(len(lock), dtype=bool)
+    flag[1:] = lock[1:] < lock[:-1]
+    return flag
+
+
+def f_since_reset(frame, cfg):
+    """Seconds since the last flagged lock reset, capped at 30 (30 when none yet)."""
+    dt = _dt(frame)
+    flag = reset_flags(frame)
+    out = np.empty(len(flag))
+    last = -np.inf
+    for k in range(len(flag)):
+        if flag[k]:
+            last = k
+        out[k] = 30.0 if last < 0 else min(30.0, (k - last) * dt)
+    return out
+
+
+def f_reset_recent(frame, cfg):
+    """1 when a lock reset was flagged in the last 5 s, else 0."""
+    return (f_since_reset(frame, cfg) <= 5.0).astype(float) * (f_since_reset(frame, cfg) < 30.0)
+
+
 def _register_opt_in() -> None:
     from .ekf import f_ekf_innov, f_ekf_innov_vel
+
+    FEATURES["since_reset_s"] = (("t_gnss_s", "lock_ms"), f_since_reset)
+    FEATURES["reset_recent_5s"] = (("t_gnss_s", "lock_ms"), f_reset_recent)
 
     cols = ("t_gnss_s", "lat_deg", "lon_deg", "vel_n_mps", "vel_e_mps", "roll_rad", "pitch_rad", "yaw_rad", "acc_bx_mps2", "acc_by_mps2", "acc_bz_mps2")
     FEATURES["ekf_innov_m"] = (cols, f_ekf_innov)

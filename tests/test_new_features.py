@@ -55,3 +55,20 @@ def test_quiet_nuisances_option_is_opt_in_and_reduces_satellite_flicker():
     changes = lambda f: int(np.sum(np.diff(f["num_sv"].to_numpy()) != 0))
     assert changes(quiet) <= changes(base)
     assert set(quiet.columns) == set(base.columns)
+
+
+def test_reset_flag_features():
+    import numpy as np
+    import pandas as pd
+
+    from ten_layer_detector.config import DEFAULT_DETECTOR_CONFIG as CFG
+    from ten_layer_detector.features import compute_features, reset_flags
+
+    lock = np.r_[np.arange(0, 3000, 100.0), np.arange(0, 10000, 100.0)]  # reset at row 30
+    df = pd.DataFrame({"t_gnss_s": np.arange(len(lock)) * 0.1, "lock_ms": lock})
+    assert reset_flags(df).sum() == 1 and reset_flags(df)[30]
+    f = compute_features(df, ["since_reset_s", "reset_recent_5s"], CFG)
+    assert f["since_reset_s"].iloc[0] == 30.0 and f["since_reset_s"].iloc[30] == 0.0
+    assert abs(f["since_reset_s"].iloc[40] - 1.0) < 1e-9
+    assert f["reset_recent_5s"].iloc[40] == 1.0 and f["reset_recent_5s"].iloc[10] == 0.0 and f["reset_recent_5s"].iloc[45] == 1.0
+    assert f["reset_recent_5s"].iloc[30 + 51] == 0.0
