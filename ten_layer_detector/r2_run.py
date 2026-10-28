@@ -164,7 +164,7 @@ def main():
             dd, sp = load_split(path, cfg)
             rid = reset_ids_of(dd)
             out[name] = {}
-            for arm in dict.fromkeys(["R0_old_primary", "R1_baseline", chosen]):
+            for arm in dict.fromkeys(["R0_old_primary", "R1_baseline", chosen, "R2_flag_gate_5s"]):
                 sc, thr, hold = arms[arm]
                 out[name][arm] = evaluate(session_scores(sc, sp), sp, thr, hold, rid)
                 r = out[name][arm]

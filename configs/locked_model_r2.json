@@ -1,0 +1,12 @@
+{
+  "locked": "2026-10-28, before sim_r2_test, sim_r2_weaktest and sim_r2_resettest were generated",
+  "plan": "configs/round2_plan.json",
+  "world": "configs/sim_v5.json",
+  "chosen": "R1_baseline: the v4 primary recipe (0.25 LightGBM + 0.75 one-class SVM ensemble, 20 v3 features, persistence 5, calibration margin 0.5 FA/h, pooled threshold) fitted and calibrated on sim_r2_val. The choice rule found no detector change worth making: R1 already meets 0.8 FA/h for every aircraft type on sim_r2_fahold (max 0.19) and the best alternative lowers the maximum by less than the 0.1 the rule requires (results/r2_val.json).",
+  "scored_with_it_on_each_test_set": {
+    "R0_old_primary": "the locked v4 primary (v4-world training and thresholds), unchanged, as the reference",
+    "R2_flag_gate_5s": "EXPLORATORY, not chosen: R1 with a 5 s alarm hold after each flagged lock reset; added so the blind window of the hold is measured on the reset-timed attack set. Picked after seeing validation (it had the lowest FA among the gates at a detection equal to R1)."
+  },
+  "step4": "not triggered (max per-type FA 0.19 <= 0.8); sim_r2_cal is not generated",
+  "acceptance": "configs/round2_plan.json"
+}
